@@ -1,0 +1,4 @@
+v 0.0.1
+d 'NUMPLUSONE': a function that adds one number to an input number and prints
+d the result.
+p numplusone
