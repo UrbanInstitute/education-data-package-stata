@@ -1,0 +1,7 @@
+d 'NUMPLUSONE': a function that adds one number to an input number and prints
+d the result.
+d
+d Distribution-Date: 20180305
+d
+F numplusone.ado
+F numplusone.sthlp
