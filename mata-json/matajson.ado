@@ -28,14 +28,19 @@ mata
 		return(root)
 	}	
 
-	string scalar todf(string scalar url){
-		class libjson scalar w
+	real scalar todf(string scalar url){
 		pointer (class libjson scalar) scalar root
 		string scalar countres
+		real scalar countreal
+		real scalar pagelimit
+		real scalar pages
+		pagelimit=100
 		root=libjson::webcall(url ,"");
-		root->prettyPrint();
 		countres = root->getString("count", "")
-		return(countres)
+		numrecs = strtoreal(countres)
+		pages = round(numrecs/pagelimit) + 1
+		return(pages)
 	}
+	result=todf("https://ui-research.github.io/education-data-package-stata/example_json.json")
 
 end
