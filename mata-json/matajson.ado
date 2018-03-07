@@ -31,9 +31,11 @@ mata
 	string scalar todf(string scalar url){
 		class libjson scalar w
 		pointer (class libjson scalar) scalar root
-		c=libjson::getrawcontents(url ,J(0,0,""))
-		root = w.parse(c)
-		return(root)
+		string scalar countres
+		root=libjson::webcall(url ,"");
+		root->prettyPrint();
+		countres = root->getString("count", "")
+		return(countres)
 	}
 
 end
