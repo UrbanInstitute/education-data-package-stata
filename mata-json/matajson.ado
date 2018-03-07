@@ -30,16 +30,28 @@ mata
 
 	real scalar todf(string scalar url){
 		pointer (class libjson scalar) scalar root
+		pointer (class libjson scalar) scalar result
+		pointer (class libjson scalar) scalar firstrow
+		string rowvector varnames
 		string scalar countres
 		real scalar countreal
 		real scalar pagelimit
 		real scalar pages
+		real scalar numvars
 		pagelimit=100
 		root=libjson::webcall(url ,"");
 		countres = root->getString("count", "")
 		numrecs = strtoreal(countres)
 		pages = round(numrecs/pagelimit) + 1
-		return(pages)
+		result = root->getNode("results")
+		if (pages!=.) {
+			firstrow = result->getArrayValue(1)
+			varnames = firstrow->listAttributeNames(1)
+			
+		} 
+		else {
+			return(1)
+		}
 	}
 	result=todf("https://ui-research.github.io/education-data-package-stata/example_json.json")
 
