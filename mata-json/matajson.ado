@@ -28,7 +28,7 @@ mata
 		return(root)
 	}	
 
-	real scalar todf(string scalar url){
+	string rowvector todf(string scalar url){
 		pointer (class libjson scalar) scalar root
 		pointer (class libjson scalar) scalar result
 		pointer (class libjson scalar) scalar firstrow
@@ -46,8 +46,8 @@ mata
 		result = root->getNode("results")
 		if (pages!=.) {
 			firstrow = result->getArrayValue(1)
-			varnames = firstrow->listAttributeNames(1)
-			
+			varnames = firstrow->listAttributeNames(0)
+			return(varnames)
 		} 
 		else {
 			return(1)
