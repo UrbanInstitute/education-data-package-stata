@@ -9,27 +9,150 @@ end
 
 mata	
 
-	string matrix todf(string scalar url){
+	// Helper function that returns results node
+	pointer (class libjson scalar) scalar getresults(string scalar url){
+		pointer (class libjson scalar) scalar root
+		pointer (class libjson scalar) scalar result
+		root=libjson::webcall(url ,"");
+		result = root->getNode("results")
+		return(result)
+	}
+
+	// Helper function that returns matrix of variable information from API
+	string matrix getvarinfo(string scalar url){
+		pointer (class libjson scalar) scalar res
+		pointer (class libjson scalar) scalar trow
+		string scalar tempvar
+		res = getresults(url)
+		numrows = res->arrayLength()
+		varinfo = J(3,numrows,"")
+		for (r=1; r<=numrows; r++) {
+			trow = res->getArrayValue(r)
+			varinfo[1,r] = trow->getString("variable", "")
+			varinfo[2,r] = trow->getString("label", "")
+			tempvar = trow->getString("data_type", "")
+			if (tempvar == "integer") varinfo[3,r] = "long"
+			else if (tempvar == "float") varinfo[3,r] = "float"
+			else if (tempvar == "string") varinfo[3,r] = "str255"
+		}
+		return(varinfo)		
+	}
+
+	// Helper function that returns string and real/integer variable names
+	string rowvector getvartypes(string scalar typ, string matrix varinfo){
+		real scalar counting
+		real scalar counter1
+		string scalar varnametypes
+		real scalar numvars
+		numvars = length(varinfo[1,.])
+		counting = 0
+		for (c=1; c<=numvars; c++){
+			if (varinfo[3,c] == "string"){
+				if (typ == "string") counting = counting + 1
+			}
+			else {
+				if (typ != "string") counting = counting + 1
+			}
+		}
+		varnametypes = J(1,counting,"")
+		counter1 = 1
+		for (c=1; c<=numvars; c++){
+			if (varinfo[3,c] == "string"){
+				if (typ == "string") {
+					varnametypes[1,counter1] = varinfo[1,c]
+					counter1 = counter1 + 1
+				}
+			}
+			else {
+				if (typ != "string") {
+					varnametypes[1,counter1] = varinfo[1,c]
+					counter1 = counter1 + 1
+				}
+			}
+		}
+		return(varnametypes)
+	}
+
+	// Gets all tables, using API to get the varlist and vartypes, and looping through all "nexts", calling gettable
+	real scalar getalltables(string scalar url1, string scalar url2){
+		pointer (class libjson scalar) scalar root
+		string matrix varinfo
+		string scalar nextpage
+		real scalar spos
+		varinfo = getvarinfo(url1)
+		st_addvar(varinfo[3,.],varinfo[1,.])
+		spos = 1
+		nextpage = gettable2(url2, spos, varinfo)
+	}
+	result=getalltables("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=20", "https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/?page=2026")
+
+
+	// Get table just gets data we need for one table, this appends results to the stata dataset
+	string scalar gettable2(string scalar url, real scalar startpos, string matrix varinfo){
+		pointer (class libjson scalar) scalar root
+		pointer (class libjson scalar) scalar result
+		pointer (class libjson scalar) scalar trow
+		string matrix sdata
+		string rowvector varnames
+		string scalar nextpage
+		string scalar tval
+		real matrix rdata
+		real scalar numrows
+		real scalar endpos
+		root = libjson::webcall(url ,"");
+		result = root->getNode("results")
+		numrows = result->arrayLength()
+		st_addobs(numrows)
+		endpos = startpos + numrows - 1
+		svarnames = getvartypes("string", varinfo)
+		rvarnames = getvartypes("other", varinfo)
+		sdata = J(numrows,length(svarnames),"")
+		rdata = J(numrows,length(rvarnames),.)
+		for (r=1; r<=numrows; r++) {
+			trow = result->getArrayValue(r);
+			for(c=1; c<=length(svarnames); c++) {
+				tval = trow->getString(svarnames[c],"");
+				if (tval == "null") tval = ""
+				sdata[r,c] = tval
+			}
+			for(c=1; c<=length(rvarnames); c++) {
+				tval = trow->getString(rvarnames[c],"");
+				if (tval == "null") rdata[r,c] = .
+				else rdata[r,c] = strtoreal(tval)
+			}
+		}
+		if (length(svarnames) > 0){
+			st_sview(SV,(startpos..endpos)',svarnames)
+			SV[.,.] = sdata[.,.]
+		}
+		if (length(rvarnames) > 0){
+			st_view(V,(startpos..endpos)',rvarnames)
+			V[.,.] = rdata[.,.]
+		}
+		nextpage = root->getString("next", "")
+		return(nextpage)
+	}
+	result=gettable2("https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/?page=2026", 1, varinfo)
+
+	// Original Learning Experience
+	real scalar gettable(string scalar url){
 		pointer (class libjson scalar) scalar root
 		pointer (class libjson scalar) scalar result
 		pointer (class libjson scalar) scalar firstrow
 		pointer (class libjson scalar) scalar trow
 		string rowvector varnames
-		real rowvector varids
 		string scalar countres
 		string matrix dataframe
 		real scalar pagelimit
 		real scalar pages
 		real scalar numvars
 		real scalar numrows
-		real scalar curpage
 		pagelimit=100
 		root=libjson::webcall(url ,"");
 		countres = root->getString("count", "")
 		numrecs = strtoreal(countres)
 		pages = round(numrecs/pagelimit) + 1
 		result = root->getNode("results")
-		curpage = 1 
 		if (pages!=.) {
 			firstrow = result->getArrayValue(1)
 			varnames = firstrow->listAttributeNames(0)
@@ -43,14 +166,17 @@ mata
 				}
 			}
 			st_addobs(rows(dataframe))
-			varids = st_addvar("strL", varnames)
-			st_store(.,varids,dataframe)
-			return(dataframe)
+			varids = st_addvar("str255", varnames)
+			st_sview(V,(1..numrows)',varnames)
+			for (r=1; r<=numrows; r++) {
+				V[r,.]=dataframe[r,.]
+			}
+			return(1)
 		} 
 		else {
-			return(J(1,1,""))
+			return(0)
 		}
 	}
-	result=todf("https://ui-research.github.io/education-data-package-stata/example_json_test.json")
+	result=gettable("https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/")
 
 end
