@@ -75,24 +75,36 @@ mata
 
 	// Gets all tables, using API to get the varlist and vartypes, and looping through all "nexts", calling gettable
 	real scalar getalltables(string scalar url1, string scalar url2){
+		pointer (class libjson scalar) scalar root
 		pointer (class libjson scalar) scalar results1
 		string matrix varinfo
 		string scalar nextpage
 		real scalar spos
 		real scalar pagesize
+		real scalar totalpages
+		real scalar countpage
 		varinfo = getvarinfo(url1)
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		spos = 1
-		results1 = getresults(url2)
+		root = libjson::webcall(url2,"");
+		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
+		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
+		countpage = 1
+		printf("For %s\n", url2)
+		printf("On page %s of %s\n", strofreal(countpage), strofreal(totalpages))
 		nextpage = gettable2(url2, spos, varinfo)
-		do {
-			spos = spos + pagesize
-			nextpage = gettable2(nextpage, spos, varinfo)
-		} while (nextpage!="null")
+		if (nextpage!="null"){
+			do {
+				spos = spos + pagesize
+				countpage = countpage + 1
+				printf("On page %s of %s\n", strofreal(countpage), strofreal(totalpages))
+				nextpage = gettable2(nextpage, spos, varinfo)
+			} while (nextpage!="null")
+		}
 		return(1)
 	}
-	result=getalltables("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=20", "https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/?page=2026")
+	result=getalltables("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=20", "https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/?page=1")
 
 
 	// Get table just gets data we need for one table, this appends results to the stata dataset
