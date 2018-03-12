@@ -23,6 +23,7 @@ mata
 		pointer (class libjson scalar) scalar res
 		pointer (class libjson scalar) scalar trow
 		string scalar tempvar
+		string scalar tempind
 		res = getresults(url)
 		numrows = res->arrayLength()
 		varinfo = J(4,numrows,"")
@@ -36,13 +37,15 @@ mata
 			else if (tempvar == "string"){ 
 				varinfo[3,r] = "str" + trow->getString("string_length", "")
 			}
-			varinfo[4,r] = trow->getString("values", "")
+			tempind = trow->getString("values", "")
+			if (tempind == "None") varinfo[4,r] = "0"
+			else varinfo[4,r] = "1"
 		}
 		return(varinfo)		
 	}
 
 	// Parse metadata to get api endpoint strings, years, and required selectors from enpoint URL
-	string matri enpointstrings(string scalar colnames){
+	string matrix enpointstrings(string scalar colnames){
 		pointer (class libjson scalar) scalar res1
 		pointer (class libjson scalar) scalar trow
 		t = tokeninit("/")
@@ -134,7 +137,6 @@ mata
 		nextpage = root->getString("next", "")
 		return(nextpage)
 	}
-	result=gettable("https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/?page=2026", 1, varinfo)
 
 	// Gets all tables, using API to get the varlist and vartypes, and looping through all "nexts", calling gettable
 	real scalar getalltables(string scalar url1, string scalar url2){
@@ -170,6 +172,6 @@ mata
 		}
 		return(1)
 	}
-	result=getalltables("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=20", "https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/?page=1")
+	result=getalltables("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=20", "https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/?page=2020")
 
 end
