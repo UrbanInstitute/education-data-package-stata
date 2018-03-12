@@ -45,10 +45,9 @@ mata
 	}
 
 	// Parse metadata to get api endpoint strings, years, and required selectors from enpoint URL
-	string matrix enpointstrings(string scalar colnames){
+	string matrix endpointstrings(string scalar colnames){
 		pointer (class libjson scalar) scalar res1
 		pointer (class libjson scalar) scalar trow
-		t = tokeninit("/")
 		res1 = getresults("https://ed-data-portal.urban.org/api/v1/api-endpoints/")
 		numrows = res1->arrayLength()
 		for (r=1; r<=numrows; r++){
@@ -90,6 +89,36 @@ mata
 			}
 		}
 		return(varnametypes)
+	}
+
+	// Helper function to get variable value definitions
+	string matrix getvardefs(string scalar var1){
+		pointer (class libjson scalar) scalar result
+		pointer (class libjson scalar) scalar trow
+		string matrix vardefs
+		string rowvector tokenstemp
+		string scalar tempvar
+		string scalar tempstring
+		real scalar numrows
+		real scalar startvar
+		result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + var1)
+		numrows = result->arrayLength()
+		vardefs = J(2,numrows,"")
+		for (r=1; r<=numrows; r++){
+			trow = result->getArrayValue(r)
+			vardefs[1,r] = trow->getString("code", "")
+			tempvar = trow->getString("code_label", "")
+			tokenstemp = tokens(tempvar, " - ")
+			if (tokenstemp[1] == "-") startvar = 4
+			else startvar = 3
+			tempstring = ""
+			for (i=startvar; i<=length(tokenstemp); i++){
+				tempstring = tempstring + tokenstemp[i]
+				if (i != length(tokenstemp)) tempstring = tempstring + " "
+			}
+			vardefs[2,r] = tempstring
+		}
+		return(vardefs)
 	}
 
 	// Get table just gets data we need for one table, this appends results to the stata dataset
@@ -143,15 +172,28 @@ mata
 		pointer (class libjson scalar) scalar root
 		pointer (class libjson scalar) scalar results1
 		string matrix varinfo
+		string matrix vardef
 		string scalar nextpage
+		string scalar labeldef
 		real scalar spos
 		real scalar pagesize
 		real scalar totalpages
 		real scalar countpage
+		stata("clear")
 		varinfo = getvarinfo(url1)
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
 			stata("label var " + varinfo[1,c] + " " + `"""' + varinfo[2,c] + `"""')
+			if (varinfo[4,c] == "1"){
+				vardef = getvardefs(varinfo[1,c])
+				labeldef = "label define " + varinfo[1,c] + "df "
+				for (r=1; r<=length(vardef[1,.]); r++){
+					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
+					if (r != length(vardef[1,.])) labeldef = labeldef + " "
+				}
+				stata(labeldef)
+				stata("label values " + varinfo[1,c] + " " + varinfo[1,c] + "df")
+			}
 		}
 		spos = 1
 		root = libjson::webcall(url2,"");
