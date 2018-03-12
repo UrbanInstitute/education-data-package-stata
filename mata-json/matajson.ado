@@ -25,7 +25,7 @@ mata
 		string scalar tempvar
 		res = getresults(url)
 		numrows = res->arrayLength()
-		varinfo = J(3,numrows,"")
+		varinfo = J(4,numrows,"")
 		for (r=1; r<=numrows; r++) {
 			trow = res->getArrayValue(r)
 			varinfo[1,r] = trow->getString("variable", "")
@@ -33,9 +33,25 @@ mata
 			tempvar = trow->getString("data_type", "")
 			if (tempvar == "integer") varinfo[3,r] = "long"
 			else if (tempvar == "float") varinfo[3,r] = "float"
-			else if (tempvar == "string") varinfo[3,r] = "str255"
+			else if (tempvar == "string"){ 
+				varinfo[3,r] = "str" + trow->getString("string_length", "")
+			}
+			varinfo[4,r] = trow->getString("values", "")
 		}
 		return(varinfo)		
+	}
+
+	// Parse metadata to get api endpoint strings, years, and required selectors from enpoint URL
+	string matri enpointstrings(string scalar colnames){
+		pointer (class libjson scalar) scalar res1
+		pointer (class libjson scalar) scalar trow
+		t = tokeninit("/")
+		res1 = getresults("https://ed-data-portal.urban.org/api/v1/api-endpoints/")
+		numrows = res1->arrayLength()
+		for (r=1; r<=numrows; r++){
+			trow = res1->getArrayValue(r)
+			
+		}
 	}
 
 	// Helper function that returns string and real/integer variable names
@@ -73,42 +89,8 @@ mata
 		return(varnametypes)
 	}
 
-	// Gets all tables, using API to get the varlist and vartypes, and looping through all "nexts", calling gettable
-	real scalar getalltables(string scalar url1, string scalar url2){
-		pointer (class libjson scalar) scalar root
-		pointer (class libjson scalar) scalar results1
-		string matrix varinfo
-		string scalar nextpage
-		real scalar spos
-		real scalar pagesize
-		real scalar totalpages
-		real scalar countpage
-		varinfo = getvarinfo(url1)
-		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
-		spos = 1
-		root = libjson::webcall(url2,"");
-		results1 = root->getNode("results")
-		pagesize = results1->arrayLength()
-		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
-		countpage = 1
-		printf("For %s\n", url2)
-		printf("On page %s of %s\n", strofreal(countpage), strofreal(totalpages))
-		nextpage = gettable2(url2, spos, varinfo)
-		if (nextpage!="null"){
-			do {
-				spos = spos + pagesize
-				countpage = countpage + 1
-				printf("On page %s of %s\n", strofreal(countpage), strofreal(totalpages))
-				nextpage = gettable2(nextpage, spos, varinfo)
-			} while (nextpage!="null")
-		}
-		return(1)
-	}
-	result=getalltables("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=20", "https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/?page=1")
-
-
 	// Get table just gets data we need for one table, this appends results to the stata dataset
-	string scalar gettable2(string scalar url, real scalar startpos, string matrix varinfo){
+	string scalar gettable(string scalar url, real scalar startpos, string matrix varinfo){
 		pointer (class libjson scalar) scalar root
 		pointer (class libjson scalar) scalar result
 		pointer (class libjson scalar) scalar trow
@@ -152,51 +134,42 @@ mata
 		nextpage = root->getString("next", "")
 		return(nextpage)
 	}
-	result=gettable2("https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/?page=2026", 1, varinfo)
+	result=gettable("https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/?page=2026", 1, varinfo)
 
-	// Original Learning Experience
-	real scalar gettable(string scalar url){
+	// Gets all tables, using API to get the varlist and vartypes, and looping through all "nexts", calling gettable
+	real scalar getalltables(string scalar url1, string scalar url2){
 		pointer (class libjson scalar) scalar root
-		pointer (class libjson scalar) scalar result
-		pointer (class libjson scalar) scalar firstrow
-		pointer (class libjson scalar) scalar trow
-		string rowvector varnames
-		string scalar countres
-		string matrix dataframe
-		real scalar pagelimit
-		real scalar pages
-		real scalar numvars
-		real scalar numrows
-		pagelimit=100
-		root=libjson::webcall(url ,"");
-		countres = root->getString("count", "")
-		numrecs = strtoreal(countres)
-		pages = round(numrecs/pagelimit) + 1
-		result = root->getNode("results")
-		if (pages!=.) {
-			firstrow = result->getArrayValue(1)
-			varnames = firstrow->listAttributeNames(0)
-			numvars = length(varnames)
-			numrows = result->arrayLength()
-			dataframe = J(numrows,numvars,"")
-			for (r=1; r<=numrows; r++) {
-				trow = result->getArrayValue(r);
-				for(c=1; c<=numvars; c++) {
-					dataframe[r,c] = trow->getString(varnames[c],"");
-				}
-			}
-			st_addobs(rows(dataframe))
-			varids = st_addvar("str255", varnames)
-			st_sview(V,(1..numrows)',varnames)
-			for (r=1; r<=numrows; r++) {
-				V[r,.]=dataframe[r,.]
-			}
-			return(1)
-		} 
-		else {
-			return(0)
+		pointer (class libjson scalar) scalar results1
+		string matrix varinfo
+		string scalar nextpage
+		real scalar spos
+		real scalar pagesize
+		real scalar totalpages
+		real scalar countpage
+		varinfo = getvarinfo(url1)
+		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
+		for (c=1; c<=length(varinfo[1,.]); c++){
+			stata("label var " + varinfo[1,c] + " " + `"""' + varinfo[2,c] + `"""')
 		}
+		spos = 1
+		root = libjson::webcall(url2,"");
+		results1 = root->getNode("results")
+		pagesize = results1->arrayLength()
+		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
+		countpage = 1
+		printf("For %s\n", url2)
+		printf("Downloading and appending page %s of %s from API\n", strofreal(countpage), strofreal(totalpages))
+		nextpage = gettable(url2, spos, varinfo)
+		if (nextpage!="null"){
+			do {
+				spos = spos + pagesize
+				countpage = countpage + 1
+				printf("Downloading and appending page %s of %s from API\n", strofreal(countpage), strofreal(totalpages))
+				nextpage = gettable(nextpage, spos, varinfo)
+			} while (nextpage!="null")
+		}
+		return(1)
 	}
-	result=gettable("https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/")
+	result=getalltables("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=20", "https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/?page=1")
 
 end
