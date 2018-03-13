@@ -45,15 +45,19 @@ mata
 	}
 
 	// Parse metadata to get api endpoint strings, years, and required selectors from enpoint URL
-	string matrix endpointstrings(string scalar colnames){
+	string matrix endpointstrings(){
 		pointer (class libjson scalar) scalar res1
 		pointer (class libjson scalar) scalar trow
+		string matrix endpointdata
 		res1 = getresults("https://ed-data-portal.urban.org/api/v1/api-endpoints/")
 		numrows = res1->arrayLength()
+		endpointdata = J(numrows,2,"")
 		for (r=1; r<=numrows; r++){
 			trow = res1->getArrayValue(r)
-			
+			endpointdata[r,1] = trow->getString("endpoint_id", "")
+			endpointdata[r,2] = trow->getString("endpoint_url", "")
 		}
+		return(endpointdata)
 	}
 
 	// Helper function that returns string and real/integer variable names
