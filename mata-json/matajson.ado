@@ -408,7 +408,7 @@ mata
 		countpage = 1
 		printf("For %s\n", url2)
 		printf("Downloading and appending page %s of %s from API\n", strofreal(countpage), strofreal(totalpages))
-		nextpage = gettable(https://ed-data-portal.urban.org + url2, spos, varinfo)
+		nextpage = gettable("https://ed-data-portal.urban.org" + url2, spos, varinfo)
 		if (nextpage!="null"){
 			do {
 				spos = spos + pagesize
@@ -419,16 +419,19 @@ mata
 		}
 		return(1)
 	}
-	result=getalltables("20", "/api/v1/college-university/ipeds/grad-rates/2002/")
+	// result=getalltables("20", "/api/v1/college-university/ipeds/grad-rates/2002/")
 	
 	// Main function to get data based on Stata request - calls other helper functions
-	string matrix getalldata(string scalar dataoptions, string scalar opts){
+	string scalar getalldata(string scalar dataoptions, string scalar opts){
 		string matrix endpoints
 		string matrix spops
 		string rowvector allopts
 		string rowvector validopts
 		string rowvector res2
+		string rowvector temp1
+		string rowvector temp2
 		string scalar eid
+		string scalar urltemp
 		real scalar epid
 		real scalar spos
 		epid = validendpoints(dataoptions)
@@ -449,7 +452,24 @@ mata
 		for (i=1; i<=length(spops[1,.]); i++){
 			if (spops[2,i] == "") spops[2,i] = spops[1,i] + "=alldata"
 		}
-		return(spops)
+		temp1 = validoptions(spops[2,1], epid)
+		if (length(spops[1,.]) == 1){
+			for (i=1; i<=length(temp1); i++){
+				urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i])
+				getalltables(eid, urltemp)
+			}
+		}
+		else{
+			temp2 = validoptions(spops[2,2], epid)
+			for (i=1; i<=length(temp1); i++){
+				for (j=1; j<=length(temp2); j++){
+					urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j])
+					getalltables(eid, urltemp)
+				}
+			}		
+		}
+		return("Data successfully downloaded and ready to use")
 	}
+	getalldata("college-university ipeds directory", "year=2011")
 
 end
