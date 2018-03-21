@@ -204,13 +204,40 @@ mata
 			levels = ("undergraduate","graduate","first-professional","post-baccalaureate")
 			fedaids = ("fed","sub-stafford","no-pell-stafford")
 			if (getit[1] == "year") years = parseyears(epid)
-			if (subinstr(subinstr(getit[2], ",", ""), ":", "") == getit[2]){
-				return((getit[2]))
-			}
-			else if (subinstr(getit[2], ",", "") != getit[2]){
-				t = tokeninit(",")
-				s = tokenset(t, getit[2])
-				return(tokengetall(t))		
+			if (getit[2] != "alldata"){
+				if (subinstr(subinstr(getit[2], ",", ""), ":", "") == getit[2]){
+					return((getit[2]))
+				}
+				else if (subinstr(getit[2], ",", "") != getit[2]){
+					t = tokeninit(",")
+					s = tokenset(t, getit[2])
+					return(tokengetall(t))		
+				}
+				else{
+					tempadd = ""
+					if (getit[1] == "year") tlev = years
+					else if (getit[1] == "grade"){
+						tlev = grades
+						tempadd = "grade-"
+					}
+					else if (getit[1] == "level_of_study") tlev = levels
+					else if (getit[1] == "fed_aid_type") tlev = fedaids
+					t = tokeninit(":")
+					s = tokenset(t, getit[2])
+					getit = tokengetall(t)
+					if (isvalid(getit[1], tlev) == 1 && isvalid(getit[2], tlev) == 1){
+						spos1 = stringpos(getit[1], tlev)
+						spos2 = stringpos(getit[2], tlev)
+						getstring = tempadd + tlev[spos1]
+						for (c=spos1 + 1; c<=spos2; c++){
+							getstring = getstring + "," + tempadd + tlev[c]
+						}
+						t = tokeninit(",")
+						s = tokenset(t, getstring)
+						return(tokengetall(t))
+					}
+					else return(("Invalid Option selection: " + getit[1] + ":" + getit[2]))
+				}
 			}
 			else{
 				tempadd = ""
@@ -220,22 +247,14 @@ mata
 					tempadd = "grade-"
 				}
 				else if (getit[1] == "level_of_study") tlev = levels
-				else if (getit[1] == "fed_aid_type") tlev = fedaids
-				t = tokeninit(":")
-				s = tokenset(t, getit[2])
-				getit = tokengetall(t)
-				if (isvalid(getit[1], tlev) == 1 && isvalid(getit[2], tlev) == 1){
-					spos1 = stringpos(getit[1], tlev)
-					spos2 = stringpos(getit[2], tlev)
-					getstring = tempadd + tlev[spos1]
-					for (c=spos1 + 1; c<=spos2; c++){
-						getstring = getstring + "," + tempadd + tlev[c]
-					}
-					t = tokeninit(",")
-					s = tokenset(t, getstring)
-					return(tokengetall(t))
+				else if (getit[1] == "fed_aid_type") tlev = fedaids	
+				getstring = tempadd + tlev[1]
+				for (c=2; c<=length(tlev); c++){
+					getstring = getstring + "," + tempadd + tlev[c]
 				}
-				else return(("Invalid Option selection: " + getit[1] + ":" + getit[2]))
+				t = tokeninit(",")
+				s = tokenset(t, getstring)
+				return(tokengetall(t))		
 			}
 		}
 		else return(("Invalid Option: " + getit[1]))
