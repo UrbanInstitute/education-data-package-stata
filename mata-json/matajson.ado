@@ -59,6 +59,52 @@ mata
 		}
 		return(endpointdata)
 	}
+	
+	// Helper function to parse url endpoint strings into required variables
+	string rowvector parseurls1(string scalar url, string scalar typevar){
+		string rowvector splits
+		string scalar splitr
+		string scalar keepvars
+		url = subinstr(url, "/api/v1/", "")
+		t = tokeninit("/")
+		s = tokenset(t, url)
+		splits = tokengetall(t)
+		keepvars = ""
+		if (typevar == "optional"){
+			for (r=1; r<=length(splits); r++){
+				splitr = subinstr(subinstr(splits[r], "{", ""), "}", "")
+				if (splitr != splits[r]){
+					if (keepvars == "") keepvars = keepvars + splitr
+					else keepvars = keepvars + "," + splitr
+				}
+			}
+		}
+		else{
+			for (r=1; r<=length(splits); r++){
+				splitr = subinstr(subinstr(splits[r], "{", ""), "}", "")
+				if (splitr == splits[r]){
+					if (keepvars == "") keepvars = keepvars + splits[r]
+					else keepvars = keepvars + "," + splits[r]
+				}
+			}
+		}
+		t = tokeninit(",")
+		s = tokenset(t, keepvars)
+		return(tokengetall(t))
+	}
+	
+	// Helper function to parse data as inputs, check against endpoints, and return values
+	string matrix validendpoints(string scalar eps, string scalar subsets){
+		string matrix endpoints
+		string rowvector grades
+		string rowvector levels
+		string rowvector fedaids
+		endpoints = endpointstrings()
+		grades = ("grade-pk","grade-k","grade-1","grade-2","grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-10","grade-11","grade-12")
+		levels = ("undergraduate","graduate","first-professional","post-baccalaureate")
+		fedaids = ("fed","sub-stafford","no-pell-stafford","all")
+		
+	}
 
 	// Helper function that returns string and real/integer variable names
 	string rowvector getvartypes(string scalar typ, string matrix varinfo){
