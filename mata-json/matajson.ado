@@ -384,7 +384,6 @@ mata
 		real scalar pagesize
 		real scalar totalpages
 		real scalar countpage
-		stata("clear")
 		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
@@ -419,7 +418,7 @@ mata
 		}
 		return(1)
 	}
-	// result=getalltables("20", "/api/v1/college-university/ipeds/grad-rates/2002/")
+	// result=getalltables("20", "/api/v1/college-university/ipeds/grad-rates/2002/?page=2020")
 	
 	// Main function to get data based on Stata request - calls other helper functions
 	string scalar getalldata(string scalar dataoptions, string scalar opts){
@@ -434,6 +433,7 @@ mata
 		string scalar urltemp
 		real scalar epid
 		real scalar spos
+		stata("clear")
 		epid = validendpoints(dataoptions)
 		endpoints = endpointstrings()
 		eid = endpoints[1,epid]
@@ -468,7 +468,7 @@ mata
 				}
 			}		
 		}
-		return("Data successfully downloaded and ready to use")
+		return("Data successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
 	}
 	getalldata("college-university ipeds directory", "year=2011")
 
