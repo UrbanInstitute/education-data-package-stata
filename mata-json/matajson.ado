@@ -122,7 +122,7 @@ mata
 	string rowvector parseyears(real scalar matid){
 		string matrix endpoints
 		string rowvector getit
-		real rowvector returnyears
+		string rowvector returnyears
 		string scalar yrs
 		string scalar yrstring
 		endpoints = endpointstrings()
@@ -168,6 +168,14 @@ mata
 		for (c = 1; c<=length(vopts); c++){
 			if (vopts[c] == test) return(1)
 		}
+		return(0)
+	}
+	
+	// Helper function to get the position of a string in a list
+	real scalar stringpos(string scalar test, string rowvector tlist){
+		for (r = 1; r<=length(tlist); r++){
+			if (test == tlist[r]) return(r)
+		}
 	}
 	
 	// Helper function to parse optional data as inputs, taking a single optional data argument, check validity, and return all chosen options
@@ -178,11 +186,13 @@ mata
 		string rowvector fedaids
 		string rowvector vopts
 		string rowvector getit
-		string rowvector checkstring
+		string rowvector tlev
 		string scalar getstring
-		string scalar tlev
-		real rowvector years
+		string scalar tempadd
+		string rowvector years
 		real scalar isopt1
+		real scalar spos1
+		real scalar spos2
 		endpoints = endpointstrings()
 		t = tokeninit("=")
 		s = tokenset(t, subset1)
@@ -195,22 +205,37 @@ mata
 			fedaids = ("fed","sub-stafford","no-pell-stafford")
 			if (getit[1] == "year") years = parseyears(epid)
 			if (subinstr(subinstr(getit[2], ",", ""), ":", "") == getit[2]){
-				checkstring = (getit[2])
+				return((getit[2]))
 			}
 			else if (subinstr(getit[2], ",", "") != getit[2]){
 				t = tokeninit(",")
 				s = tokenset(t, getit[2])
-				checkstring = tokengetall(t)		
+				return(tokengetall(t))		
 			}
 			else{
+				tempadd = ""
 				if (getit[1] == "year") tlev = years
-				else if (getit[1] == "grade") tlev = grade
+				else if (getit[1] == "grade"){
+					tlev = grades
+					tempadd = "grade-"
+				}
 				else if (getit[1] == "level_of_study") tlev = levels
 				else if (getit[1] == "fed_aid_type") tlev = fedaids
 				t = tokeninit(":")
 				s = tokenset(t, getit[2])
 				getit = tokengetall(t)
-				
+				if (isvalid(getit[1], tlev) == 1 && isvalid(getit[2], tlev) == 1){
+					spos1 = stringpos(getit[1], tlev)
+					spos2 = stringpos(getit[2], tlev)
+					getstring = tempadd + tlev[spos1]
+					for (c=spos1 + 1; c<=spos2; c++){
+						getstring = getstring + "," + tempadd + tlev[c]
+					}
+					t = tokeninit(",")
+					s = tokenset(t, getstring)
+					return(tokengetall(t))
+				}
+				else return(("Invalid Option selection: " + getit[1] + ":" + getit[2]))
 			}
 		}
 		else return(("Invalid Option: " + getit[1]))
