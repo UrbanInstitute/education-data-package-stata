@@ -176,6 +176,7 @@ mata
 		for (r = 1; r<=length(tlist); r++){
 			if (test == tlist[r]) return(r)
 		}
+		return(0)
 	}
 	
 	// Helper function to parse optional data as inputs, taking a single optional data argument, check validity, and return all chosen options
@@ -372,7 +373,7 @@ mata
 	}
 
 	// Gets all tables, using API to get the varlist and vartypes, and looping through all "nexts", calling gettable
-	real scalar getalltables(string scalar url1, string scalar url2){
+	real scalar getalltables(string scalar eid, string scalar url2){
 		pointer (class libjson scalar) scalar root
 		pointer (class libjson scalar) scalar results1
 		string matrix varinfo
@@ -384,7 +385,7 @@ mata
 		real scalar totalpages
 		real scalar countpage
 		stata("clear")
-		varinfo = getvarinfo(url1)
+		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
 			stata("label var " + varinfo[1,c] + " " + `"""' + varinfo[2,c] + `"""')
@@ -400,14 +401,14 @@ mata
 			}
 		}
 		spos = 1
-		root = libjson::webcall(url2,"");
+		root = libjson::webcall("https://ed-data-portal.urban.org" + url2,"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
 		countpage = 1
 		printf("For %s\n", url2)
 		printf("Downloading and appending page %s of %s from API\n", strofreal(countpage), strofreal(totalpages))
-		nextpage = gettable(url2, spos, varinfo)
+		nextpage = gettable(https://ed-data-portal.urban.org + url2, spos, varinfo)
 		if (nextpage!="null"){
 			do {
 				spos = spos + pagesize
@@ -418,6 +419,37 @@ mata
 		}
 		return(1)
 	}
-	result=getalltables("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=20", "https://ed-data-portal.urban.org/api/v1/college-university/ipeds/grad-rates/2002/?page=2020")
+	result=getalltables("20", "/api/v1/college-university/ipeds/grad-rates/2002/")
+	
+	// Main function to get data based on Stata request - calls other helper functions
+	string matrix getalldata(string scalar dataoptions, string scalar opts){
+		string matrix endpoints
+		string matrix spops
+		string rowvector allopts
+		string rowvector validopts
+		string rowvector res2
+		string scalar eid
+		real scalar epid
+		real scalar spos
+		epid = validendpoints(dataoptions)
+		endpoints = endpointstrings()
+		eid = endpoints[1,epid]
+		allopts = tokens(opts)
+		validopts = parseurls(endpoints[2,epid], "optional")
+		spops = J(2,length(validopts),"")
+		spops[1,.] = validopts[1,.]
+		for (i=1; i<=length(allopts); i++){
+			t = tokeninit("=")
+			s = tokenset(t, allopts[i])
+			res2 = tokengetall(t)
+			spos = stringpos(res2[1], validopts)
+			if (spos > 0) spops[2,spos] = allopts[i]
+			else return("Error, option " + allopts[i] + " not valid")
+		}
+		for (i=1; i<=length(spops[1,.]); i++){
+			if (spops[2,i] == "") spops[2,i] = spops[1,i] + "=alldata"
+		}
+		return(spops)
+	}
 
 end
