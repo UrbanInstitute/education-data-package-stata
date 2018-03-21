@@ -51,17 +51,18 @@ mata
 		string matrix endpointdata
 		res1 = getresults("https://ed-data-portal.urban.org/api/v1/api-endpoints/")
 		numrows = res1->arrayLength()
-		endpointdata = J(numrows,2,"")
+		endpointdata = J(3,numrows,"")
 		for (r=1; r<=numrows; r++){
 			trow = res1->getArrayValue(r)
-			endpointdata[r,1] = trow->getString("endpoint_id", "")
-			endpointdata[r,2] = trow->getString("endpoint_url", "")
+			endpointdata[1,r] = trow->getString("endpoint_id", "")
+			endpointdata[2,r] = trow->getString("endpoint_url", "")
+			endpointdata[3,r] = trow->getString("years_available", "")
 		}
 		return(endpointdata)
 	}
 	
 	// Helper function to parse url endpoint strings into required variables
-	string rowvector parseurls1(string scalar url, string scalar typevar){
+	string rowvector parseurls(string scalar url, string scalar typevar){
 		string rowvector splits
 		string scalar splitr
 		string scalar keepvars
@@ -93,17 +94,89 @@ mata
 		return(tokengetall(t))
 	}
 	
-	// Helper function to parse data as inputs, check against endpoints, and return values
-	string matrix validendpoints(string scalar eps, string scalar subsets){
+	// Helper function to parse required data as inputs, check validity, and return endpoint chosen
+	real scalar validendpoints(string scalar eps){
 		string matrix endpoints
+		string rowvector epsind
+		string rowvector parsedurls
+		real scalar check
+		real scalar permcheck
+		endpoints = endpointstrings()
+		epsind = tokens(eps)
+		permcheck = 0
+		for (c=1; c<=length(endpoints[2,.]); c++){
+			parsedurls = parseurls(endpoints[2,c], "required")
+			if (length(parsedurls) == length(epsind)){
+				check = 1
+				for (r=1; r<=length(epsind); r++){
+					if (epsind[r] == parsedurls[r]) check = check * 1
+					else check = check * 0
+				}
+				if (check == 1) permcheck = c
+			}
+		}
+		return(permcheck)
+	}
+	
+	// Helper function to parse years available for endpoint
+	real rowvector parseyears7(real scalar matid){
+		string matrix endpoints
+		string rowvector getit
+		real rowvector returnyears
+		string scalar yrs
+		string scalar yrstring
+		endpoints = endpointstrings()
+		yrs = endpoints[3,matid]
+		if (subinstr(subinstr(yrs, ",", ""), "–", "") == yrs){
+			returnyears = (strtoreal(yrs))
+		}
+		else if (subinstr(yrs, "and", "") != yrs){
+			yrs = subinstr(subinstr(yrs, " ", ""), "and", "")
+			t = tokeninit(",")
+			s = tokenset(t, yrs)
+			getit = tokengetall(t)
+			yrstring = subinstr(yrs, "," + getit[length(getit)], "")
+			t = tokeninit("–")
+			s = tokenset(t, getit[length(getit)])
+			getit = tokengetall(t)
+			for (y=strtoreal(getit[1]); y<=strtoreal(getit[2]); y++){
+				yrstring = yrstring + "," + strofreal(y)
+			}
+			t = tokeninit(",")
+			s = tokenset(t, yrstring)
+			getit = tokengetall(t)
+			returnyears = J(1,length(getit),.)
+			for (y=1; y<=length(getit); y++){
+				returnyears[1,y] = strtoreal(getit[y])
+			}
+		}
+		else {
+			t = tokeninit("–")
+			s = tokenset(t, yrs)
+			getit = tokengetall(t)
+			yrstring = getit[1]
+			for (y=strtoreal(getit[1])+1; y<=strtoreal(getit[2]); y++){
+				yrstring = yrstring + "," + strofreal(y)
+			}
+			t = tokeninit(",")
+			s = tokenset(t, yrstring)
+			getit = tokengetall(t)
+			returnyears = J(1,length(getit),.)
+			for (y=1; y<=length(getit); y++){
+				returnyears[1,y] = strtoreal(getit[y])
+			}
+		}
+		return(returnyears)
+	}
+	
+	// Helper function to parse optional data as inputs, check validity
+	string rowvector validoptions(string scalar subsets, real scalar epid){
 		string rowvector grades
 		string rowvector levels
 		string rowvector fedaids
-		endpoints = endpointstrings()
-		grades = ("grade-pk","grade-k","grade-1","grade-2","grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-10","grade-11","grade-12")
+		grades = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
 		levels = ("undergraduate","graduate","first-professional","post-baccalaureate")
 		fedaids = ("fed","sub-stafford","no-pell-stafford","all")
-		
 	}
 
 	// Helper function that returns string and real/integer variable names
