@@ -119,7 +119,7 @@ mata
 	}
 	
 	// Helper function to parse years available for endpoint
-	real rowvector parseyears7(real scalar matid){
+	string rowvector parseyears(real scalar matid){
 		string matrix endpoints
 		string rowvector getit
 		real rowvector returnyears
@@ -128,7 +128,7 @@ mata
 		endpoints = endpointstrings()
 		yrs = endpoints[3,matid]
 		if (subinstr(subinstr(yrs, ",", ""), "–", "") == yrs){
-			returnyears = (strtoreal(yrs))
+			returnyears = (yrs)
 		}
 		else if (subinstr(yrs, "and", "") != yrs){
 			yrs = subinstr(subinstr(yrs, " ", ""), "and", "")
@@ -144,11 +144,7 @@ mata
 			}
 			t = tokeninit(",")
 			s = tokenset(t, yrstring)
-			getit = tokengetall(t)
-			returnyears = J(1,length(getit),.)
-			for (y=1; y<=length(getit); y++){
-				returnyears[1,y] = strtoreal(getit[y])
-			}
+			returnyears = tokengetall(t)
 		}
 		else {
 			t = tokeninit("–")
@@ -160,23 +156,64 @@ mata
 			}
 			t = tokeninit(",")
 			s = tokenset(t, yrstring)
-			getit = tokengetall(t)
-			returnyears = J(1,length(getit),.)
-			for (y=1; y<=length(getit); y++){
-				returnyears[1,y] = strtoreal(getit[y])
-			}
+			returnyears = tokengetall(t)
 		}
 		return(returnyears)
 	}
 	
-	// Helper function to parse optional data as inputs, check validity
-	string rowvector validoptions(string scalar subsets, real scalar epid){
+	// Helper function to validate a single option against the list of valid options
+	real scalar isvalid(string scalar test, string rowvector vopts){
+		real scalar isopt
+		isopt = 0
+		for (c = 1; c<=length(vopts); c++){
+			if (vopts[c] == test) return(1)
+		}
+	}
+	
+	// Helper function to parse optional data as inputs, taking a single optional data argument, check validity, and return all chosen options
+	string rowvector validoptions(string scalar subset1, real scalar epid){
+		string matrix endpoints
 		string rowvector grades
 		string rowvector levels
 		string rowvector fedaids
-		grades = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
-		levels = ("undergraduate","graduate","first-professional","post-baccalaureate")
-		fedaids = ("fed","sub-stafford","no-pell-stafford","all")
+		string rowvector vopts
+		string rowvector getit
+		string rowvector checkstring
+		string scalar getstring
+		string scalar tlev
+		real rowvector years
+		real scalar isopt1
+		endpoints = endpointstrings()
+		t = tokeninit("=")
+		s = tokenset(t, subset1)
+		getit = tokengetall(t)
+		vopts = parseurls(endpoints[2,epid], "optional")
+		isopt1 = isvalid(getit[1], vopts)
+		if (isopt1 == 1){
+			grades = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
+			levels = ("undergraduate","graduate","first-professional","post-baccalaureate")
+			fedaids = ("fed","sub-stafford","no-pell-stafford")
+			if (getit[1] == "year") years = parseyears(epid)
+			if (subinstr(subinstr(getit[2], ",", ""), ":", "") == getit[2]){
+				checkstring = (getit[2])
+			}
+			else if (subinstr(getit[2], ",", "") != getit[2]){
+				t = tokeninit(",")
+				s = tokenset(t, getit[2])
+				checkstring = tokengetall(t)		
+			}
+			else{
+				if (getit[1] == "year") tlev = years
+				else if (getit[1] == "grade") tlev = grade
+				else if (getit[1] == "level_of_study") tlev = levels
+				else if (getit[1] == "fed_aid_type") tlev = fedaids
+				t = tokeninit(":")
+				s = tokenset(t, getit[2])
+				getit = tokengetall(t)
+				
+			}
+		}
+		else return(("Invalid Option: " + getit[1]))
 	}
 
 	// Helper function that returns string and real/integer variable names
