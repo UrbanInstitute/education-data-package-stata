@@ -270,7 +270,7 @@ mata
 		numvars = length(varinfo[1,.])
 		counting = 0
 		for (c=1; c<=numvars; c++){
-			if (varinfo[3,c] == "string"){
+			if (subinstr(varinfo[3,c], "str", "") != varinfo[3,c]){
 				if (typ == "string") counting = counting + 1
 			}
 			else {
@@ -280,7 +280,7 @@ mata
 		varnametypes = J(1,counting,"")
 		counter1 = 1
 		for (c=1; c<=numvars; c++){
-			if (varinfo[3,c] == "string"){
+			if (subinstr(varinfo[3,c], "str", "") != varinfo[3,c]){
 				if (typ == "string") {
 					varnametypes[1,counter1] = varinfo[1,c]
 					counter1 = counter1 + 1
@@ -395,6 +395,7 @@ mata
 					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
 					if (r != length(vardef[1,.])) labeldef = labeldef + " "
 				}
+				printf(labeldef)
 				stata(labeldef)
 				stata("label values " + varinfo[1,c] + " " + varinfo[1,c] + "df")
 			}
