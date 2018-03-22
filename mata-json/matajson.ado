@@ -1,10 +1,10 @@
-program jsontodataframe
+program educationdata
 version 1.0
 // Beginning section and some structure borrowed from insheetjson - thanks!
-mata: if (findexternal("libjson()")) {} else printf("{err: Error: The required JSON library (libjson) seems to be missing so this command will fail. Read the help file for more information.}\n");
-mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson.}\n");
-syntax [varlist] using/ , [COLumns(string)] [TABLEselector(string)] [LIMIT(integer 0)] [OFFSET(integer 0)] [PRINTonly] [REPlace] [DEBUG] [SAVECONtents(string)] [SHOWresponse] [FOLLOWurl(string)]
-mata: 	dummy=todf("`using'", "`columns'", "`varlist'","`tableselector'", strtoreal("`limit'"), strtoreal("`offset'"), strlen("`printonly'"), strlen( "`replace'"),strlen( "`debug'"), st_local("followurl"), "`savecontents'");
+mata: if (findexternal("libjson()")) {} else printf("{err: Error: The required JSON library (libjson) seems to be missing so this command will fail. Run the following: ssc install libjson}\n");
+mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
+syntax , COLumns(string) [VOPTions(string)]
+mata: 	dummy=getalldata("`columns'", "`voptions'");
 end
 
 mata	
@@ -376,18 +376,11 @@ mata
 		return(nextpage)
 	}
 
-	// Gets all tables, using API to get the varlist and vartypes, and looping through all "nexts", calling gettable
-	real scalar getalltables(string scalar eid, string scalar url2){
-		pointer (class libjson scalar) scalar root
-		pointer (class libjson scalar) scalar results1
+	// Helper function to create dataset
+	real scalar createdataset(string scalar eid){
 		string matrix varinfo
 		string matrix vardef
-		string scalar nextpage
 		string scalar labeldef
-		real scalar spos
-		real scalar pagesize
-		real scalar totalpages
-		real scalar countpage
 		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
@@ -403,26 +396,52 @@ mata
 				stata("label values " + varinfo[1,c] + " " + varinfo[1,c] + "df")
 			}
 		}
+		return(1)
+	}
+
+	// Gets all tables, using API to get the varlist and vartypes, and looping through all "nexts", calling gettable
+	real scalar getalltables(string scalar eid, string scalar url2, real scalar totallen1, real scalar epcount1){
+		pointer (class libjson scalar) scalar root
+		pointer (class libjson scalar) scalar results1
+		string matrix varinfo
+		string scalar nextpage
+		string scalar timetaken
+		string scalar starttime
+		string scalar nowtime
+		real scalar spos
+		real scalar pagesize
+		real scalar totalpages
+		real scalar countpage
+		real scalar timeper
+		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		spos = 1
 		root = libjson::webcall("https://ed-data-portal.urban.org" + url2,"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
 		countpage = 1
-		printf("For %s\n", url2)
-		printf("Downloading and appending page %s of %s from API\n", strofreal(countpage), strofreal(totalpages))
+		starttime = "$S_TIME"
+		printf("Getting data from %s, endpoint %s of %s (%s records)\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
 		nextpage = gettable("https://ed-data-portal.urban.org" + url2, spos, varinfo)
 		if (nextpage!="null"){
 			do {
 				spos = spos + pagesize
 				countpage = countpage + 1
-				printf("Downloading and appending page %s of %s from API\n", strofreal(countpage), strofreal(totalpages))
 				nextpage = gettable(nextpage, spos, varinfo)
+				if (countpage == 10 && epcount1 == 1){
+					nowtime = "$S_TIME"
+					timeper = (Clock(nowtime, "hms") - Clock(starttime, "hms"))
+					timeper = timeper * totalpages * totallen1
+					if (hhC(timeper) == 0 && mmC(timeper) == 0) timetaken = "less than one minute."
+					else if (hhC(timeper) == 0) timetaken = "at least " + strofreal(mmC(timeper)) + " minute(s)."
+					else timetaken = "at least " + strofreal(hhC(timeper)) + " hours and " + strofreal(mmC(timeper)) + " minute(s)."
+					printf("I estimate that the download for the entire file you requested will take %s\n", timetaken)
+					printf("Actual time may vary due to internet speed and file size differences.\n")
+				}
 			} while (nextpage!="null")
 		}
 		return(1)
 	}
-	// result=getalltables("20", "/api/v1/college-university/ipeds/grad-rates/2002/?page=2020")
 	
 	// Main function to get data based on Stata request - calls other helper functions
 	string scalar getalldata(string scalar dataoptions, string scalar opts){
@@ -437,6 +456,10 @@ mata
 		string scalar urltemp
 		real scalar epid
 		real scalar spos
+		real scalar hidereturn
+		real scalar totallen
+		real scalar epcount
+		real scalar tempdata
 		stata("clear")
 		epid = validendpoints(dataoptions)
 		endpoints = endpointstrings()
@@ -457,18 +480,25 @@ mata
 			if (spops[2,i] == "") spops[2,i] = spops[1,i] + "=alldata"
 		}
 		temp1 = validoptions(spops[2,1], epid)
+		epcount = 0
+		printf("Please be patient - Downloading data from API. I'll give you a time estimate in a few seconds.\n")
+		tempdata = createdataset(eid)
 		if (length(spops[1,.]) == 1){
+			totallen = length(temp1)
 			for (i=1; i<=length(temp1); i++){
+				epcount = epcount + 1
 				urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i])
-				getalltables(eid, urltemp)
+				hidereturn = getalltables(eid, urltemp, totallen, epcount)
 			}
 		}
 		else{
 			temp2 = validoptions(spops[2,2], epid)
+			totallen = length(temp1) * length(temp2)
 			for (i=1; i<=length(temp1); i++){
 				for (j=1; j<=length(temp2); j++){
+					epcount = epcount + 1
 					urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j])
-					getalltables(eid, urltemp)
+					hidereturn = getalltables(eid, urltemp, totallen, epcount)
 				}
 			}		
 		}
