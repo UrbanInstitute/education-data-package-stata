@@ -22,8 +22,11 @@ mata
 	string matrix getvarinfo(string scalar url){
 		pointer (class libjson scalar) scalar res
 		pointer (class libjson scalar) scalar trow
+		pointer (class libjson scalar) scalar result
 		string scalar tempvar
 		string scalar tempind
+		real scalar numrows
+		real scalar numrowscheck
 		res = getresults(url)
 		numrows = res->arrayLength()
 		varinfo = J(4,numrows,"")
@@ -37,8 +40,9 @@ mata
 			else if (tempvar == "string"){ 
 				varinfo[3,r] = "str" + trow->getString("string_length", "")
 			}
-			tempind = trow->getString("values", "")
-			if (tempind == "None") varinfo[4,r] = "0"
+			result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + varinfo[1,r])
+			numrowscheck = result->arrayLength()
+			if (numrowscheck == 0) varinfo[4,r] = "0"
 			else varinfo[4,r] = "1"
 		}
 		return(varinfo)		
@@ -395,7 +399,6 @@ mata
 					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
 					if (r != length(vardef[1,.])) labeldef = labeldef + " "
 				}
-				printf(labeldef)
 				stata(labeldef)
 				stata("label values " + varinfo[1,c] + " " + varinfo[1,c] + "df")
 			}
