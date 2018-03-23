@@ -345,35 +345,78 @@ mata
 		root = libjson::webcall(url ,"");
 		result = root->getNode("results")
 		numrows = result->arrayLength()
-		st_addobs(numrows)
-		endpos = startpos + numrows - 1
-		svarnames = getvartypes("string", varinfo)
-		rvarnames = getvartypes("other", varinfo)
-		sdata = J(numrows,length(svarnames),"")
-		rdata = J(numrows,length(rvarnames),.)
-		for (r=1; r<=numrows; r++) {
-			trow = result->getArrayValue(r);
-			for(c=1; c<=length(svarnames); c++) {
-				tval = trow->getString(svarnames[c],"");
-				if (tval == "null") tval = ""
-				sdata[r,c] = tval
+		if (numrows > 0){
+			st_addobs(numrows)
+			endpos = startpos + numrows - 1
+			svarnames = getvartypes("string", varinfo)
+			rvarnames = getvartypes("other", varinfo)
+			sdata = J(numrows,length(svarnames),"")
+			rdata = J(numrows,length(rvarnames),.)
+			for (r=1; r<=numrows; r++) {
+				trow = result->getArrayValue(r);
+				for(c=1; c<=length(svarnames); c++) {
+					tval = trow->getString(svarnames[c],"");
+					if (tval == "null") tval = ""
+					sdata[r,c] = tval
+				}
+				for(c=1; c<=length(rvarnames); c++) {
+					tval = trow->getString(rvarnames[c],"");
+					if (tval == "null") rdata[r,c] = .
+					else rdata[r,c] = strtoreal(tval)
+				}
 			}
-			for(c=1; c<=length(rvarnames); c++) {
-				tval = trow->getString(rvarnames[c],"");
-				if (tval == "null") rdata[r,c] = .
-				else rdata[r,c] = strtoreal(tval)
+			if (length(svarnames) > 0){
+				st_sview(SV,(startpos..endpos)',svarnames)
+				SV[.,.] = sdata[.,.]
+			}
+			if (length(rvarnames) > 0){
+				st_view(V,(startpos..endpos)',rvarnames)
+				V[.,.] = rdata[.,.]
+			}
+			nextpage = root->getString("next", "")
+			return(nextpage)
+		}
+		else return("null")
+	}
+
+	// Helper function to create query strings ?var=x for all potential subset combinations
+	string scalar getquerystrings(string scalar additions){
+		string rowvector result1
+		string rowvector result2
+		string rowvector result3
+		string scalar staticstring
+		string scalar dynamicstring
+		real scalar countstatic
+		if (additions == "") return("")
+		t = tokeninit(";")
+		s = tokenset(t, additions)
+		result1 = tokengetall(t)
+		countstatic = 1
+		staticstring = ""
+		for (c=1; c<=length(result1); c++){
+			t = tokeninit("=")
+			s = tokenset(t, result1[c])
+			result2 = tokengetall(t)
+			if (subinstr(result2[2], ":", "") == result2[2]){
+				if (countstatic == 1) staticstring = staticstring + result1[c]
+				else staticstring = staticstring + "&" + result1[c]
+				countstatic = countstatic + 1
+			}
+			else{
+				t = tokeninit(":")
+				s = tokenset(t, result2[2])
+				result3 = tokengetall(t)
+				dynamicstring = ""
+				for (r=strtoreal(result3[1]); r<=strtoreal(result3[2]); r++){
+					if (r == strtoreal(result3[1])) dynamicstring = dynamicstring + result2[1] + "=" + strofreal(r)
+					else dynamicstring = dynamicstring + "," + strofreal(r)
+				}	
+				if (countstatic == 1) staticstring = staticstring + dynamicstring
+				else staticstring = staticstring + "&" + result1[c]
+				countstatic = countstatic + 1
 			}
 		}
-		if (length(svarnames) > 0){
-			st_sview(SV,(startpos..endpos)',svarnames)
-			SV[.,.] = sdata[.,.]
-		}
-		if (length(rvarnames) > 0){
-			st_view(V,(startpos..endpos)',rvarnames)
-			V[.,.] = rdata[.,.]
-		}
-		nextpage = root->getString("next", "")
-		return(nextpage)
+		return("?" + staticstring)
 	}
 
 	// Helper function to create dataset
@@ -408,17 +451,17 @@ mata
 		string scalar timetaken
 		string scalar starttime
 		string scalar nowtime
-		real scalar spos
 		real scalar pagesize
 		real scalar totalpages
 		real scalar countpage
 		real scalar timeper
 		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
-		spos = 1
 		root = libjson::webcall("https://ed-data-portal.urban.org" + url2,"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
+		spos = 1
+		// TO DO - Count rows in stata dataset and update spos if there is 1 row or more to len(dataset) + 1
 		countpage = 1
 		starttime = "$S_TIME"
 		printf("Getting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
@@ -454,12 +497,10 @@ mata
 		string rowvector res2
 		string rowvector temp1
 		string rowvector temp2
-		string rowvector res3
 		string scalar eid
 		string scalar urltemp
 		string scalar urladds
-		string scalar staticstring
-		string scalar multstring
+		string scalar querystring
 		real scalar epid
 		real scalar spos
 		real scalar spos1
@@ -493,7 +534,7 @@ mata
 					printf("Error, option " + allopts[i] + " not valid. Valid variable selections are as follows:\n")
 					urladds = ""
 					for (c=1; c<=length(varinfo[1,.]); c++){
-						if (stringpos(strofreal(c),("1", 6","11","16","21","26","31","36","41","46","51","56","61","66","71","76","81","86","91","96","101")) > 0) urladds = urladds + varinfo[1,c]
+						if (stringpos(strofreal(c),("1","6","11","16","21","26","31","36","41","46","51","56","61","66","71","76","81","86","91","96","101")) > 0) urladds = urladds + varinfo[1,c]
 						else urladds = urladds + ", " + varinfo[1,c]
 						if (stringpos(strofreal(c),("5","10","15","20","25","30","35","40","45","50","55","60","65","70","75","80","85","90","95","100")) > 0) urladds = urladds + "\n"
 					}
@@ -502,10 +543,7 @@ mata
 				}
 			}
 		}
-		t = tokeninit(";")
-		s = tokenset(t, urladds)
-		res3 = tokengetall(t)
-
+		querystring = getquerystrings(urladds)
 		for (i=1; i<=length(spops[1,.]); i++){
 			if (spops[2,i] == "") spops[2,i] = spops[1,i] + "=alldata"
 		}
@@ -517,7 +555,7 @@ mata
 			totallen = length(temp1)
 			for (i=1; i<=length(temp1); i++){
 				epcount = epcount + 1
-				urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i])
+				urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
 				hidereturn = getalltables(eid, urltemp, totallen, epcount)
 			}
 		}
@@ -527,13 +565,13 @@ mata
 			for (i=1; i<=length(temp1); i++){
 				for (j=1; j<=length(temp2); j++){
 					epcount = epcount + 1
-					urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j])
+					urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
 					hidereturn = getalltables(eid, urltemp, totallen, epcount)
 				}
 			}		
 		}
 		printf("Data successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
-		return("\n")
+		return("")
 	}
 	getalldata("college-university ipeds directory", "year=2011 cbsa=33860")
 
