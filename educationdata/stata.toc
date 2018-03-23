@@ -1,0 +1,4 @@
+v 0.0.1
+d 'EDUCATIONDATA': The package for accessing the Education Data Portal {break}
+d https://ed-data-portal.urban.org/
+p educationdata

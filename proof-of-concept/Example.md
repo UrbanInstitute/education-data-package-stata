@@ -15,3 +15,5 @@ markdoc github.ado, export(sthlp)
 - BUT instead of doing that, just cd to the directory and type: do numplusone.ado and that will register the command with Stata
 - IMPORTANT - every time to change the program, you must run: "capture program drop numplusone" to drop it from memory, and then rerun: "do numplusone.ado" to reregister in memory
 - To install once it's in the docs folder in Github, run: net install numplusone, from("https://ui-research.github.io/education-data-package-stata/")
+- To install the educationdata package, run: net install educationdata, force from("D:/Users/GMacDonald/Documents/education-data-package-stata/educationdata/")
+- Example call: educationdata, col("college-university ipeds directory") vopt("year=2011 cbsa=33860")

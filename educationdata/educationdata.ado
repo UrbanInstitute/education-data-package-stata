@@ -1,14 +1,14 @@
 program educationdata
-version 1.0
-// Beginning section and some structure borrowed from insheetjson - thanks!
+version 15.0
 mata: if (findexternal("libjson()")) {} else printf("{err: Error: The required JSON library (libjson) seems to be missing so this command will fail. Run the following: ssc install libjson}\n");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
-syntax , COLumns(string) [VOPTions(string)]
-mata: 	dummy=getalldata("`columns'", "`voptions'");
+syntax using/ , [SUBset(string)]
+mata: 	dummy=getalldata("`using'", "`subset'");
 end
 
 mata	
 
+	// Beginning section above and some structure borrowed from insheetjson - thanks!;
 	// Helper function that returns results node
 	pointer (class libjson scalar) scalar getresults(string scalar url){
 		pointer (class libjson scalar) scalar root
@@ -468,7 +468,6 @@ mata
 		nextpage = gettable("https://ed-data-portal.urban.org" + url2, spos, varinfo)
 		if (nextpage!="null"){
 			do {
-				printf(".")
 				spos = spos + pagesize
 				countpage = countpage + 1
 				nextpage = gettable(nextpage, spos, varinfo)
@@ -481,7 +480,7 @@ mata
 					else timetaken = "at least " + strofreal(hhC(timeper)) + " hours and " + strofreal(mmC(timeper)) + " minute(s)."
 					printf("\n\nI estimate that the download for the entire file you requested will take %s\n", timetaken)
 					printf("Actual time may vary due to internet speed and file size differences.\n\n")
-					printf("Progress for each enpoint will print to your screen. Please wait...")
+					printf("Progress for each enpoint will print to your screen. Please wait...\n")
 				}
 			} while (nextpage!="null")
 		}
@@ -574,6 +573,5 @@ mata
 		printf("Data successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
 		return("")
 	}
-	getalldata("college-university ipeds directory", "year=2011 cbsa=33860")
 
 end
