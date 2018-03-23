@@ -461,13 +461,14 @@ mata
 		pagesize = results1->arrayLength()
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
 		spos = 1
-		// TO DO - Count rows in stata dataset and update spos if there is 1 row or more to len(dataset) + 1
+		if (st_nobs() > 0) spos = st_nobs() + 1
 		countpage = 1
 		starttime = "$S_TIME"
-		printf("Getting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
+		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
 		nextpage = gettable("https://ed-data-portal.urban.org" + url2, spos, varinfo)
 		if (nextpage!="null"){
 			do {
+				printf(".")
 				spos = spos + pagesize
 				countpage = countpage + 1
 				nextpage = gettable(nextpage, spos, varinfo)
@@ -478,9 +479,9 @@ mata
 					if (hhC(timeper) == 0 && mmC(timeper) == 0) timetaken = "less than one minute."
 					else if (hhC(timeper) == 0) timetaken = "at least " + strofreal(mmC(timeper)) + " minute(s)."
 					else timetaken = "at least " + strofreal(hhC(timeper)) + " hours and " + strofreal(mmC(timeper)) + " minute(s)."
-					printf("I estimate that the download for the entire file you requested will take %s\n", timetaken)
+					printf("\n\nI estimate that the download for the entire file you requested will take %s\n", timetaken)
 					printf("Actual time may vary due to internet speed and file size differences.\n\n")
-					printf("Please wait...\n\n")
+					printf("Progress for each enpoint will print to your screen. Please wait...")
 				}
 			} while (nextpage!="null")
 		}
