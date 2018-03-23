@@ -384,16 +384,16 @@ mata
 		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
-			stata("label var " + varinfo[1,c] + " " + `"""' + varinfo[2,c] + `"""')
+			stata("qui label var " + varinfo[1,c] + " " + `"""' + varinfo[2,c] + `"""')
 			if (varinfo[4,c] == "1"){
 				vardef = getvardefs(varinfo[1,c])
-				labeldef = "label define " + varinfo[1,c] + "df "
+				labeldef = "qui label define " + varinfo[1,c] + "df "
 				for (r=1; r<=length(vardef[1,.]); r++){
 					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
 					if (r != length(vardef[1,.])) labeldef = labeldef + " "
 				}
 				stata(labeldef)
-				stata("label values " + varinfo[1,c] + " " + varinfo[1,c] + "df")
+				stata("qui label values " + varinfo[1,c] + " " + varinfo[1,c] + "df")
 			}
 		}
 		return(1)
@@ -421,7 +421,7 @@ mata
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
 		countpage = 1
 		starttime = "$S_TIME"
-		printf("Getting data from %s, endpoint %s of %s (%s records)\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
+		printf("Getting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
 		nextpage = gettable("https://ed-data-portal.urban.org" + url2, spos, varinfo)
 		if (nextpage!="null"){
 			do {
@@ -436,7 +436,8 @@ mata
 					else if (hhC(timeper) == 0) timetaken = "at least " + strofreal(mmC(timeper)) + " minute(s)."
 					else timetaken = "at least " + strofreal(hhC(timeper)) + " hours and " + strofreal(mmC(timeper)) + " minute(s)."
 					printf("I estimate that the download for the entire file you requested will take %s\n", timetaken)
-					printf("Actual time may vary due to internet speed and file size differences.\n")
+					printf("Actual time may vary due to internet speed and file size differences.\n\n")
+					printf("Please wait...\n\n")
 				}
 			} while (nextpage!="null")
 		}
@@ -447,15 +448,21 @@ mata
 	string scalar getalldata(string scalar dataoptions, string scalar opts){
 		string matrix endpoints
 		string matrix spops
+		string matrix varinfo
 		string rowvector allopts
 		string rowvector validopts
 		string rowvector res2
 		string rowvector temp1
 		string rowvector temp2
+		string rowvector res3
 		string scalar eid
 		string scalar urltemp
+		string scalar urladds
+		string scalar staticstring
+		string scalar multstring
 		real scalar epid
 		real scalar spos
+		real scalar spos1
 		real scalar hidereturn
 		real scalar totallen
 		real scalar epcount
@@ -464,18 +471,41 @@ mata
 		epid = validendpoints(dataoptions)
 		endpoints = endpointstrings()
 		eid = endpoints[1,epid]
+		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		allopts = tokens(opts)
 		validopts = parseurls(endpoints[2,epid], "optional")
 		spops = J(2,length(validopts),"")
 		spops[1,.] = validopts[1,.]
+		urladds = ""
 		for (i=1; i<=length(allopts); i++){
 			t = tokeninit("=")
 			s = tokenset(t, allopts[i])
 			res2 = tokengetall(t)
 			spos = stringpos(res2[1], validopts)
 			if (spos > 0) spops[2,spos] = allopts[i]
-			else return("Error, option " + allopts[i] + " not valid")
+			else{
+				spos1 = stringpos(res2[1], varinfo[1,.])
+				if (spos1 > 0){
+					if (urladds == "") urladds = urladds + allopts[i]
+					else urladds = urladds + ";" + allopts[i]
+				}
+				else {
+					printf("Error, option " + allopts[i] + " not valid. Valid variable selections are as follows:\n")
+					urladds = ""
+					for (c=1; c<=length(varinfo[1,.]); c++){
+						if (stringpos(strofreal(c),("1", 6","11","16","21","26","31","36","41","46","51","56","61","66","71","76","81","86","91","96","101")) > 0) urladds = urladds + varinfo[1,c]
+						else urladds = urladds + ", " + varinfo[1,c]
+						if (stringpos(strofreal(c),("5","10","15","20","25","30","35","40","45","50","55","60","65","70","75","80","85","90","95","100")) > 0) urladds = urladds + "\n"
+					}
+					printf(urladds)
+					return("\n\nDownload failed. Please try again.")
+				}
+			}
 		}
+		t = tokeninit(";")
+		s = tokenset(t, urladds)
+		res3 = tokengetall(t)
+
 		for (i=1; i<=length(spops[1,.]); i++){
 			if (spops[2,i] == "") spops[2,i] = spops[1,i] + "=alldata"
 		}
@@ -502,8 +532,9 @@ mata
 				}
 			}		
 		}
-		return("Data successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
+		printf("Data successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
+		return("\n")
 	}
-	getalldata("college-university ipeds directory", "year=2011")
+	getalldata("college-university ipeds directory", "year=2011 cbsa=33860")
 
 end
