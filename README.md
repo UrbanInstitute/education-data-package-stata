@@ -2,7 +2,7 @@
 
 Welcome to the Education Data Portal Stata Package repository. You'll need an internet connection to install and use the package.
 
-## Install the Package
+### Install the Package
 
 ```stata
 net install educationdata, replace from("https://ui-research.github.io/education-data-package-stata/")
@@ -10,7 +10,7 @@ net install educationdata, replace from("https://ui-research.github.io/education
 
 If you have trouble with this command, uninstall any existing installations using the instructions below, close and re-open Stata, then re-run the command above.
 
-## Testing the package
+### Testing the package
 
 First, ensure you are connected to the internet. Then run one of the simpler examples, such as:
 
@@ -18,7 +18,7 @@ First, ensure you are connected to the internet. Then run one of the simpler exa
 educationdata using "college-university ipeds directory", sub("year=2011 cbsa=33860")
 ```
 
-## Uninstall the Package
+### Uninstall the Package
 
 ```stata
 ado uninstall educationdata
