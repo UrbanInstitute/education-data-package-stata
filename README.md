@@ -8,6 +8,8 @@ Welcome to the Education Data Portal Stata Package repository. You'll need an in
 net install educationdata, replace from("https://ui-research.github.io/education-data-package-stata/")
 ```
 
+If you have trouble with this command, uninstall any existing installations using the instructions below, close and re-open Stata, then re-run the command above.
+
 ## Testing the package
 
 First, ensure you are connected to the internet. Then run one of the simpler examples, such as:
