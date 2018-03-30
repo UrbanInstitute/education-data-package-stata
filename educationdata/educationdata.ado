@@ -478,7 +478,7 @@ mata
 		timetaken2 = timeit(timeper2)
 		printf("\n\nI estimate that the download for the entire file you requested will take between %s and %s.\n", timetaken1, timetaken2)
 		printf("Actual time may vary due to internet speed and file size differences.\n\n")
-		printf("Progress for each enpoint will print to your screen. Please wait...\n")
+		printf("Progress for each enpoint and call to the API will print to your screen. Please wait...\n")
 		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
 		nextpage = gettable("https://ed-data-portal.urban.org" + url2, spos, varinfo)
 		if (nextpage!="null"){
