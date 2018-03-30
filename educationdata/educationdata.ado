@@ -438,6 +438,11 @@ mata
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + varinfo[1,c] + "df")
 			}
+			else if (varinfo[3,c] == "long" || varinfo[3,c] == "float"){
+				labeldef = "qui label define " + varinfo[1,c] + "df -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				stata(labeldef)
+				stata("qui label values " + varinfo[1,c] + " " + varinfo[1,c] + "df")
+			}
 		}
 		return(1)
 	}
