@@ -442,19 +442,28 @@ mata
 		return(1)
 	}
 
+	// Helper function for time taken
+	string scalar timeit(real scalar timeper){
+		string scalar timetaken
+		if (hhC(timeper) == 0 && mmC(timeper) == 0) timetaken = "less than one minute"
+		else if (hhC(timeper) == 0) timetaken = strofreal(mmC(timeper)) + " minute(s)"
+		else timetaken = strofreal(hhC(timeper)) + " hours and " + strofreal(mmC(timeper)) + " minute(s)"
+		return(timetaken)
+	}
+
 	// Gets all tables, using API to get the varlist and vartypes, and looping through all "nexts", calling gettable
 	real scalar getalltables(string scalar eid, string scalar url2, real scalar totallen1, real scalar epcount1){
 		pointer (class libjson scalar) scalar root
 		pointer (class libjson scalar) scalar results1
 		string matrix varinfo
 		string scalar nextpage
-		string scalar timetaken
-		string scalar starttime
-		string scalar nowtime
+		string scalar timetaken1
+		string scalar timetaken2
 		real scalar pagesize
 		real scalar totalpages
 		real scalar countpage
-		real scalar timeper
+		real scalar timeper1
+		real scalar timeper2
 		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		root = libjson::webcall("https://ed-data-portal.urban.org" + url2,"");
 		results1 = root->getNode("results")
@@ -463,25 +472,21 @@ mata
 		spos = 1
 		if (st_nobs() > 0) spos = st_nobs() + 1
 		countpage = 1
-		starttime = "$S_TIME"
+		timeper1 = 500 * totalpages * totallen1
+		timeper2 = 3000 * totalpages * totallen1
+		timetaken1 = timeit(timeper1)
+		timetaken2 = timeit(timeper2)
+		printf("\n\nI estimate that the download for the entire file you requested will take between %s and %s.\n", timetaken1, timetaken2)
+		printf("Actual time may vary due to internet speed and file size differences.\n\n")
+		printf("Progress for each enpoint will print to your screen. Please wait...\n")
 		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
 		nextpage = gettable("https://ed-data-portal.urban.org" + url2, spos, varinfo)
 		if (nextpage!="null"){
 			do {
 				spos = spos + pagesize
 				countpage = countpage + 1
+				printf("Endpoint %s of %s: On page %s of %s\n", strofreal(epcount1), strofreal(totallen1), strofreal(countpage), strofreal(totalpages))
 				nextpage = gettable(nextpage, spos, varinfo)
-				if (countpage == 10 && epcount1 == 1){
-					nowtime = "$S_TIME"
-					timeper = (Clock(nowtime, "hms") - Clock(starttime, "hms"))
-					timeper = timeper * totalpages * totallen1
-					if (hhC(timeper) == 0 && mmC(timeper) == 0) timetaken = "less than one minute."
-					else if (hhC(timeper) == 0) timetaken = "at least " + strofreal(mmC(timeper)) + " minute(s)."
-					else timetaken = "at least " + strofreal(hhC(timeper)) + " hours and " + strofreal(mmC(timeper)) + " minute(s)."
-					printf("\n\nI estimate that the download for the entire file you requested will take %s\n", timetaken)
-					printf("Actual time may vary due to internet speed and file size differences.\n\n")
-					printf("Progress for each enpoint will print to your screen. Please wait...\n")
-				}
 			} while (nextpage!="null")
 		}
 		return(1)
@@ -549,7 +554,7 @@ mata
 		}
 		temp1 = validoptions(spops[2,1], epid)
 		epcount = 0
-		printf("Please be patient - Downloading data from API. I'll give you a time estimate in a few seconds.\n")
+		printf("Please be patient - Downloading data from API. I'll give you a time estimate shortly.\n")
 		tempdata = createdataset(eid)
 		if (length(spops[1,.]) == 1){
 			totallen = length(temp1)
