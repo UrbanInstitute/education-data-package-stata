@@ -477,13 +477,15 @@ mata
 		spos = 1
 		if (st_nobs() > 0) spos = st_nobs() + 1
 		countpage = 1
-		timeper1 = 500 * totalpages * totallen1
-		timeper2 = 3000 * totalpages * totallen1
-		timetaken1 = timeit(timeper1)
-		timetaken2 = timeit(timeper2)
-		printf("\n\nI estimate that the download for the entire file you requested will take between %s and %s.\n", timetaken1, timetaken2)
-		printf("Actual time may vary due to internet speed and file size differences.\n\n")
-		printf("Progress for each enpoint and call to the API will print to your screen. Please wait...\n")
+		if (epcount1 == 1){
+			timeper1 = 500 * totalpages * totallen1
+			timeper2 = 3000 * totalpages * totallen1
+			timetaken1 = timeit(timeper1)
+			timetaken2 = timeit(timeper2)
+			printf("\n\nI estimate that the download for the entire file you requested will take between %s and %s.\n", timetaken1, timetaken2)
+			printf("Actual time may vary due to internet speed and file size differences.\n\n")
+			printf("Progress for each endpoint and call to the API will print to your screen. Please wait...\n")
+		}
 		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
 		nextpage = gettable("https://ed-data-portal.urban.org" + url2, spos, varinfo)
 		if (nextpage!="null"){
