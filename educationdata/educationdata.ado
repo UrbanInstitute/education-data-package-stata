@@ -530,28 +530,30 @@ mata
 		spops = J(2,length(validopts),"")
 		spops[1,.] = validopts[1,.]
 		urladds = ""
-		for (i=1; i<=length(allopts); i++){
-			t = tokeninit("=")
-			s = tokenset(t, allopts[i])
-			res2 = tokengetall(t)
-			spos = stringpos(res2[1], validopts)
-			if (spos > 0) spops[2,spos] = allopts[i]
-			else{
-				spos1 = stringpos(res2[1], varinfo[1,.])
-				if (spos1 > 0){
-					if (urladds == "") urladds = urladds + allopts[i]
-					else urladds = urladds + ";" + allopts[i]
-				}
-				else {
-					printf("Error, option " + allopts[i] + " not valid. Valid variable selections are as follows:\n")
-					urladds = ""
-					for (c=1; c<=length(varinfo[1,.]); c++){
-						if (stringpos(strofreal(c),("1","6","11","16","21","26","31","36","41","46","51","56","61","66","71","76","81","86","91","96","101")) > 0) urladds = urladds + varinfo[1,c]
-						else urladds = urladds + ", " + varinfo[1,c]
-						if (stringpos(strofreal(c),("5","10","15","20","25","30","35","40","45","50","55","60","65","70","75","80","85","90","95","100")) > 0) urladds = urladds + "\n"
+		if (length(varinfo[1,.]) > 0){
+			for (i=1; i<=length(allopts); i++){
+				t = tokeninit("=")
+				s = tokenset(t, allopts[i])
+				res2 = tokengetall(t)
+				spos = stringpos(res2[1], validopts)
+				if (spos > 0) spops[2,spos] = allopts[i]
+				else{
+					spos1 = stringpos(res2[1], varinfo[1,.])
+					if (spos1 > 0){
+						if (urladds == "") urladds = urladds + allopts[i]
+						else urladds = urladds + ";" + allopts[i]
 					}
-					printf(urladds)
-					return("\n\nDownload failed. Please try again.")
+					else {
+						printf("Error, option " + allopts[i] + " not valid. Valid variable selections are as follows:\n")
+						urladds = ""
+						for (c=1; c<=length(varinfo[1,.]); c++){
+							if (stringpos(strofreal(c),("1","6","11","16","21","26","31","36","41","46","51","56","61","66","71","76","81","86","91","96","101")) > 0) urladds = urladds + varinfo[1,c]
+							else urladds = urladds + ", " + varinfo[1,c]
+							if (stringpos(strofreal(c),("5","10","15","20","25","30","35","40","45","50","55","60","65","70","75","80","85","90","95","100")) > 0) urladds = urladds + "\n"
+						}
+						printf(urladds)
+						return("\n\nDownload failed. Please try again.")
+					}
 				}
 			}
 		}
