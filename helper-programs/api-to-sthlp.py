@@ -8,6 +8,9 @@ res = requests.get(url).text
 data = json.loads(res)
 keep_str = ""
 
+# Temporarily hide endpoints
+hide = ["college-university ipeds academic-charges-professional","college-university ipeds academic-charges-general","college-university ipeds program-year-charges","college-university ipeds program-year-charges-cip","college-university ipeds student-financial-aid"]
+
 # Break description up for Stata to read
 def break_desc(t1, t2):
 	max_len = 80
@@ -36,7 +39,8 @@ for i in data["results"]:
 	res_str = res_str[1:]
 	if i["description"] == "": i["description"] = "No description at this time."
 	i["description"] = break_desc(res_str,i["description"])
-	keep_str = keep_str + '{bf:"' + res_str + '"}: ' + i["description"] + '\n'
+	if res_str not in hide:
+		keep_str = keep_str + '{bf:"' + res_str + '"}: ' + i["description"] + '\n'
 
 with open('sthlp_table.txt', 'w') as f:
 	f.write(keep_str)

@@ -5,16 +5,16 @@ and the net price calculator. Identifies institutions as currently active,
 that participate in Title IV federal financial aid programs for which IPEDS is
 It also includes variables derived from the Institutional Characteristics
 such as control and level of institution, highest level and highest degree
-and Carnegie classifications. Data are available for 1980 and 1984–2016.
+and Carnegie classifications.
 
 {bf:"schools ccd directory"}: This endpoint contains school level information on
 mailing addresses, school types, highest and lowest grades offered, and free
 reduced price lunch. This endpoint also contains the school level data on the
-of full-time eqivalent teachers. Data are available for 1986-2015.
+of full-time eqivalent teachers.
 
 {bf:"school-districts saipe"}: This endpoint contains district level data on the size
 the population, the size of the school age population, and the size of the
-age population that is in poverty. These data are available for 1995 - 2016.
+age population that is in poverty.
 
 {bf:"college-university ipeds fall-enrollment"}: This file contains the number of
 enrolled in the fall, by full-time/part-time status, and level of study. For
@@ -23,8 +23,7 @@ is broken down by class level. Institutions with traditional academic year
 systems (semester, quarter, trimester or 4-1-4) report their enrollment as of
 15 or the official fall reporting date of the institution. Institutions with
 systems that differ by program or allow continuous enrollment report students
-are enrolled at any time between August 1 and October 31. Data are available
-1986–2015.
+are enrolled at any time between August 1 and October 31.
 
 {bf:"college-university ipeds fall-enrollment race"}: This file contains the number of
 enrolled in the fall, by race, full-time/part-time status, and level of study.
@@ -33,8 +32,7 @@ and degree-seeking is broken down by class level. Institutions with traditional
 year calendar systems (semester, quarter, trimester or 4-1-4) report their
 as of October 15 or the official fall reporting date of the institution.
 with calendar systems that differ by program or allow continuous enrollment
-students that are enrolled at any time between August 1 and October 31. Data
-available from 1986–2015.
+students that are enrolled at any time between August 1 and October 31.
 
 {bf:"college-university ipeds fall-enrollment sex"}: This file contains the number of
 enrolled in the fall, by sex, full-time/part-time status, and level of study.
@@ -43,8 +41,7 @@ and degree-seeking is broken down by class level. Institutions with traditional
 year calendar systems (semester, quarter, trimester or 4-1-4) report their
 as of October 15 or the official fall reporting date of the institution.
 with calendar systems that differ by program or allow continuous enrollment
-students that are enrolled at any time between August 1 and October 31. Data
-available from 1986–2015.
+students that are enrolled at any time between August 1 and October 31.
 
 {bf:"college-university ipeds fall-enrollment race sex"}: This file contains the number
 students enrolled in the fall, by race, sex, full-time/part-time status, and
@@ -53,8 +50,7 @@ and degree-seeking is broken down by class level. Institutions with traditional
 year calendar systems (semester, quarter, trimester or 4-1-4) report their
 as of October 15 or the official fall reporting date of the institution.
 with calendar systems that differ by program or allow continuous enrollment
-students that are enrolled at any time between August 1 and October 31. Data
-available from 1986–2015.
+students that are enrolled at any time between August 1 and October 31.
 
 {bf:"college-university ipeds fall-enrollment age"}: This endpoint contains the number
 students enrolled in the fall, by age categories, full-time/part-time status
@@ -63,8 +59,7 @@ quarter, trimester or 4-1-4) report their enrollment as of October 15 or the
 fall reporting date of the institution. Institutions with calendar systems that
 by program or allow continuous enrollment report students that are enrolled at
 time between August 1 and October 31. Submission of enrollment by age
-is optional in even-numbered years. Data are available for 1991, 1993, 1995,
-and 1999–2016.
+is optional in even-numbered years.
 
 {bf:"college-university ipeds fall-enrollment age sex"}: This endpoint contains the
 of students enrolled in the fall, by age categories, sex, full-time/part-time
@@ -73,20 +68,7 @@ and level of study. Institutions with traditional academic year calendar
 or the official fall reporting date of the institution. Institutions with
 systems that differ by program or allow continuous enrollment report students
 are enrolled at any time between August 1 and October 31. Submission of
-by age categories is optional in even-numbered years. Data are available for
-1993, 1995, 1997, and 1999–2016.
-
-{bf:"college-university ipeds fall-retention"}: The first-year retention rate data
-the percentage of first-year students who had persisted in or completed their
-program a year later. Data are available from 2003–2016.
-
-{bf:"college-university ipeds student-faculty-ratio"}: Student-to-faculty ratio is
-as total FTE students not in graduate or professional programs divided by total
-instructional staff not teaching in graduate or professional programs. All data
-this file is applicable only to institutions with undergraduate students. Data
-available from 2009–2016.
-
-{bf:"college-university ipeds student-financial-aid"}: No description at this time.
+by age categories is optional in even-numbered years.
 
 {bf:"college-university ipeds grad-rates-200pct"}: This endpoint contains the
 rate status as of August 31, at the end of the academic year, for the cohort of
@@ -96,7 +78,7 @@ years prior, the number of bachelor degree seeking students who completed a
 degree within 100, 150 or 200 percent on normal time. Data for less than 4-year
 include the number of full-time, first-time students who enrolled four academic
 prior, the number of students who completed any degree/certificate within 100,
-or 200 percent of normal time. These data are only available from 2007 to 2015.
+or 200 percent of normal time.
 
 {bf:"college-university ipeds institutional-characteristics"}: This endpoint contains
 on program and award level offerings, control and affiliation of institution.
@@ -128,8 +110,7 @@ year institutions include the number of full-time, first-time students who
 three academic years prior, the number of students who completed any
 within 100 or 150 percent of normal time and the number of students who
 out. The number of students who completed a degree/certificate within 100
-of normal time is not available by race and sex. These data are only available
-1996 to 2015.
+of normal time is not available by race and sex.
 
 {bf:"college-university ipeds grad-rates-pell"}: This endpoint contains the graduation
 status as of August 31, at the end of the academic year, for three subcohorts
@@ -144,8 +125,7 @@ within 150 percent of normal time, the number who completed a bachelor's degree
 than a bachelor's degree are also included for four year institutions. Data for
 year and less-than 2-year institutions include the number of full-time,
 students who enrolled three academic years prior, the number of students who
-any degree/certificate 150 percent of normal time. These data are only
-for the 2015/16 academic year.
+any degree/certificate 150 percent of normal time.
 
 {bf:"college-university ipeds outcome-measures"}: This endpoint contains award and
 data from degree-granting institutions on four undergraduate cohorts that
@@ -153,7 +133,6 @@ an institution eight academic years ago at two points in time: six academic
 after entry and eight academic years after entry. The four cohorts of
 undergraduates are: full-time, first-time entering; part-time, first-time
 full-time, non-first-time entering; and part-time, non-first-time entering.
-data are only available for the 2015/16 academic year.
 
 {bf:"college-university ipeds completions-cip"}: This endpoint contains the number of
 by type of program, level of award (certificate or degree), first or second
@@ -166,8 +145,7 @@ data at the 2-digit CIP level until 2001, after that, we collapsed the 6-digit
 data to the 2-digit level until 2015.
 
 {bf:"college-university ipeds completers"}: This endpoint contains the number of
-who completed any degree or certificate by race/ethnicity and gender. These
-are only available from 2011-2015.
+who completed any degree or certificate by race/ethnicity and gender.
 
 {bf:"college-university ipeds enrollment-headcount"}: This endpoint contains the
 head count of students enrolled over a 12-month period for both undergraduate
@@ -199,15 +177,6 @@ first-time students. Writing scores for both SAT and ACT are no longer
 The possible values for the admission consideration variables have changed from
 data. "Do not know" is no longer an option and "considered but not required"
 added.
-
-{bf:"college-university ipeds academic-charges-professional"}: No description at this
-
-
-{bf:"college-university ipeds academic-charges-general"}: No description at this time.
-
-{bf:"college-university ipeds program-year-charges"}: No description at this time.
-
-{bf:"college-university ipeds program-year-charges-cip"}: No description at this time.
 
 {bf:"college-university ipeds enrollment-full-time-equivalent"}: This endpoint contains
 on instructional activity measured in total credit and/or contact hours
