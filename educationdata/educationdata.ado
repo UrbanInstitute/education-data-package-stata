@@ -523,7 +523,8 @@ mata
 		real scalar totallen
 		real scalar epcount
 		real scalar tempdata
-		stata("clear")
+		X = st_data(.,.)
+		if (length(X[.,.]) > 0) return("You currently have data loaded in Stata. Please run" + `"""' + "clear" + `"""' + " in the Stata console to remove your current dataset before running this command.")
 		epid = validendpoints(dataoptions)
 		endpoints = endpointstrings()
 		eid = endpoints[1,epid]
