@@ -524,7 +524,11 @@ mata
 		real scalar epcount
 		real scalar tempdata
 		X = st_data(.,.)
-		if (length(X[.,.]) > 0) return("You currently have data loaded in Stata. Please run" + `"""' + "clear" + `"""' + " in the Stata console to remove your current dataset before running this command.")
+		if (length(X[.,.]) > 0) {
+			printf("Error: You currently have data loaded in Stata. Please run " + `"""' + "clear" + `"""' + " in the Stata console to remove your current dataset before running this command.")
+			return("")
+		}
+		else stata("clear")
 		epid = validendpoints(dataoptions)
 		endpoints = endpointstrings()
 		eid = endpoints[1,epid]
@@ -575,6 +579,7 @@ mata
 				epcount = epcount + 1
 				urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
 				hidereturn = getalltables(eid, urltemp, totallen, epcount)
+				stata("compress")
 			}
 		}
 		else{
@@ -585,6 +590,7 @@ mata
 					epcount = epcount + 1
 					urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
 					hidereturn = getalltables(eid, urltemp, totallen, epcount)
+					stata("compress")
 				}
 			}		
 		}
