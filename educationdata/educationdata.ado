@@ -424,24 +424,27 @@ mata
 		string matrix varinfo
 		string matrix vardef
 		string scalar labeldef
+		string scalar labelshort
 		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
 			stata("qui label var " + varinfo[1,c] + " " + `"""' + varinfo[2,c] + `"""')
+			if (strlen(varinfo[1,c]) > 30) labelshort = substr(varinfo[1,c], 1, 30) + "df"
+			else labelshort = varinfo[1,c] + "df"
 			if (varinfo[4,c] == "1"){
 				vardef = getvardefs(varinfo[1,c])
-				labeldef = "qui label define " + varinfo[1,c] + "df "
+				labeldef = "qui label define " + labelshort + " "
 				for (r=1; r<=length(vardef[1,.]); r++){
 					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
 					if (r != length(vardef[1,.])) labeldef = labeldef + " "
 				}
 				stata(labeldef)
-				stata("qui label values " + varinfo[1,c] + " " + varinfo[1,c] + "df")
+				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
 			else if (varinfo[3,c] == "long" || varinfo[3,c] == "float"){
-				labeldef = "qui label define " + varinfo[1,c] + "df -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
 				stata(labeldef)
-				stata("qui label values " + varinfo[1,c] + " " + varinfo[1,c] + "df")
+				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
 		}
 		return(1)
