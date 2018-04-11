@@ -592,7 +592,7 @@ mata
 				}
 			}		
 		}
-		stata("compress")
+		stata("qui compress")
 		printf("Data successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
 		return("")
 	}
