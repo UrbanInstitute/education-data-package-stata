@@ -579,7 +579,6 @@ mata
 				epcount = epcount + 1
 				urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
 				hidereturn = getalltables(eid, urltemp, totallen, epcount)
-				stata("compress")
 			}
 		}
 		else{
@@ -590,10 +589,10 @@ mata
 					epcount = epcount + 1
 					urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
 					hidereturn = getalltables(eid, urltemp, totallen, epcount)
-					stata("compress")
 				}
 			}		
 		}
+		stata("compress")
 		printf("Data successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
 		return("")
 	}
