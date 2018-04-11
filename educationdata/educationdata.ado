@@ -2,8 +2,8 @@ program educationdata
 version 11.0
 mata: if (findexternal("libjson()")) {} else printf("{err: Error: The required JSON library (libjson) seems to be missing so this command will fail. Run the following: ssc install libjson}\n");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
-syntax using/ , [SUBset(string)]
-mata: 	dummy=getalldata("`using'", "`subset'");
+syntax using/ , [SUBset(string)] [COLumns(string)]
+mata: 	dummy=getalldata("`using'", "`columns'", "`subset'");
 end
 
 mata
@@ -507,7 +507,7 @@ mata
 	}
 	
 	// Main function to get data based on Stata request - calls other helper functions
-	string scalar getalldata(string scalar dataoptions, string scalar opts){
+	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts){
 		string matrix endpoints
 		string matrix spops
 		string matrix varinfo
@@ -597,6 +597,7 @@ mata
 			}		
 		}
 		stata("qui compress")
+		if (vlist != "") stata("keep " + vlist)
 		printf("\nData successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
 		return("")
 	}
