@@ -465,6 +465,7 @@ mata
 		pointer (class libjson scalar) scalar results1
 		string matrix varinfo
 		string scalar nextpage
+		string scalar timea
 		string scalar timetaken1
 		string scalar timetaken2
 		real scalar pagesize
@@ -485,7 +486,10 @@ mata
 			timeper2 = 3000 * totalpages * totallen1
 			timetaken1 = timeit(timeper1)
 			timetaken2 = timeit(timeper2)
-			printf("\n\nI estimate that the download for the entire file you requested will take between %s and %s.\n", timetaken1, timetaken2)
+			timea = "\nI estimate that the download for the entire file you requested will take "
+			if (timetaken1 == "less than one minute" && timetaken2 == "less than one minute") printf(timea + "less than one minute.\n")
+			else if (timetaken1 == "less than one minute" && timetaken2 != "less than one minute") printf(timea + "less than " + timetaken2 + ".\n")
+			else printf(timea + "between %s and %s.\n", timetaken1, timetaken2)
 			printf("Actual time may vary due to internet speed and file size differences.\n\n")
 			printf("Progress for each endpoint and call to the API will print to your screen. Please wait...\n")
 		}
@@ -593,7 +597,7 @@ mata
 			}		
 		}
 		stata("qui compress")
-		printf("Data successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
+		printf("\nData successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
 		return("")
 	}
 
