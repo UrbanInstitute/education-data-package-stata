@@ -462,18 +462,13 @@ mata
 		else if (result1[1] == "district") st1 = "school-districts"
 		else if (result1[1] == "college") st1 = "college-university"
 		else return("Error2")
-		for (r=1; r<=length(eps[2,.]); r++){
-			voptions = parseurls(eps[2,r], "required")
-			if (voptions[1] == st1){
-				toreturn = ""
-				for (c=1; c<=length(voptions); c++){
-					if (c == 1) toreturn = toreturn + voptions[c]
-					else toreturn = toreturn + " " + voptions[c]
-				}
-				return(toreturn)
-			}	
+		result1[1] = st1
+		toreturn = ""
+		for (r=1; r<=length(result1); r++){
+			if (r == 1) toreturn = toreturn + result1[r]
+			else toreturn = toreturn + " " + result1[r]
 		}
-		return("Error3")
+		return(toreturn)
 	}
 
 	// Helper function for time taken
