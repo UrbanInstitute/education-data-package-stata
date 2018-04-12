@@ -1,6 +1,6 @@
 # Changelog for educationdata Stata Package
 
-#### 0.0.4
+#### 0.0.4 (Development Version, not publicly released)
 
 - Skips validity checks for variable names if the endpoint returns no formatted variables, so no error is thrown that stops the program
 - Removes API endpoints that are hidden because they are not yet available, from the Stata help file
@@ -11,7 +11,7 @@
 - Adds a col() option to only keep certain variables once downloaded
 - 
 
-#### 0.0.3
+#### 0.0.3 (Current Stable Version)
 
 - Fixes the error that stopped the program when an API call returns no results
 
