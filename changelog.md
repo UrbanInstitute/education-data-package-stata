@@ -9,7 +9,8 @@
 - Adds compression to the dataset after it is fully downloaded
 - Modifies time estimate language to be more sensible English
 - Adds a col() option to only keep certain variables once downloaded
-- 
+- Uses hard coded "short names" for college-university, school-districts, and schools
+- Orders the datasets in the Stata help file in the order specified by the API
 
 #### 0.0.3 (Current Stable Version)
 
