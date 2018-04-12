@@ -17,7 +17,7 @@ If you have trouble with this command, uninstall any existing installations usin
 First, ensure you are connected to the internet. Then run one of the simpler examples, such as:
 
 ```stata
-educationdata using "college-university ipeds directory", sub("year=2011 cbsa=33860")
+educationdata using "college ipeds directory", sub("year=2011 cbsa=33860")
 ```
 
 ### Uninstall the Package

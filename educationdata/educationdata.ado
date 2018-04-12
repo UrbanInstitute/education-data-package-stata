@@ -326,7 +326,7 @@ mata
 				tempstring = tempstring + tokenstemp[i]
 				if (i != length(tokenstemp)) tempstring = tempstring + " "
 			}
-			vardefs[2,r] = tempstring
+			vardefs[2,r] = subinstr(tempstring, " - ", "-")
 		}
 		return(vardefs)
 	}

@@ -255,7 +255,7 @@ valid variables in the dataset specified after the "using" statement.
 2. {bf:{opt col:umns(str)}}: Specifies the variables you would like to select, if you only
 want a subset of variables. So, you might say:
 
-. educationdata using "college-university ipeds directory", col("unitid year")
+. educationdata using "college ipeds directory", col("unitid year")
 
 {title:Installing package dependencies}
 
@@ -271,21 +271,21 @@ install {bf:libjson} by running the following command:
 {bf:Examples of downloading full datasets}: 
 
     Download the full directory of primary and secondary school information:
-        . educationdata using "schools ccd directory"
+        . educationdata using "school ccd directory"
 
     Download the full primary and secondary school enrollment totals by grade:
-        . educationdata using "schools ccd enrollment"
+        . educationdata using "school ccd enrollment"
         
 {bf:Examples of subsetting datasets}:
         
     Download the full directory of colleges and universities for 2011
-        . educationdata using "college-university ipeds directory", sub("year=2011")
+        . educationdata using "college ipeds directory", sub("year=2011")
         
     Download the full directory of colleges and universities for 2011 in the Montgomery, AL metro area.
-        . educationdata using "college-university ipeds directory", sub("year=2011 cbsa=33860")
+        . educationdata using "college ipeds directory", sub("year=2011 cbsa=33860")
 
     Download the full directory for 2011 in Montgomery, AL and keep only the unitid and year variables.
-    	. educationdata using "college-university ipeds directory", sub("year=2011 cbsa=33860") col("unitid year")
+    	. educationdata using "college ipeds directory", sub("year=2011 cbsa=33860") col("unitid year")
         
 {title:Author}
 

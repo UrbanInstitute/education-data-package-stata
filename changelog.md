@@ -12,6 +12,7 @@
 - Uses hard coded "short names" for college-university, school-districts, and schools
 - Orders the datasets in the Stata help file in the order specified by the API
 - Throws a helpful error when the user does not select a valid dataset name
+- Labels no longer have spaces before and after hyphens
 
 #### 0.0.3 (Current Stable Version)
 
