@@ -70,6 +70,7 @@ mata
 		string rowvector splits
 		string scalar splitr
 		string scalar keepvars
+		real scalar stopme
 		url = subinstr(url, "/api/v1/", "")
 		t = tokeninit("/")
 		s = tokenset(t, url)
@@ -450,6 +451,31 @@ mata
 		return(1)
 	}
 
+	// Helper function to translate short dataset name to full name
+	string scalar shorttolongname(string scalar shortname, string matrix eps){
+		string rowvector voptions
+		string rowvector result1
+		string scalar toreturn
+		result1 = tokens(shortname)
+		if (length(result1) < 2) return("Error1")
+		if (result1[1] == "school") st1 = "schools"
+		else if (result1[1] == "district") st1 = "school-districts"
+		else if (result1[1] == "college") st1 = "college-university"
+		else return("Error2")
+		for (r=1; r<=length(eps[2,.]); r++){
+			voptions = parseurls(eps[2,r], "required")
+			if (voptions[1] == st1){
+				toreturn = ""
+				for (c=1; c<=length(voptions); c++){
+					if (c == 1) toreturn = toreturn + voptions[c]
+					else toreturn = toreturn + " " + voptions[c]
+				}
+				return(toreturn)
+			}	
+		}
+		return("Error3")
+	}
+
 	// Helper function for time taken
 	string scalar timeit(real scalar timeper){
 		string scalar timetaken
@@ -520,6 +546,7 @@ mata
 		string scalar urltemp
 		string scalar urladds
 		string scalar querystring
+		string scalar dataoptions1
 		real scalar epid
 		real scalar spos
 		real scalar spos1
@@ -533,8 +560,21 @@ mata
 			return("")
 		}
 		else stata("clear")
-		epid = validendpoints(dataoptions)
 		endpoints = endpointstrings()
+		dataoptions1 = shorttolongname(dataoptions, endpoints)
+		if (dataoptions1 == "Error1"){
+			printf("Error: You must enter the complete name of a dataset in the 'using' statement. The first is the 'short' name for the data category, and the remaining words are the unique name of the dataset. E.g., using " + `"""' + "school directory" + `"""' + ". Type " + `"""' + "help educationdata" + `"""' + " to learn more.")
+			return("")
+		}
+		else if (dataoptions1 == "Error2"){
+			printf("Error: The option you selected was invalid. The three options are: " + `"""' + "school" + `"""' + ", " + `"""' + "district" + `"""' + ", and " + `"""' + "college" + `"""' + ". Type " + `"""' + "help educationdata" + `"""' + " to learn more.")
+			return("")			
+		}
+		else if (dataoptions1 == "Error3"){
+			printf("Error: The name of the category ('school', 'district', or 'college') is correct, but the name of the dataset you chose is not. Please verify the list of allowed options by typing " + `"""' + "help educationdata" + `"""' + ".")
+			return("")
+		}
+		epid = validendpoints(dataoptions1)
 		eid = endpoints[1,epid]
 		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		allopts = tokens(opts)
