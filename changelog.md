@@ -13,6 +13,7 @@
 - Orders the datasets in the Stata help file in the order specified by the API
 - Throws a helpful error when the user does not select a valid dataset name
 - Labels no longer have spaces before and after hyphens
+- Add feature that validates required options, and allows for shortened grade numbers (e.g., pk OR grade-pk) for grade inputs
 
 #### 0.0.3 (Current Stable Version)
 

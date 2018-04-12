@@ -183,6 +183,36 @@ mata
 		}
 		return(0)
 	}
+
+	// Helper function to check if item is in a list
+	real scalar iteminlist(string scalar i, string rowvector tlist){
+		real scalar isinlist
+		isinlist = 0
+		for (r=1; r<=length(tlist); r++){
+			if (i == tlist[r]) isinlist = 1
+		}
+		return(isinlist)
+	}
+
+	// Helper function to validate against list
+	string rowvector checkinglist(string rowvector alist, string scalar tocheck){
+		string rowvector tochecklist
+		string rowvector toaddlist
+		if (tocheck == "grade") { 
+			tochecklist = ("grade-pk","grade-k","grade-1","grade-2","grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-10","grade-11","grade-12","grade-99","-1","0","1","2","3","4","5","6","7","8","9","10","11","12","99")
+			toaddlist = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
+		}
+		else if (tocheck == "level_of_study") tochecklist = ("undergraduate","graduate","first-professional","post-baccalaureate","1","2","3","4")
+		else if (tocheck == "fed_aid_type") tochecklist = ("fed","sub-stafford","no-pell-stafford","1","2","3")
+		else return(alist)
+		for (c=1; c<=length(alist); c++){
+			if (iteminlist(alist[c],tochecklist) == 0) {
+				if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0) return(("Error",""))
+				else alist[c] = "grade-" + alist[c]
+			}
+		}
+		return(alist)
+	}
 	
 	// Helper function to parse optional data as inputs, taking a single optional data argument, check validity, and return all chosen options
 	string rowvector validoptions(string scalar subset1, real scalar epid){
@@ -193,9 +223,10 @@ mata
 		string rowvector vopts
 		string rowvector getit
 		string rowvector tlev
+		string rowvector years
+		string rowvector checklist
 		string scalar getstring
 		string scalar tempadd
-		string rowvector years
 		real scalar isopt1
 		real scalar spos1
 		real scalar spos2
@@ -212,12 +243,16 @@ mata
 			if (getit[1] == "year") years = parseyears(epid)
 			if (getit[2] != "alldata"){
 				if (subinstr(subinstr(getit[2], ",", ""), ":", "") == getit[2]){
-					return((getit[2]))
+					checklist = checkinglist((getit[2]), getit[1])
+					if (checklist[1] == "Error") return(("Invalid Option: " + getit[1]))
+					else return(checklist)
 				}
 				else if (subinstr(getit[2], ",", "") != getit[2]){
 					t = tokeninit(",")
 					s = tokenset(t, getit[2])
-					return(tokengetall(t))		
+					checklist = checkinglist(tokengetall(t), getit[1])
+					if (checklist[1] == "Error") return(("Invalid Option: " + getit[1]))
+					else return(checklist)	
 				}
 				else{
 					tempadd = ""
@@ -240,7 +275,9 @@ mata
 						}
 						t = tokeninit(",")
 						s = tokenset(t, getstring)
-						return(tokengetall(t))
+						checklist = checkinglist(tokengetall(t), getit[1])
+						if (checklist[1] == "Error") return(("Invalid Option: " + getit[1]))
+						else return(checklist)	
 					}
 					else return(("Invalid Option selection: " + getit[1] + ":" + getit[2]))
 				}
@@ -498,6 +535,7 @@ mata
 		root = libjson::webcall("https://ed-data-portal.urban.org" + url2,"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
+		printf(strofreal(pagesize))
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
 		spos = 1
 		if (st_nobs() > 0) spos = st_nobs() + 1
@@ -609,6 +647,10 @@ mata
 			if (spops[2,i] == "") spops[2,i] = spops[1,i] + "=alldata"
 		}
 		temp1 = validoptions(spops[2,1], epid)
+		if (tokens(temp1[1])[1] == "Invalid"){ 
+			printf(temp1[1])
+			return("")
+		}
 		epcount = 0
 		printf("Please be patient - Downloading data from API. I'll give you a time estimate shortly.\n")
 		tempdata = createdataset(eid)
@@ -622,6 +664,10 @@ mata
 		}
 		else{
 			temp2 = validoptions(spops[2,2], epid)
+			if (tokens(temp2[1])[1] == "Invalid"){ 
+				printf(temp2[1])
+				return("")
+			}
 			totallen = length(temp1) * length(temp2)
 			for (i=1; i<=length(temp1); i++){
 				for (j=1; j<=length(temp2); j++){
