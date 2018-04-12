@@ -1,6 +1,6 @@
 # Changelog for educationdata Stata Package
 
-### 0.0.4
+#### 0.0.4
 
 - Skips validity checks for variable names if the endpoint returns no formatted variables, so no error is thrown that stops the program
 - Removes API endpoints that are hidden because they are not yet available, from the Stata help file
@@ -11,16 +11,16 @@
 - Adds a col() option to only keep certain variables once downloaded
 - 
 
-### 0.0.3
+#### 0.0.3
 
 - Fixes the error that stopped the program when an API call returns no results
 
-### 0.0.2
+#### 0.0.2
 
 - Adding formats "-1", "-2", and "-3" to all numeric variables without a format value
 - Providing a more useful time range estimate, given Stata can only measure the time when the program starts
 - Printing more detailed progress to the console for the user when the data are downloading
 
-### 0.0.1
+#### 0.0.1
 
 Hello world!

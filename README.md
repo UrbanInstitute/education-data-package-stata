@@ -4,6 +4,8 @@ Welcome to the Education Data Portal Stata Package repository. You'll need an in
 
 ### Install the Package
 
+If you don't have `libjson` installed, the package will prompt you to install it. Or, you can type `ssc install libjson`.
+
 ```stata
 net install educationdata, replace from("https://ui-research.github.io/education-data-package-stata/")
 ```
@@ -30,6 +32,10 @@ If you recieve the error `criterion matches more than one package` and you're ru
 adoupdate
 ado uninstall educationdata
 ```
+
+### Changes
+
+To view the changes made to the package over time, see the [changelog](https://github.com/UI-Research/education-data-package-stata/blob/master/changelog.md).
 
 ## Personal notes on building a Stata package, and using this one in general
 
