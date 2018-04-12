@@ -570,11 +570,11 @@ mata
 			printf("Error: The option you selected was invalid. The three options are: " + `"""' + "school" + `"""' + ", " + `"""' + "district" + `"""' + ", and " + `"""' + "college" + `"""' + ". Type " + `"""' + "help educationdata" + `"""' + " to learn more.")
 			return("")			
 		}
-		else if (dataoptions1 == "Error3"){
-			printf("Error: The name of the category ('school', 'district', or 'college') is correct, but the name of the dataset you chose is not. Please verify the list of allowed options by typing " + `"""' + "help educationdata" + `"""' + ".")
-			return("")
-		}
 		epid = validendpoints(dataoptions1)
+		if (epid == 0 || dataoptions1 == "Error3"){
+			printf("Error: The name of the category ('school', 'district', or 'college') is correct, but the name of the dataset you chose is not. Please verify the list of allowed options by typing " + `"""' + "help educationdata" + `"""' + ".")
+			return("")			
+		}
 		eid = endpoints[1,epid]
 		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		allopts = tokens(opts)
