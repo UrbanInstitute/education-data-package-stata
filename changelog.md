@@ -1,6 +1,10 @@
 # Changelog for educationdata Stata Package
 
-#### 0.0.4 (Development Version, not publicly released)
+#### 0.1.1 (Development Version, not yet released)
+
+- 
+
+#### 0.1.0 (Current Stable Version)
 
 - Skips validity checks for variable names if the endpoint returns no formatted variables, so no error is thrown that stops the program
 - Removes API endpoints that are hidden because they are not yet available, from the Stata help file
@@ -15,7 +19,7 @@
 - Labels no longer have spaces before and after hyphens
 - Add feature that validates required options, and allows for shortened grade numbers (e.g., pk OR grade-pk) for grade inputs
 
-#### 0.0.3 (Current Stable Version)
+#### 0.0.3
 
 - Fixes the error that stopped the program when an API call returns no results
 

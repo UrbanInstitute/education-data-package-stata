@@ -2,8 +2,8 @@ program educationdata
 version 11.0
 mata: if (findexternal("libjson()")) {} else printf("{err: Error: The required JSON library (libjson) seems to be missing so this command will fail. Run the following: ssc install libjson}\n");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
-syntax using/ , [SUBset(string)]
-mata: 	dummy=getalldata("`using'", "`subset'");
+syntax using/ , [SUBset(string)] [COLumns(string)]
+mata: 	dummy=getalldata("`using'", "`columns'", "`subset'");
 end
 
 mata
@@ -70,6 +70,7 @@ mata
 		string rowvector splits
 		string scalar splitr
 		string scalar keepvars
+		real scalar stopme
 		url = subinstr(url, "/api/v1/", "")
 		t = tokeninit("/")
 		s = tokenset(t, url)
@@ -182,6 +183,36 @@ mata
 		}
 		return(0)
 	}
+
+	// Helper function to check if item is in a list
+	real scalar iteminlist(string scalar i, string rowvector tlist){
+		real scalar isinlist
+		isinlist = 0
+		for (r=1; r<=length(tlist); r++){
+			if (i == tlist[r]) isinlist = 1
+		}
+		return(isinlist)
+	}
+
+	// Helper function to validate against list
+	string rowvector checkinglist(string rowvector alist, string scalar tocheck){
+		string rowvector tochecklist
+		string rowvector toaddlist
+		if (tocheck == "grade") { 
+			tochecklist = ("grade-pk","grade-k","grade-1","grade-2","grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-10","grade-11","grade-12","grade-99","-1","0","1","2","3","4","5","6","7","8","9","10","11","12","99")
+			toaddlist = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
+		}
+		else if (tocheck == "level_of_study") tochecklist = ("undergraduate","graduate","first-professional","post-baccalaureate","1","2","3","4")
+		else if (tocheck == "fed_aid_type") tochecklist = ("fed","sub-stafford","no-pell-stafford","1","2","3")
+		else return(alist)
+		for (c=1; c<=length(alist); c++){
+			if (iteminlist(alist[c],tochecklist) == 0) {
+				if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0) return(("Error",""))
+				else alist[c] = "grade-" + alist[c]
+			}
+		}
+		return(alist)
+	}
 	
 	// Helper function to parse optional data as inputs, taking a single optional data argument, check validity, and return all chosen options
 	string rowvector validoptions(string scalar subset1, real scalar epid){
@@ -192,9 +223,10 @@ mata
 		string rowvector vopts
 		string rowvector getit
 		string rowvector tlev
+		string rowvector years
+		string rowvector checklist
 		string scalar getstring
 		string scalar tempadd
-		string rowvector years
 		real scalar isopt1
 		real scalar spos1
 		real scalar spos2
@@ -211,12 +243,16 @@ mata
 			if (getit[1] == "year") years = parseyears(epid)
 			if (getit[2] != "alldata"){
 				if (subinstr(subinstr(getit[2], ",", ""), ":", "") == getit[2]){
-					return((getit[2]))
+					checklist = checkinglist((getit[2]), getit[1])
+					if (checklist[1] == "Error") return(("Invalid Option: " + getit[1]))
+					else return(checklist)
 				}
 				else if (subinstr(getit[2], ",", "") != getit[2]){
 					t = tokeninit(",")
 					s = tokenset(t, getit[2])
-					return(tokengetall(t))		
+					checklist = checkinglist(tokengetall(t), getit[1])
+					if (checklist[1] == "Error") return(("Invalid Option: " + getit[1]))
+					else return(checklist)	
 				}
 				else{
 					tempadd = ""
@@ -239,7 +275,9 @@ mata
 						}
 						t = tokeninit(",")
 						s = tokenset(t, getstring)
-						return(tokengetall(t))
+						checklist = checkinglist(tokengetall(t), getit[1])
+						if (checklist[1] == "Error") return(("Invalid Option: " + getit[1]))
+						else return(checklist)	
 					}
 					else return(("Invalid Option selection: " + getit[1] + ":" + getit[2]))
 				}
@@ -325,7 +363,7 @@ mata
 				tempstring = tempstring + tokenstemp[i]
 				if (i != length(tokenstemp)) tempstring = tempstring + " "
 			}
-			vardefs[2,r] = tempstring
+			vardefs[2,r] = subinstr(tempstring, " - ", "-")
 		}
 		return(vardefs)
 	}
@@ -424,27 +462,50 @@ mata
 		string matrix varinfo
 		string matrix vardef
 		string scalar labeldef
+		string scalar labelshort
 		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
 			stata("qui label var " + varinfo[1,c] + " " + `"""' + varinfo[2,c] + `"""')
+			if (strlen(varinfo[1,c]) > 30) labelshort = substr(varinfo[1,c], 1, 30) + "df"
+			else labelshort = varinfo[1,c] + "df"
 			if (varinfo[4,c] == "1"){
 				vardef = getvardefs(varinfo[1,c])
-				labeldef = "qui label define " + varinfo[1,c] + "df "
+				labeldef = "qui label define " + labelshort + " "
 				for (r=1; r<=length(vardef[1,.]); r++){
 					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
 					if (r != length(vardef[1,.])) labeldef = labeldef + " "
 				}
 				stata(labeldef)
-				stata("qui label values " + varinfo[1,c] + " " + varinfo[1,c] + "df")
+				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
 			else if (varinfo[3,c] == "long" || varinfo[3,c] == "float"){
-				labeldef = "qui label define " + varinfo[1,c] + "df -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
 				stata(labeldef)
-				stata("qui label values " + varinfo[1,c] + " " + varinfo[1,c] + "df")
+				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
 		}
 		return(1)
+	}
+
+	// Helper function to translate short dataset name to full name
+	string scalar shorttolongname(string scalar shortname, string matrix eps){
+		string rowvector voptions
+		string rowvector result1
+		string scalar toreturn
+		result1 = tokens(shortname)
+		if (length(result1) < 2) return("Error1")
+		if (result1[1] == "school") st1 = "schools"
+		else if (result1[1] == "district") st1 = "school-districts"
+		else if (result1[1] == "college") st1 = "college-university"
+		else return("Error2")
+		result1[1] = st1
+		toreturn = ""
+		for (r=1; r<=length(result1); r++){
+			if (r == 1) toreturn = toreturn + result1[r]
+			else toreturn = toreturn + " " + result1[r]
+		}
+		return(toreturn)
 	}
 
 	// Helper function for time taken
@@ -462,6 +523,7 @@ mata
 		pointer (class libjson scalar) scalar results1
 		string matrix varinfo
 		string scalar nextpage
+		string scalar timea
 		string scalar timetaken1
 		string scalar timetaken2
 		real scalar pagesize
@@ -473,6 +535,7 @@ mata
 		root = libjson::webcall("https://ed-data-portal.urban.org" + url2,"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
+		printf(strofreal(pagesize))
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
 		spos = 1
 		if (st_nobs() > 0) spos = st_nobs() + 1
@@ -482,7 +545,10 @@ mata
 			timeper2 = 3000 * totalpages * totallen1
 			timetaken1 = timeit(timeper1)
 			timetaken2 = timeit(timeper2)
-			printf("\n\nI estimate that the download for the entire file you requested will take between %s and %s.\n", timetaken1, timetaken2)
+			timea = "\nI estimate that the download for the entire file you requested will take "
+			if (timetaken1 == "less than one minute" && timetaken2 == "less than one minute") printf(timea + "less than one minute.\n")
+			else if (timetaken1 == "less than one minute" && timetaken2 != "less than one minute") printf(timea + "less than " + timetaken2 + ".\n")
+			else printf(timea + "between %s and %s.\n", timetaken1, timetaken2)
 			printf("Actual time may vary due to internet speed and file size differences.\n\n")
 			printf("Progress for each endpoint and call to the API will print to your screen. Please wait...\n")
 		}
@@ -500,7 +566,7 @@ mata
 	}
 	
 	// Main function to get data based on Stata request - calls other helper functions
-	string scalar getalldata(string scalar dataoptions, string scalar opts){
+	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts){
 		string matrix endpoints
 		string matrix spops
 		string matrix varinfo
@@ -513,6 +579,7 @@ mata
 		string scalar urltemp
 		string scalar urladds
 		string scalar querystring
+		string scalar dataoptions1
 		real scalar epid
 		real scalar spos
 		real scalar spos1
@@ -520,9 +587,27 @@ mata
 		real scalar totallen
 		real scalar epcount
 		real scalar tempdata
-		stata("clear")
-		epid = validendpoints(dataoptions)
+		X = st_data(.,.)
+		if (length(X[.,.]) > 0) {
+			printf("Error: You currently have data loaded in Stata. Please run " + `"""' + "clear" + `"""' + " in the Stata console to remove your current dataset before running this command.")
+			return("")
+		}
+		else stata("clear")
 		endpoints = endpointstrings()
+		dataoptions1 = shorttolongname(dataoptions, endpoints)
+		if (dataoptions1 == "Error1"){
+			printf("Error: You must enter the complete name of a dataset in the 'using' statement. The first is the 'short' name for the data category, and the remaining words are the unique name of the dataset. E.g., using " + `"""' + "school directory" + `"""' + ". Type " + `"""' + "help educationdata" + `"""' + " to learn more.")
+			return("")
+		}
+		else if (dataoptions1 == "Error2"){
+			printf("Error: The option you selected was invalid. The three options are: " + `"""' + "school" + `"""' + ", " + `"""' + "district" + `"""' + ", and " + `"""' + "college" + `"""' + ". Type " + `"""' + "help educationdata" + `"""' + " to learn more.")
+			return("")			
+		}
+		epid = validendpoints(dataoptions1)
+		if (epid == 0 || dataoptions1 == "Error3"){
+			printf("Error: The name of the category ('school', 'district', or 'college') is correct, but the name of the dataset you chose is not. Please verify the list of allowed options by typing " + `"""' + "help educationdata" + `"""' + ".")
+			return("")			
+		}
 		eid = endpoints[1,epid]
 		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		allopts = tokens(opts)
@@ -530,28 +615,30 @@ mata
 		spops = J(2,length(validopts),"")
 		spops[1,.] = validopts[1,.]
 		urladds = ""
-		for (i=1; i<=length(allopts); i++){
-			t = tokeninit("=")
-			s = tokenset(t, allopts[i])
-			res2 = tokengetall(t)
-			spos = stringpos(res2[1], validopts)
-			if (spos > 0) spops[2,spos] = allopts[i]
-			else{
-				spos1 = stringpos(res2[1], varinfo[1,.])
-				if (spos1 > 0){
-					if (urladds == "") urladds = urladds + allopts[i]
-					else urladds = urladds + ";" + allopts[i]
-				}
-				else {
-					printf("Error, option " + allopts[i] + " not valid. Valid variable selections are as follows:\n")
-					urladds = ""
-					for (c=1; c<=length(varinfo[1,.]); c++){
-						if (stringpos(strofreal(c),("1","6","11","16","21","26","31","36","41","46","51","56","61","66","71","76","81","86","91","96","101")) > 0) urladds = urladds + varinfo[1,c]
-						else urladds = urladds + ", " + varinfo[1,c]
-						if (stringpos(strofreal(c),("5","10","15","20","25","30","35","40","45","50","55","60","65","70","75","80","85","90","95","100")) > 0) urladds = urladds + "\n"
+		if (length(varinfo[1,.]) > 0){
+			for (i=1; i<=length(allopts); i++){
+				t = tokeninit("=")
+				s = tokenset(t, allopts[i])
+				res2 = tokengetall(t)
+				spos = stringpos(res2[1], validopts)
+				if (spos > 0) spops[2,spos] = allopts[i]
+				else{
+					spos1 = stringpos(res2[1], varinfo[1,.])
+					if (spos1 > 0){
+						if (urladds == "") urladds = urladds + allopts[i]
+						else urladds = urladds + ";" + allopts[i]
 					}
-					printf(urladds)
-					return("\n\nDownload failed. Please try again.")
+					else {
+						printf("Error, option " + allopts[i] + " not valid. Valid variable selections are as follows:\n")
+						urladds = ""
+						for (c=1; c<=length(varinfo[1,.]); c++){
+							if (stringpos(strofreal(c),("1","6","11","16","21","26","31","36","41","46","51","56","61","66","71","76","81","86","91","96","101")) > 0) urladds = urladds + varinfo[1,c]
+							else urladds = urladds + ", " + varinfo[1,c]
+							if (stringpos(strofreal(c),("5","10","15","20","25","30","35","40","45","50","55","60","65","70","75","80","85","90","95","100")) > 0) urladds = urladds + "\n"
+						}
+						printf(urladds)
+						return("\n\nDownload failed. Please try again.")
+					}
 				}
 			}
 		}
@@ -560,6 +647,10 @@ mata
 			if (spops[2,i] == "") spops[2,i] = spops[1,i] + "=alldata"
 		}
 		temp1 = validoptions(spops[2,1], epid)
+		if (tokens(temp1[1])[1] == "Invalid"){ 
+			printf(temp1[1])
+			return("")
+		}
 		epcount = 0
 		printf("Please be patient - Downloading data from API. I'll give you a time estimate shortly.\n")
 		tempdata = createdataset(eid)
@@ -573,6 +664,10 @@ mata
 		}
 		else{
 			temp2 = validoptions(spops[2,2], epid)
+			if (tokens(temp2[1])[1] == "Invalid"){ 
+				printf(temp2[1])
+				return("")
+			}
 			totallen = length(temp1) * length(temp2)
 			for (i=1; i<=length(temp1); i++){
 				for (j=1; j<=length(temp2); j++){
@@ -582,7 +677,9 @@ mata
 				}
 			}		
 		}
-		printf("Data successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
+		stata("qui compress")
+		if (vlist != "") stata("keep " + vlist)
+		printf("\nData successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
 		return("")
 	}
 
