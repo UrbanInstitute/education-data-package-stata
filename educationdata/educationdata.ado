@@ -535,7 +535,6 @@ mata
 		root = libjson::webcall("https://ed-data-portal.urban.org" + url2,"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
-		printf(strofreal(pagesize))
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
 		spos = 1
 		if (st_nobs() > 0) spos = st_nobs() + 1
