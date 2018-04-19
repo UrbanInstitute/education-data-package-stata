@@ -540,8 +540,8 @@ mata
 		if (st_nobs() > 0) spos = st_nobs() + 1
 		countpage = 1
 		if (epcount1 == 1){
-			timeper1 = 500 * totalpages * totallen1
-			timeper2 = 3000 * totalpages * totallen1
+			timeper1 = 1500 * totalpages * totallen1
+			timeper2 = 10000 * totalpages * totallen1
 			timetaken1 = timeit(timeper1)
 			timetaken2 = timeit(timeper2)
 			timea = "\nI estimate that the download for the entire file you requested will take "
