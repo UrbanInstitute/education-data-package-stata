@@ -305,9 +305,9 @@ saving the new dataset. For example,
 {title:Installing package dependencies}
 
 The SSC package {bf:libjson} is required to use the {bf:educationdata}
-package. If you do not have {bf:libjson} installed, you will be prompted
-to install it after running the {bf:educationdata} command. You can 
-install {bf:libjson} by running the following command:
+package. If you do not have {bf:libjson} installed, it will be installed automatically
+after first running the {bf:educationdata} command. Or, before running the package,
+you can install {bf:libjson} by running the following command:
 
     . ssc install libjson
 
