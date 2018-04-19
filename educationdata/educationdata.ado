@@ -1,6 +1,6 @@
 program educationdata
 version 11.0
-mata: if (length(findfile("libjson.mlib")) != "") {} else stata("ssc install libjson");
+mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
 syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR]
 mata: 	dummy=getalldata("`using'", "`columns'", "`subset'","`clear'");
