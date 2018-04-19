@@ -326,10 +326,10 @@ you can install {bf:libjson} by running the following command:
     Download the full directory of colleges and universities for 2011
         . educationdata using "college ipeds directory", sub(year=2011)
         
-    Download the full directory of colleges and universities for 2011 in the Montgomery, AL metro area.
+    Download the full directory of colleges and universities for 2011 in Florida.
         . educationdata using "college ipeds directory", sub(year=2011 fips=12)
 
-    Download the full directory for 2011 in Montgomery, AL and keep only the unitid and year variables.
+    Download the full directory for 2011 in Florida and keep only the unitid and year variables.
     	. educationdata using "college ipeds directory", sub(year=2011 fips=12) col(unitid year)
         
 {title:Author}
