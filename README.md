@@ -2,9 +2,9 @@
 
 Welcome to the Education Data Portal Stata Package repository. You'll need an internet connection to install and use the package.
 
-### Install the Package
+### Install or Update the Package
 
-If you don't have `libjson` installed, the package will prompt you to install it. Or, you can type `ssc install libjson`.
+If you don't have `libjson` installed, the package will automatically install it for you once you run your first `educationdata` command. Or, you can type `ssc install libjson`. The following command will install, or if the package is already installed, update the education data package.
 
 ```stata
 net install educationdata, replace from("https://ui-research.github.io/education-data-package-stata/")
