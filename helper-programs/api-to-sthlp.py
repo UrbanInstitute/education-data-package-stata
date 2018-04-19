@@ -27,9 +27,7 @@ def break_desc(t1, t2):
 		test_str = cur_line + " " + t
 		if len(test_str) > max_len:
 			temp_str = temp_str + cur_line[1:] + '\n'
-			cur_line = ""
-			if t == tsplit[len(tsplit) - 1]:
-				cur_line = " " + t
+			cur_line = " " + t
 		else:
 			cur_line = cur_line + " " + t
 	temp_str = temp_str + cur_line[1:] + '\n'
