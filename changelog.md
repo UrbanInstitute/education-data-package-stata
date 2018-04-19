@@ -2,8 +2,9 @@
 
 #### 0.1.1 (Development Version, not yet released)
 
-- Update documentation to reflect that you do not need to use quotes around the `subset()` and `columns()` arguments.
-- Adds functionality that checks whether libjson is installed and installs it on first command if it is not.
+- Update documentation to reflect that you do not need to use quotes around the `subset()` and `columns()` arguments
+- Adds functionality that checks whether libjson is installed and installs it on first command if it is not
+- Adds a "clear" option to the command to clear your current data in memory before adding additional data
 
 #### 0.1.0 (Current Stable Version)
 
