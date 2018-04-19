@@ -73,41 +73,49 @@ derived FTE or report their own FTE. Both reported and estimated/derived FTE
 available in this data table. In addition, the reported FTE of Doctoral
 practice students are also included.
 
-{bf:"college ipeds fall-enrollment"}: This file contains the number of
+{bf:"college ipeds fall-enrollment"}: This endpoint contains the number of
 enrolled in the fall, by full-time/part-time status, and level of study. For
 this is further broken down by degree-seeking/non-degree-seeking, and
 is broken down by class level. Institutions with traditional academic year
 systems (semester, quarter, trimester or 4-1-4) report their enrollment as of
 15 or the official fall reporting date of the institution. Institutions with
 systems that differ by program or allow continuous enrollment report students
-are enrolled at any time between August 1 and October 31.
+are enrolled at any time between August 1 and October 31. Available levels of
+are undergraduate, graduate, first-professional (through 2008 only), and
+(through 1998 only).
 
-{bf:"college ipeds fall-enrollment race"}: This file contains the number of
-enrolled in the fall, by race, full-time/part-time status, and level of study.
-undergraduates, this is further broken down by
+{bf:"college ipeds fall-enrollment race"}: This endpoint contains the number
+students enrolled in the fall, by race, full-time/part-time status, and level
+study. For undergraduates, this is further broken down by
 and degree-seeking is broken down by class level. Institutions with traditional
 year calendar systems (semester, quarter, trimester or 4-1-4) report their
 as of October 15 or the official fall reporting date of the institution.
 with calendar systems that differ by program or allow continuous enrollment
 students that are enrolled at any time between August 1 and October 31.
+levels of study are undergraduate, graduate, first-professional (through 2008
+and post-baccalaureate (through 1998 only).
 
-{bf:"college ipeds fall-enrollment sex"}: This file contains the number of
-enrolled in the fall, by sex, full-time/part-time status, and level of study.
-undergraduates, this is further broken down by
+{bf:"college ipeds fall-enrollment sex"}: This endpoint contains the number
+students enrolled in the fall, by sex, full-time/part-time status, and level of
+For undergraduates, this is further broken down by
 and degree-seeking is broken down by class level. Institutions with traditional
 year calendar systems (semester, quarter, trimester or 4-1-4) report their
 as of October 15 or the official fall reporting date of the institution.
 with calendar systems that differ by program or allow continuous enrollment
 students that are enrolled at any time between August 1 and October 31.
+levels of study are undergraduate, graduate, first-professional (through 2008
+and post-baccalaureate (through 1998 only).
 
-{bf:"college ipeds fall-enrollment race sex"}: This file contains the number
-students enrolled in the fall, by race, sex, full-time/part-time status, and
+{bf:"college ipeds fall-enrollment race sex"}: This endpoint contains the
+of students enrolled in the fall, by race, sex, full-time/part-time status, and
 of study. For undergraduates, this is further broken down by
 and degree-seeking is broken down by class level. Institutions with traditional
 year calendar systems (semester, quarter, trimester or 4-1-4) report their
 as of October 15 or the official fall reporting date of the institution.
 with calendar systems that differ by program or allow continuous enrollment
 students that are enrolled at any time between August 1 and October 31.
+levels of study are undergraduate, graduate, first-professional (through 2008
+and post-baccalaureate (through 1998 only).
 
 {bf:"college ipeds fall-enrollment age"}: This endpoint contains the number
 students enrolled in the fall, by age categories, full-time/part-time status
@@ -116,7 +124,9 @@ quarter, trimester or 4-1-4) report their enrollment as of October 15 or the
 fall reporting date of the institution. Institutions with calendar systems that
 by program or allow continuous enrollment report students that are enrolled at
 time between August 1 and October 31. Submission of enrollment by age
-is optional in even-numbered years.
+is optional in even-numbered years. Available levels of study are
+graduate, and first-professional (through 2008 only); in 2000, only
+data are available.
 
 {bf:"college ipeds fall-enrollment age sex"}: This endpoint contains the
 of students enrolled in the fall, by age categories, sex, full-time/part-time
@@ -125,7 +135,26 @@ and level of study. Institutions with traditional academic year calendar
 or the official fall reporting date of the institution. Institutions with
 systems that differ by program or allow continuous enrollment report students
 are enrolled at any time between August 1 and October 31. Submission of
-by age categories is optional in even-numbered years.
+by age categories is optional in even-numbered years. Available levels of study
+undergraduate, graduate, and first-professional (through 2008 only); in 2000,
+undergraduate data are available.
+
+{bf:"college ipeds enrollment-headcount"}: This endpoint contains the
+head count of students enrolled over a 12-month period for both undergraduate
+graduate levels. These enrollment data are particularly valuable for
+that use non-traditional calendar systems and offer short-term programs.
+this enrollment measure encompasses an entire year, it provides a more complete
+of the number of students these schools serve. Counts are available by level of
+sex, and race/ethnicity.
+
+{bf:"college ipeds fall-retention"}: The first-year retention rate data
+the percentage of first-year students who had persisted in or completed their
+program a year later.
+
+{bf:"college ipeds student-faculty-ratio"}: Student-to-faculty ratio is
+as total FTE students not in graduate or professional programs divided by total
+instructional staff not teaching in graduate or professional programs. All data
+this file is applicable only to institutions with undergraduate students.
 
 {bf:"college ipeds grad-rates-200pct"}: This endpoint contains the
 rate status as of August 31, at the end of the academic year, for the cohort of
@@ -174,6 +203,9 @@ after entry and eight academic years after entry. The four cohorts of
 undergraduates are: full-time, first-time entering; part-time, first-time
 full-time, non-first-time entering; and part-time, non-first-time entering.
 
+{bf:"college ipeds completers"}: This endpoint contains the number of
+who completed any degree or certificate by race/ethnicity and gender.
+
 {bf:"college ipeds completions-cip"}: This endpoint contains the number of
 by type of program, level of award (certificate or degree), first or second
 and by race/ethnicity and gender. Type of program is categorized according to
@@ -183,17 +215,6 @@ families. There are some exceptions, such as law and medical fields, which were
 as 6-digits by IPEDS. These data are available from 1991 to 2015. IPEDS
 data at the 2-digit CIP level until 2001, after that, we collapsed the 6-digit
 data to the 2-digit level until 2015.
-
-{bf:"college ipeds completers"}: This endpoint contains the number of
-who completed any degree or certificate by race/ethnicity and gender.
-
-{bf:"college ipeds enrollment-headcount"}: This endpoint contains the
-head count of students enrolled over a 12-month period for both undergraduate
-graduate levels. These enrollment data are particularly valuable for
-that use non-traditional calendar systems and offer short-term programs.
-this enrollment measure encompasses an entire year, it provides a more complete
-of the number of students these schools serve. Counts are available by level of
-sex, and race/ethnicity.
 
 {bf:"District"}
 

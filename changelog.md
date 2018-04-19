@@ -1,6 +1,10 @@
 # Changelog for educationdata Stata Package
 
-#### 0.1.1 (Development Version, not yet released)
+#### 0.1.2 (Development Version, not yet released)
+
+- 
+
+#### 0.1.1 (Current Stable Version)
 
 - Update documentation to reflect that you do not need to use quotes around the `subset()` and `columns()` arguments
 - Adds functionality that checks whether libjson is installed and installs it on first command if it is not
@@ -8,7 +12,7 @@
 - Properly formats variables whose names are not the same as their format names, such as Yes/No variables and Grade Offered
 - Fixes a bug that didn't allow grade selection for grades 1-12 and total (99), now short grade=1 selection should work properly
 
-#### 0.1.0 (Current Stable Version)
+#### 0.1.0
 
 - Skips validity checks for variable names if the endpoint returns no formatted variables, so no error is thrown that stops the program
 - Removes API endpoints that are hidden because they are not yet available, from the Stata help file

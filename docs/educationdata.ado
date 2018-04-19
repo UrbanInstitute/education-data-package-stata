@@ -1,9 +1,9 @@
 program educationdata
 version 11.0
-mata: if (findexternal("libjson()")) {} else printf("{err: Error: The required JSON library (libjson) seems to be missing so this command will fail. Run the following: ssc install libjson}\n");
+mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
-syntax using/ , [SUBset(string)] [COLumns(string)]
-mata: 	dummy=getalldata("`using'", "`columns'", "`subset'");
+syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR]
+mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"));
 end
 
 mata
@@ -29,7 +29,7 @@ mata
 		real scalar numrowscheck
 		res = getresults(url)
 		numrows = res->arrayLength()
-		varinfo = J(4,numrows,"")
+		varinfo = J(5,numrows,"")
 		for (r=1; r<=numrows; r++) {
 			trow = res->getArrayValue(r)
 			varinfo[1,r] = trow->getString("variable", "")
@@ -40,7 +40,11 @@ mata
 			else if (tempvar == "string"){ 
 				varinfo[3,r] = "str" + trow->getString("string_length", "")
 			}
-			result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + varinfo[1,r])
+			varinfo[5,r] = trow->getString("format", "")
+			if (varinfo[5,r] != varinfo[1,r] && varinfo[5,r] != "string" && varinfo[5,r] != "numeric"){
+				result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + varinfo[5,r])	
+			}
+			else result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + varinfo[1,r])
 			numrowscheck = result->arrayLength()
 			if (numrowscheck == 0) varinfo[4,r] = "0"
 			else varinfo[4,r] = "1"
@@ -199,7 +203,7 @@ mata
 		string rowvector tochecklist
 		string rowvector toaddlist
 		if (tocheck == "grade") { 
-			tochecklist = ("grade-pk","grade-k","grade-1","grade-2","grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-10","grade-11","grade-12","grade-99","-1","0","1","2","3","4","5","6","7","8","9","10","11","12","99")
+			tochecklist = ("grade-pk","grade-k","grade-1","grade-2","grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-10","grade-11","grade-12","grade-99")
 			toaddlist = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
 		}
 		else if (tocheck == "level_of_study") tochecklist = ("undergraduate","graduate","first-professional","post-baccalaureate","1","2","3","4")
@@ -339,7 +343,7 @@ mata
 	}
 
 	// Helper function to get variable value definitions
-	string matrix getvardefs(string scalar var1){
+	string matrix getvardefs(string scalar var1, string scalar format1){
 		pointer (class libjson scalar) scalar result
 		pointer (class libjson scalar) scalar trow
 		string matrix vardefs
@@ -348,7 +352,10 @@ mata
 		string scalar tempstring
 		real scalar numrows
 		real scalar startvar
-		result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + var1)
+		if (format1 != var1 && format1 != "string" && format1 != "numeric"){
+			result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + format1)	
+		}
+		else result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + var1)
 		numrows = result->arrayLength()
 		vardefs = J(2,numrows,"")
 		for (r=1; r<=numrows; r++){
@@ -470,7 +477,7 @@ mata
 			if (strlen(varinfo[1,c]) > 30) labelshort = substr(varinfo[1,c], 1, 30) + "df"
 			else labelshort = varinfo[1,c] + "df"
 			if (varinfo[4,c] == "1"){
-				vardef = getvardefs(varinfo[1,c])
+				vardef = getvardefs(varinfo[1,c], varinfo[5,c])
 				labeldef = "qui label define " + labelshort + " "
 				for (r=1; r<=length(vardef[1,.]); r++){
 					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
@@ -535,14 +542,13 @@ mata
 		root = libjson::webcall("https://ed-data-portal.urban.org" + url2,"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
-		printf(strofreal(pagesize))
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
 		spos = 1
 		if (st_nobs() > 0) spos = st_nobs() + 1
 		countpage = 1
 		if (epcount1 == 1){
-			timeper1 = 500 * totalpages * totallen1
-			timeper2 = 3000 * totalpages * totallen1
+			timeper1 = 1500 * totalpages * totallen1
+			timeper2 = 10000 * totalpages * totallen1
 			timetaken1 = timeit(timeper1)
 			timetaken2 = timeit(timeper2)
 			timea = "\nI estimate that the download for the entire file you requested will take "
@@ -566,7 +572,7 @@ mata
 	}
 	
 	// Main function to get data based on Stata request - calls other helper functions
-	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts){
+	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme){
 		string matrix endpoints
 		string matrix spops
 		string matrix varinfo
@@ -588,11 +594,14 @@ mata
 		real scalar epcount
 		real scalar tempdata
 		X = st_data(.,.)
-		if (length(X[.,.]) > 0) {
-			printf("Error: You currently have data loaded in Stata. Please run " + `"""' + "clear" + `"""' + " in the Stata console to remove your current dataset before running this command.")
-			return("")
+		if (clearme > 0) stata("clear")
+		else{
+			if (length(X[.,.]) > 0) {
+				printf("Error: You currently have data loaded in Stata. Please add " + `"""' + "clear" + `"""' + " to the end of this command if you wish to remove your current data.")
+				return("")
+			}
+			else stata("clear")
 		}
-		else stata("clear")
 		endpoints = endpointstrings()
 		dataoptions1 = shorttolongname(dataoptions, endpoints)
 		if (dataoptions1 == "Error1"){
@@ -659,6 +668,7 @@ mata
 			for (i=1; i<=length(temp1); i++){
 				epcount = epcount + 1
 				urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
+				printf(urltemp)
 				hidereturn = getalltables(eid, urltemp, totallen, epcount)
 			}
 		}
@@ -673,6 +683,7 @@ mata
 				for (j=1; j<=length(temp2); j++){
 					epcount = epcount + 1
 					urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
+					printf(urltemp)
 					hidereturn = getalltables(eid, urltemp, totallen, epcount)
 				}
 			}		
