@@ -2,7 +2,7 @@
 
 #### 0.1.1 (Development Version, not yet released)
 
-- 
+- Update documentation to reflect that you do not need to use quotes around the `subset()` and `columns()` arguments.
 
 #### 0.1.0 (Current Stable Version)
 

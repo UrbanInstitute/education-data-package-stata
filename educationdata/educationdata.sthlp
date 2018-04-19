@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.1.0}
+{title:Education Data Package}{right:Version 0.1.1}
 
 {title:Syntax}
 
@@ -24,7 +24,7 @@ statement of the {bf:educationdata} command.
 If you'd like to subset the data, or use other options, you can add options
 statements as follows:
 
-    . educationdata using "dataset name here", optionnamehere("optionvaluehere")
+    . educationdata using "dataset name here", optionnamehere(optionvaluehere)
 
 {marker datasetname}{...}
 {title:Dataset Name Options}
@@ -241,21 +241,21 @@ subset values for a variable must either take the form of a continuous list sepa
 by a colon, or a list of values separated by a comma. 
 
 To be concrete, while not a complete list of options, subset conditions may take the 
-form of sub("variable1=value1"), sub("variable1=value1,value2"), 
-sub("variable1=value1:value5"), sub("variable1=value1 variable2=value1,value4,value5,value6"),
-or sub("variable1=value4:value6 variable2=value1,value2"), to name a few. Lists 
+form of sub(variable1=value1), sub(variable1=value1,value2), 
+sub(variable1=value1:value5), sub(variable1=value1 variable2=value1,value4,value5,value6),
+or sub(variable1=value4:value6 variable2=value1,value2), to name a few. Lists 
 separated by a colon and a comma in a single variable are {bf:not supported}. For 
-example, sub("variable1=value1:value3,value5") is {bf:not allowed}. 
+example, sub(variable1=value1:value3,value5) is {bf:not allowed}. 
 
-To be even more concrete, valid values might include sub("year=2011"), 
-sub("year=2010:2015"), sub("year=2012:2016 cbsa=33860"), etc. if year and cbsa were 
+To be even more concrete, valid values might include sub(year=2011), 
+sub(year=2010:2015), sub(year=2012:2016 cbsa=33860), etc. if year and cbsa were 
 valid variables in the dataset specified after the "using" statement.
 
 {marker columns}{...}
 2. {bf:{opt col:umns(str)}}: Specifies the variables you would like to select, if you only
 want a subset of variables. So, you might say:
 
-. educationdata using "college ipeds directory", col("unitid year")
+. educationdata using "college ipeds directory", col(unitid year)
 
 {title:Installing package dependencies}
 
@@ -279,13 +279,13 @@ install {bf:libjson} by running the following command:
 {bf:Examples of subsetting datasets}:
         
     Download the full directory of colleges and universities for 2011
-        . educationdata using "college ipeds directory", sub("year=2011")
+        . educationdata using "college ipeds directory", sub(year=2011)
         
     Download the full directory of colleges and universities for 2011 in the Montgomery, AL metro area.
-        . educationdata using "college ipeds directory", sub("year=2011 cbsa=33860")
+        . educationdata using "college ipeds directory", sub(year=2011 cbsa=33860)
 
     Download the full directory for 2011 in Montgomery, AL and keep only the unitid and year variables.
-    	. educationdata using "college ipeds directory", sub("year=2011 cbsa=33860") col("unitid year")
+    	. educationdata using "college ipeds directory", sub(year=2011 cbsa=33860) col(unitid year)
         
 {title:Author}
 
