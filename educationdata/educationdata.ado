@@ -668,7 +668,6 @@ mata
 			for (i=1; i<=length(temp1); i++){
 				epcount = epcount + 1
 				urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
-				printf(urltemp)
 				hidereturn = getalltables(eid, urltemp, totallen, epcount)
 			}
 		}
@@ -683,7 +682,6 @@ mata
 				for (j=1; j<=length(temp2); j++){
 					epcount = epcount + 1
 					urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
-					printf(urltemp)
 					hidereturn = getalltables(eid, urltemp, totallen, epcount)
 				}
 			}		

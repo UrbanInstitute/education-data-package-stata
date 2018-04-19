@@ -1,10 +1,16 @@
 # Changelog for educationdata Stata Package
 
-#### 0.1.2 (Development Version, not yet released)
+#### 0.1.3 (Development Version, not yet released)
 
 - 
 
-#### 0.1.1 (Current Stable Version)
+#### 0.1.2 (Current Stable Version)
+
+- Fixes to documentation to ensure line-wraps are included
+- Fixes to documentation to include working FIPS example
+- Removes debugging statement from function that printed out the URL of each endpoint
+
+#### 0.1.1 
 
 - Update documentation to reflect that you do not need to use quotes around the `subset()` and `columns()` arguments
 - Adds functionality that checks whether libjson is installed and installs it on first command if it is not

@@ -520,7 +520,7 @@ mata
 		string scalar timetaken
 		if (hhC(timeper) == 0 && mmC(timeper) == 0) timetaken = "less than one minute"
 		else if (hhC(timeper) == 0) timetaken = strofreal(mmC(timeper)) + " minute(s)"
-		else timetaken = strofreal(hhC(timeper)) + " hours and " + strofreal(mmC(timeper)) + " minute(s)"
+		else timetaken = strofreal(hhC(timeper)) + " hour(s) and " + strofreal(mmC(timeper)) + " minute(s)"
 		return(timetaken)
 	}
 
@@ -668,7 +668,6 @@ mata
 			for (i=1; i<=length(temp1); i++){
 				epcount = epcount + 1
 				urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
-				printf(urltemp)
 				hidereturn = getalltables(eid, urltemp, totallen, epcount)
 			}
 		}
@@ -683,7 +682,6 @@ mata
 				for (j=1; j<=length(temp2); j++){
 					epcount = epcount + 1
 					urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
-					printf(urltemp)
 					hidereturn = getalltables(eid, urltemp, totallen, epcount)
 				}
 			}		

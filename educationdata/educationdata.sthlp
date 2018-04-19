@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.1.1}
+{title:Education Data Package}{right:Version 0.1.2}
 
 {title:Syntax}
 
@@ -288,7 +288,7 @@ separated by a colon and a comma in a single variable are {bf:not supported}. Fo
 example, sub(variable1=value1:value3,value5) is {bf:not allowed}. 
 
 To be even more concrete, valid values might include sub(year=2011), 
-sub(year=2010:2015), sub(year=2012:2016 cbsa=33860), etc. if year and cbsa were 
+sub(year=2010:2015), sub(year=2012:2016 fips=12), etc. if year and fips were 
 valid variables in the dataset specified after the "using" statement.
 
 {marker columns}{...}
@@ -327,10 +327,10 @@ you can install {bf:libjson} by running the following command:
         . educationdata using "college ipeds directory", sub(year=2011)
         
     Download the full directory of colleges and universities for 2011 in the Montgomery, AL metro area.
-        . educationdata using "college ipeds directory", sub(year=2011 cbsa=33860)
+        . educationdata using "college ipeds directory", sub(year=2011 fips=12)
 
     Download the full directory for 2011 in Montgomery, AL and keep only the unitid and year variables.
-    	. educationdata using "college ipeds directory", sub(year=2011 cbsa=33860) col(unitid year)
+    	. educationdata using "college ipeds directory", sub(year=2011 fips=12) col(unitid year)
         
 {title:Author}
 
