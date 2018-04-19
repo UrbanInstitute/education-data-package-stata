@@ -29,7 +29,7 @@ mata
 		real scalar numrowscheck
 		res = getresults(url)
 		numrows = res->arrayLength()
-		varinfo = J(4,numrows,"")
+		varinfo = J(5,numrows,"")
 		for (r=1; r<=numrows; r++) {
 			trow = res->getArrayValue(r)
 			varinfo[1,r] = trow->getString("variable", "")
@@ -40,7 +40,11 @@ mata
 			else if (tempvar == "string"){ 
 				varinfo[3,r] = "str" + trow->getString("string_length", "")
 			}
-			result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + varinfo[1,r])
+			varinfo[5,r] = trow->getString("format", "")
+			if (varinfo[5,r] != varinfo[1,r] && varinfo[5,r] != "string" && varinfo[5,r] != "numeric"){
+				result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + varinfo[5,r])	
+			}
+			else result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + varinfo[1,r])
 			numrowscheck = result->arrayLength()
 			if (numrowscheck == 0) varinfo[4,r] = "0"
 			else varinfo[4,r] = "1"
@@ -339,7 +343,7 @@ mata
 	}
 
 	// Helper function to get variable value definitions
-	string matrix getvardefs(string scalar var1){
+	string matrix getvardefs(string scalar var1, string scalar format1){
 		pointer (class libjson scalar) scalar result
 		pointer (class libjson scalar) scalar trow
 		string matrix vardefs
@@ -348,7 +352,10 @@ mata
 		string scalar tempstring
 		real scalar numrows
 		real scalar startvar
-		result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + var1)
+		if (format1 != var1 && format1 != "string" && format1 != "numeric"){
+			result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + format1)	
+		}
+		else result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + var1)
 		numrows = result->arrayLength()
 		vardefs = J(2,numrows,"")
 		for (r=1; r<=numrows; r++){
@@ -470,7 +477,7 @@ mata
 			if (strlen(varinfo[1,c]) > 30) labelshort = substr(varinfo[1,c], 1, 30) + "df"
 			else labelshort = varinfo[1,c] + "df"
 			if (varinfo[4,c] == "1"){
-				vardef = getvardefs(varinfo[1,c])
+				vardef = getvardefs(varinfo[1,c], varinfo[5,c])
 				labeldef = "qui label define " + labelshort + " "
 				for (r=1; r<=length(vardef[1,.]); r++){
 					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
