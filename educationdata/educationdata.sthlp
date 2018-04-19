@@ -231,7 +231,7 @@ endpoint.
 {marker options}{...}
 {title:Command Options}
 
-The {bf:educationdata} command takes two for only collecting a subset
+The {bf:educationdata} command takes two options for only collecting a subset
 of the dataset you request:
 
 1. {bf:{opt sub:set(str)}}: Specifies a single subset or list of subsets of the dataset
@@ -256,6 +256,11 @@ valid variables in the dataset specified after the "using" statement.
 want a subset of variables. So, you might say:
 
 . educationdata using "college ipeds directory", col(unitid year)
+
+{bf:In addition}, the {bf:{opt clear:}} option clears the current dataset in memory before
+saving the new dataset. For example,
+
+. educationdata using "college ipeds directory", col(unitid year) clear 
 
 {title:Installing package dependencies}
 

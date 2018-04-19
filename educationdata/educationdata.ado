@@ -1,9 +1,9 @@
 program educationdata
 version 11.0
-mata: if (length(findfile("libjson.mlib")) > 1) {} else stata("ssc install libjson");
+mata: if (length(findfile("libjson.mlib")) != "") {} else stata("ssc install libjson");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
-syntax using/ , [SUBset(string)] [COLumns(string)]
-mata: 	dummy=getalldata("`using'", "`columns'", "`subset'");
+syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR]
+mata: 	dummy=getalldata("`using'", "`columns'", "`subset'","`clear'");
 end
 
 mata
@@ -565,7 +565,7 @@ mata
 	}
 	
 	// Main function to get data based on Stata request - calls other helper functions
-	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts){
+	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, string scalar clearme){
 		string matrix endpoints
 		string matrix spops
 		string matrix varinfo
@@ -587,11 +587,14 @@ mata
 		real scalar epcount
 		real scalar tempdata
 		X = st_data(.,.)
-		if (length(X[.,.]) > 0) {
-			printf("Error: You currently have data loaded in Stata. Please run " + `"""' + "clear" + `"""' + " in the Stata console to remove your current dataset before running this command.")
-			return("")
+		if (length(clearme) > 1) stata("clear")
+		else{
+			if (length(X[.,.]) > 0) {
+				printf("Error: You currently have data loaded in Stata. Please run " + `"""' + "clear" + `"""' + " in the Stata console to remove your current dataset before running this command.")
+				return("")
+			}
+			else stata("clear")
 		}
-		else stata("clear")
 		endpoints = endpointstrings()
 		dataoptions1 = shorttolongname(dataoptions, endpoints)
 		if (dataoptions1 == "Error1"){
