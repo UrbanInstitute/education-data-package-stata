@@ -203,7 +203,7 @@ mata
 		string rowvector tochecklist
 		string rowvector toaddlist
 		if (tocheck == "grade") { 
-			tochecklist = ("grade-pk","grade-k","grade-1","grade-2","grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-10","grade-11","grade-12","grade-99","-1","0","1","2","3","4","5","6","7","8","9","10","11","12","99")
+			tochecklist = ("grade-pk","grade-k","grade-1","grade-2","grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-10","grade-11","grade-12","grade-99")
 			toaddlist = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
 		}
 		else if (tocheck == "level_of_study") tochecklist = ("undergraduate","graduate","first-professional","post-baccalaureate","1","2","3","4")
@@ -668,6 +668,7 @@ mata
 			for (i=1; i<=length(temp1); i++){
 				epcount = epcount + 1
 				urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
+				printf(urltemp)
 				hidereturn = getalltables(eid, urltemp, totallen, epcount)
 			}
 		}
@@ -682,6 +683,7 @@ mata
 				for (j=1; j<=length(temp2); j++){
 					epcount = epcount + 1
 					urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
+					printf(urltemp)
 					hidereturn = getalltables(eid, urltemp, totallen, epcount)
 				}
 			}		

@@ -6,6 +6,7 @@
 - Adds functionality that checks whether libjson is installed and installs it on first command if it is not
 - Adds a "clear" option to the command to clear your current data in memory before adding additional data
 - Properly formats variables whose names are not the same as their format names, such as Yes/No variables and Grade Offered
+- Fixes a bug that didn't allow grade selection for grades 1-12 and total (99), now short grade=1 selection should work properly
 
 #### 0.1.0 (Current Stable Version)
 
