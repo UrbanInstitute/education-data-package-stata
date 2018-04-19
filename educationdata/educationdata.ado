@@ -520,7 +520,7 @@ mata
 		string scalar timetaken
 		if (hhC(timeper) == 0 && mmC(timeper) == 0) timetaken = "less than one minute"
 		else if (hhC(timeper) == 0) timetaken = strofreal(mmC(timeper)) + " minute(s)"
-		else timetaken = strofreal(hhC(timeper)) + " hours and " + strofreal(mmC(timeper)) + " minute(s)"
+		else timetaken = strofreal(hhC(timeper)) + " hour(s) and " + strofreal(mmC(timeper)) + " minute(s)"
 		return(timetaken)
 	}
 
