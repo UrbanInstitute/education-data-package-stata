@@ -12,6 +12,24 @@ net install educationdata, replace from("https://ui-research.github.io/education
 
 If you have trouble with this command, uninstall any existing installations using the instructions below, close and re-open Stata, then re-run the command above.
 
+#### Error r(672) - Server refused to send file
+
+If you run into the error `server refused to send file`, your firewall may be blocking access to Stata's ability to download content. Note that this may also block your ability to download data via an API, so this may not solve all concerns. First, download the zip file of the package, by copying the following to your browser:
+
+```
+https://ui-research.github.io/education-data-package-stata/educationdata.zip
+```
+
+Unzip the file, and do one of two things:
+
+1) Type `. personal` in Stata, and note the location of your personal ado directoy, i.e. `C:\ado\personal\`
+2) Move all the extracted files from the zip file to that personal directory
+
+OR
+
+1) Note the filepath of the extracted files, e.g., `D:/Users/Username/Downloads/educationdata/`
+2) Type `net install educationdata, force from("D:/Users/Username/Downloads/educationdata/")` in Stata, replacing the path in the `from()` command with the filepath you noted in step 1
+
 ### Testing the package
 
 First, ensure you are connected to the internet. Then run one of the simpler examples, such as:
