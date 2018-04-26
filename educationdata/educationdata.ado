@@ -238,7 +238,7 @@ mata
 		else return(alist)
 		for (c=1; c<=length(alist); c++){
 			if (iteminlist(alist[c],tochecklist) == 0) {
-				if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0) return(("Error",""))
+				if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0) return(("Error",alist[c]))
 				else alist[c] = "grade-" + alist[c]
 			}
 		}
@@ -275,14 +275,14 @@ mata
 			if (getit[2] != "alldata"){
 				if (subinstr(subinstr(getit[2], ",", ""), ":", "") == getit[2]){
 					checklist = checkinglist((getit[2]), getit[1])
-					if (checklist[1] == "Error") return(("Invalid Option: " + getit[1]))
+					if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
 					else return(checklist)
 				}
 				else if (subinstr(getit[2], ",", "") != getit[2]){
 					t = tokeninit(",")
 					s = tokenset(t, getit[2])
 					checklist = checkinglist(tokengetall(t), getit[1])
-					if (checklist[1] == "Error") return(("Invalid Option: " + getit[1]))
+					if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
 					else return(checklist)	
 				}
 				else{
@@ -307,10 +307,13 @@ mata
 						t = tokeninit(",")
 						s = tokenset(t, getstring)
 						checklist = checkinglist(tokengetall(t), getit[1])
-						if (checklist[1] == "Error") return(("Invalid Option: " + getit[1]))
+						if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
 						else return(checklist)	
 					}
-					else return(("Invalid Option selection: " + getit[1] + ":" + getit[2]))
+					else {
+						if (isvalid(getit[1], tlev) == 0) return(("Invalid Option selection: " + getit[1] + " in " + getit[1] + ":" + getit[2]))
+						else return(("Invalid Option selection: " + getit[2] + " in " + getit[1] + ":" + getit[2]))
+					}
 				}
 			}
 			else{
