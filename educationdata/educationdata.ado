@@ -432,6 +432,7 @@ mata
 				for(c=1; c<=length(svarnames); c++) {
 					tval = trow->getString(svarnames[c],"");
 					if (tval == "null") tval = ""
+					if (tval == `"""' + `"""') tval = ""
 					sdata[r,c] = tval
 				}
 				for(c=1; c<=length(rvarnames); c++) {
