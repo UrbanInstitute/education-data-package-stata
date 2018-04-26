@@ -131,9 +131,11 @@ mata
 	string rowvector parseyears(real scalar matid){
 		string matrix endpoints
 		string rowvector getit
+		string rowvector getit2
 		string rowvector returnyears
 		string scalar yrs
 		string scalar yrstring
+		string scalar yrstring2
 		endpoints = endpointstrings()
 		yrs = endpoints[3,matid]
 		if (subinstr(subinstr(yrs, ",", ""), "–", "") == yrs){
@@ -154,6 +156,31 @@ mata
 			t = tokeninit(",")
 			s = tokenset(t, yrstring)
 			returnyears = tokengetall(t)
+		}
+		else if (subinstr(yrs, ",", "") != yrs){
+			t = tokeninit(", ")
+			s = tokenset(t, yrs)
+			getit = tokengetall(t)
+			yrstring = ""
+			for (c=1; c<=length(getit); c++){
+				if (subinstr(getit[c], "–", "") != getit[c]){
+					t = tokeninit("–")
+					s = tokenset(t, getit[c])
+					getit2 = tokengetall(t)
+					if (c == 1) yrstring = getit2[c]
+					else yrstring = yrstring + "," + getit2[1]
+					for (y=strtoreal(getit2[1])+1; y<=strtoreal(getit2[2]); y++){
+						yrstring = yrstring + "," + strofreal(y)
+					}				
+				}
+				else{
+					if (c == 1) yrstring = getit[c]
+					else yrstring = yrstring + "," + getit[c]
+				}
+			}	
+			t = tokeninit(",")
+			s = tokenset(t, yrstring)
+			returnyears = tokengetall(t)		
 		}
 		else {
 			t = tokeninit("–")

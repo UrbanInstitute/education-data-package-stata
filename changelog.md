@@ -3,6 +3,7 @@
 #### 0.1.3 (Development Version, not yet released)
 
 - Adds totals example to documentation, clarifies values for grade and level_of_studies, and explains the use of 99 for totals only queries
+- Fixes year parsing error that did not correctly give all years of data for endpoints that skip years, so all data should now be returned for these calls
 - 
 
 #### 0.1.2 (Current Stable Version)
