@@ -2,6 +2,7 @@
 
 #### 0.1.3 (Development Version, not yet released)
 
+- Adds totals example to documentation, clarifies values for grade and level_of_studies, and explains the use of 99 for totals only queries
 - 
 
 #### 0.1.2 (Current Stable Version)
