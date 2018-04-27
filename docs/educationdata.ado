@@ -131,9 +131,11 @@ mata
 	string rowvector parseyears(real scalar matid){
 		string matrix endpoints
 		string rowvector getit
+		string rowvector getit2
 		string rowvector returnyears
 		string scalar yrs
 		string scalar yrstring
+		string scalar yrstring2
 		endpoints = endpointstrings()
 		yrs = endpoints[3,matid]
 		if (subinstr(subinstr(yrs, ",", ""), "–", "") == yrs){
@@ -154,6 +156,31 @@ mata
 			t = tokeninit(",")
 			s = tokenset(t, yrstring)
 			returnyears = tokengetall(t)
+		}
+		else if (subinstr(yrs, ",", "") != yrs){
+			t = tokeninit(", ")
+			s = tokenset(t, yrs)
+			getit = tokengetall(t)
+			yrstring = ""
+			for (c=1; c<=length(getit); c++){
+				if (subinstr(getit[c], "–", "") != getit[c]){
+					t = tokeninit("–")
+					s = tokenset(t, getit[c])
+					getit2 = tokengetall(t)
+					if (c == 1) yrstring = getit2[c]
+					else yrstring = yrstring + "," + getit2[1]
+					for (y=strtoreal(getit2[1])+1; y<=strtoreal(getit2[2]); y++){
+						yrstring = yrstring + "," + strofreal(y)
+					}				
+				}
+				else{
+					if (c == 1) yrstring = getit[c]
+					else yrstring = yrstring + "," + getit[c]
+				}
+			}	
+			t = tokeninit(",")
+			s = tokenset(t, yrstring)
+			returnyears = tokengetall(t)		
 		}
 		else {
 			t = tokeninit("–")
@@ -211,7 +238,7 @@ mata
 		else return(alist)
 		for (c=1; c<=length(alist); c++){
 			if (iteminlist(alist[c],tochecklist) == 0) {
-				if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0) return(("Error",""))
+				if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0) return(("Error",alist[c]))
 				else alist[c] = "grade-" + alist[c]
 			}
 		}
@@ -248,14 +275,14 @@ mata
 			if (getit[2] != "alldata"){
 				if (subinstr(subinstr(getit[2], ",", ""), ":", "") == getit[2]){
 					checklist = checkinglist((getit[2]), getit[1])
-					if (checklist[1] == "Error") return(("Invalid Option: " + getit[1]))
+					if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
 					else return(checklist)
 				}
 				else if (subinstr(getit[2], ",", "") != getit[2]){
 					t = tokeninit(",")
 					s = tokenset(t, getit[2])
 					checklist = checkinglist(tokengetall(t), getit[1])
-					if (checklist[1] == "Error") return(("Invalid Option: " + getit[1]))
+					if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
 					else return(checklist)	
 				}
 				else{
@@ -280,10 +307,13 @@ mata
 						t = tokeninit(",")
 						s = tokenset(t, getstring)
 						checklist = checkinglist(tokengetall(t), getit[1])
-						if (checklist[1] == "Error") return(("Invalid Option: " + getit[1]))
+						if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
 						else return(checklist)	
 					}
-					else return(("Invalid Option selection: " + getit[1] + ":" + getit[2]))
+					else {
+						if (isvalid(getit[1], tlev) == 0) return(("Invalid Option selection: " + getit[1] + " in " + getit[1] + ":" + getit[2]))
+						else return(("Invalid Option selection: " + getit[2] + " in " + getit[1] + ":" + getit[2]))
+					}
 				}
 			}
 			else{
@@ -402,6 +432,7 @@ mata
 				for(c=1; c<=length(svarnames); c++) {
 					tval = trow->getString(svarnames[c],"");
 					if (tval == "null") tval = ""
+					if (tval == `"""' + `"""') tval = ""
 					sdata[r,c] = tval
 				}
 				for(c=1; c<=length(rvarnames); c++) {
