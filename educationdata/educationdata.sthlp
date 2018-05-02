@@ -26,6 +26,11 @@ statements as follows:
 
     . educationdata using "dataset name here", optionnamehere(optionvaluehere)
 
+Or as follows:
+
+    . educationdata using "dataset name here", optionnamehere(optionvaluehere) 
+      anotheroptionhere
+
 {marker datasetname}{...}
 {title:Dataset Name Options}
 
@@ -315,6 +320,11 @@ saving the new dataset. For example,
 
 . educationdata using "college ipeds directory", col(unitid year) clear 
 
+{bf:And the {opt meta:data}} option allows reads in the variable names, variable labels, 
+and value labels, without reading in the data. For example,
+
+. educationdata using "college ipeds directory", meta
+
 {title:Installing package dependencies}
 
 The SSC package {bf:libjson} is required to use the {bf:educationdata}
@@ -347,6 +357,11 @@ you can install {bf:libjson} by running the following command:
 
     Download graduate rates for totals only, not race and sex breakdowns, for all years
         . educationdata using "college ipeds grad-rates", sub(race=99 sex=99)
+
+{bf:Getting only metadata}:
+
+    Get metadata for the full directory of colleges and universities
+        . educationdata using "college ipeds directory", meta
         
 {title:Author}
 

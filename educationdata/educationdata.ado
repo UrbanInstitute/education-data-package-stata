@@ -2,8 +2,8 @@ program educationdata
 version 11.0
 mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
-syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR]
-mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"));
+syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR] [METAdata]
+mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"),strlen("`metadata'"));
 end
 
 mata
@@ -625,7 +625,7 @@ mata
 	}
 	
 	// Main function to get data based on Stata request - calls other helper functions
-	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme){
+	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly){
 		string matrix endpoints
 		string matrix spops
 		string matrix varinfo
@@ -714,34 +714,37 @@ mata
 			return("")
 		}
 		epcount = 0
-		printf("Please be patient - Downloading data from API. I'll give you a time estimate shortly.\n")
+		if (metadataonly <= 0) printf("Please be patient - Downloading data from API. I'll give you a time estimate shortly.\n")
 		tempdata = createdataset(eid)
-		if (length(spops[1,.]) == 1){
-			totallen = length(temp1)
-			for (i=1; i<=length(temp1); i++){
-				epcount = epcount + 1
-				urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
-				hidereturn = getalltables(eid, urltemp, totallen, epcount)
-			}
-		}
-		else{
-			temp2 = validoptions(spops[2,2], epid)
-			if (tokens(temp2[1])[1] == "Invalid"){ 
-				printf(temp2[1])
-				return("")
-			}
-			totallen = length(temp1) * length(temp2)
-			for (i=1; i<=length(temp1); i++){
-				for (j=1; j<=length(temp2); j++){
+		if (metadataonly <= 0){
+			if (length(spops[1,.]) == 1){
+				totallen = length(temp1)
+				for (i=1; i<=length(temp1); i++){
 					epcount = epcount + 1
-					urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
+					urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
 					hidereturn = getalltables(eid, urltemp, totallen, epcount)
 				}
-			}		
+			}
+			else{
+				temp2 = validoptions(spops[2,2], epid)
+				if (tokens(temp2[1])[1] == "Invalid"){ 
+					printf(temp2[1])
+					return("")
+				}
+				totallen = length(temp1) * length(temp2)
+				for (i=1; i<=length(temp1); i++){
+					for (j=1; j<=length(temp2); j++){
+						epcount = epcount + 1
+						urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
+						hidereturn = getalltables(eid, urltemp, totallen, epcount)
+					}
+				}		
+			}
+			stata("qui compress")
 		}
-		stata("qui compress")
 		if (vlist != "") stata("keep " + vlist)
-		printf("\nData successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
+		if (metadataonly > 0) printf("Metadata successfully loaded into Stata and ready to view. Remove the " + `"""' + "metadata" + `"""' + " argument if you want to load the data itself.")
+		else printf("\nData successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
 		return("")
 	}
 

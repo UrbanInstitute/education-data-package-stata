@@ -4,6 +4,7 @@
 
 - Adds option to specify pre-k and k grades as "-1" and "0", as specified in the documentation, adds this to Stata help
 - Fixes error in time estimate that produced blanks if the first API call had no records
+- Adds the ability to get the variable names, labels, and values only via "meta" or "metadata" option
 - 
 
 #### 0.1.3 (Current Stable Version) 
