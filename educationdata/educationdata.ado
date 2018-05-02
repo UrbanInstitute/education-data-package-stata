@@ -238,7 +238,11 @@ mata
 		else return(alist)
 		for (c=1; c<=length(alist); c++){
 			if (iteminlist(alist[c],tochecklist) == 0) {
-				if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0) return(("Error",alist[c]))
+				if (tocheck == "grade" && (alist[c] == "-1" || alist[c] == "0")){
+					if (alist[c] == "-1") alist[c] = "grade-pk"
+					else alist[c] = "grade-k"
+				}
+				else if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0) return(("Error",alist[c]))
 				else alist[c] = "grade-" + alist[c]
 			}
 		}
@@ -261,6 +265,7 @@ mata
 		real scalar isopt1
 		real scalar spos1
 		real scalar spos2
+		real scalar isgrade
 		endpoints = endpointstrings()
 		t = tokeninit("=")
 		s = tokenset(t, subset1)
@@ -269,6 +274,7 @@ mata
 		isopt1 = isvalid(getit[1], vopts)
 		if (isopt1 == 1){
 			grades = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
+			grades_alt = ("-1","0","1","2","3","4","5","6","7","8","9","10","11","12","99")
 			levels = ("undergraduate","graduate","first-professional","post-baccalaureate")
 			fedaids = ("fed","sub-stafford","no-pell-stafford")
 			if (getit[1] == "year") years = parseyears(epid)
@@ -287,10 +293,12 @@ mata
 				}
 				else{
 					tempadd = ""
+					isgrade = 0
 					if (getit[1] == "year") tlev = years
 					else if (getit[1] == "grade"){
 						tlev = grades
 						tempadd = "grade-"
+						isgrade = 1
 					}
 					else if (getit[1] == "level_of_study") tlev = levels
 					else if (getit[1] == "fed_aid_type") tlev = fedaids
@@ -300,6 +308,19 @@ mata
 					if (isvalid(getit[1], tlev) == 1 && isvalid(getit[2], tlev) == 1){
 						spos1 = stringpos(getit[1], tlev)
 						spos2 = stringpos(getit[2], tlev)
+						getstring = tempadd + tlev[spos1]
+						for (c=spos1 + 1; c<=spos2; c++){
+							getstring = getstring + "," + tempadd + tlev[c]
+						}
+						t = tokeninit(",")
+						s = tokenset(t, getstring)
+						checklist = checkinglist(tokengetall(t), getit[1])
+						if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
+						else return(checklist)	
+					}
+					else if (isgrade == 1 && (isvalid(getit[1], grades_alt) == 1 && isvalid(getit[2], grades_alt) == 1)){
+						spos1 = stringpos(getit[1], grades_alt)
+						spos2 = stringpos(getit[2], grades_alt)
 						getstring = tempadd + tlev[spos1]
 						for (c=spos1 + 1; c<=spos2; c++){
 							getstring = getstring + "," + tempadd + tlev[c]

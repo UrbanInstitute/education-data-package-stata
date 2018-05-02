@@ -292,6 +292,8 @@ sub(year=2010:2015), sub(year=2012:2016 fips=12), etc. if year and fips were
 valid variables in the dataset specified after the "using" statement.
 
 For {bf:grade}, the options include "pk", "k", 1 through 12, and 99 (total).
+Optionally, you may substitute "-1" for "pk" and "0" for "k", so the grades run
+from -1 to 12 or "pk","k", and 1 to 12.
 
 For {bf:level_of_study}, the options include "undergraduate","graduate",
 "first-professional", and "post-baccalaureate".
