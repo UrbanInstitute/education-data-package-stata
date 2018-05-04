@@ -32,10 +32,22 @@ OR
 
 ### Testing the package
 
-First, ensure you are connected to the internet. Then run one of the simpler examples, such as:
+First, ensure you are connected to the internet. Then run one of the simpler examples, such as getting the metadata for a dataset:
 
 ```stata
+educationdata using "college ipeds directory", meta
+```
+
+Next, try downloading a subset of the dataset:
+
+```
 educationdata using "college ipeds directory", sub(year=2011 fips=12)
+```
+
+Use the `help` command to read about all of the commands and dataset options:
+
+```
+help educationdata
 ```
 
 ### Uninstall the Package

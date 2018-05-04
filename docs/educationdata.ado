@@ -2,8 +2,8 @@ program educationdata
 version 11.0
 mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
-syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR]
-mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"));
+syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR] [METAdata]
+mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"),strlen("`metadata'"));
 end
 
 mata
@@ -238,7 +238,11 @@ mata
 		else return(alist)
 		for (c=1; c<=length(alist); c++){
 			if (iteminlist(alist[c],tochecklist) == 0) {
-				if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0) return(("Error",alist[c]))
+				if (tocheck == "grade" && (alist[c] == "-1" || alist[c] == "0")){
+					if (alist[c] == "-1") alist[c] = "grade-pk"
+					else alist[c] = "grade-k"
+				}
+				else if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0) return(("Error",alist[c]))
 				else alist[c] = "grade-" + alist[c]
 			}
 		}
@@ -261,6 +265,7 @@ mata
 		real scalar isopt1
 		real scalar spos1
 		real scalar spos2
+		real scalar isgrade
 		endpoints = endpointstrings()
 		t = tokeninit("=")
 		s = tokenset(t, subset1)
@@ -269,6 +274,7 @@ mata
 		isopt1 = isvalid(getit[1], vopts)
 		if (isopt1 == 1){
 			grades = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
+			grades_alt = ("-1","0","1","2","3","4","5","6","7","8","9","10","11","12","99")
 			levels = ("undergraduate","graduate","first-professional","post-baccalaureate")
 			fedaids = ("fed","sub-stafford","no-pell-stafford")
 			if (getit[1] == "year") years = parseyears(epid)
@@ -287,10 +293,12 @@ mata
 				}
 				else{
 					tempadd = ""
+					isgrade = 0
 					if (getit[1] == "year") tlev = years
 					else if (getit[1] == "grade"){
 						tlev = grades
 						tempadd = "grade-"
+						isgrade = 1
 					}
 					else if (getit[1] == "level_of_study") tlev = levels
 					else if (getit[1] == "fed_aid_type") tlev = fedaids
@@ -300,6 +308,19 @@ mata
 					if (isvalid(getit[1], tlev) == 1 && isvalid(getit[2], tlev) == 1){
 						spos1 = stringpos(getit[1], tlev)
 						spos2 = stringpos(getit[2], tlev)
+						getstring = tempadd + tlev[spos1]
+						for (c=spos1 + 1; c<=spos2; c++){
+							getstring = getstring + "," + tempadd + tlev[c]
+						}
+						t = tokeninit(",")
+						s = tokenset(t, getstring)
+						checklist = checkinglist(tokengetall(t), getit[1])
+						if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
+						else return(checklist)	
+					}
+					else if (isgrade == 1 && (isvalid(getit[1], grades_alt) == 1 && isvalid(getit[2], grades_alt) == 1)){
+						spos1 = stringpos(getit[1], grades_alt)
+						spos2 = stringpos(getit[2], grades_alt)
 						getstring = tempadd + tlev[spos1]
 						for (c=spos1 + 1; c<=spos2; c++){
 							getstring = getstring + "," + tempadd + tlev[c]
@@ -578,6 +599,7 @@ mata
 		if (st_nobs() > 0) spos = st_nobs() + 1
 		countpage = 1
 		if (epcount1 == 1){
+			if (totalpages == .) totalpages = 1
 			timeper1 = 1500 * totalpages * totallen1
 			timeper2 = 10000 * totalpages * totallen1
 			timetaken1 = timeit(timeper1)
@@ -586,7 +608,7 @@ mata
 			if (timetaken1 == "less than one minute" && timetaken2 == "less than one minute") printf(timea + "less than one minute.\n")
 			else if (timetaken1 == "less than one minute" && timetaken2 != "less than one minute") printf(timea + "less than " + timetaken2 + ".\n")
 			else printf(timea + "between %s and %s.\n", timetaken1, timetaken2)
-			printf("Actual time may vary due to internet speed and file size differences.\n\n")
+			printf("I only used the first endpoint to measure this, so actual time may vary due to internet speed and file size differences.\n\n")
 			printf("Progress for each endpoint and call to the API will print to your screen. Please wait...\n")
 		}
 		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
@@ -603,7 +625,7 @@ mata
 	}
 	
 	// Main function to get data based on Stata request - calls other helper functions
-	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme){
+	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly){
 		string matrix endpoints
 		string matrix spops
 		string matrix varinfo
@@ -692,34 +714,37 @@ mata
 			return("")
 		}
 		epcount = 0
-		printf("Please be patient - Downloading data from API. I'll give you a time estimate shortly.\n")
+		if (metadataonly <= 0) printf("Please be patient - Downloading data from API. I'll give you a time estimate shortly.\n")
 		tempdata = createdataset(eid)
-		if (length(spops[1,.]) == 1){
-			totallen = length(temp1)
-			for (i=1; i<=length(temp1); i++){
-				epcount = epcount + 1
-				urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
-				hidereturn = getalltables(eid, urltemp, totallen, epcount)
-			}
-		}
-		else{
-			temp2 = validoptions(spops[2,2], epid)
-			if (tokens(temp2[1])[1] == "Invalid"){ 
-				printf(temp2[1])
-				return("")
-			}
-			totallen = length(temp1) * length(temp2)
-			for (i=1; i<=length(temp1); i++){
-				for (j=1; j<=length(temp2); j++){
+		if (metadataonly <= 0){
+			if (length(spops[1,.]) == 1){
+				totallen = length(temp1)
+				for (i=1; i<=length(temp1); i++){
 					epcount = epcount + 1
-					urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
+					urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
 					hidereturn = getalltables(eid, urltemp, totallen, epcount)
 				}
-			}		
+			}
+			else{
+				temp2 = validoptions(spops[2,2], epid)
+				if (tokens(temp2[1])[1] == "Invalid"){ 
+					printf(temp2[1])
+					return("")
+				}
+				totallen = length(temp1) * length(temp2)
+				for (i=1; i<=length(temp1); i++){
+					for (j=1; j<=length(temp2); j++){
+						epcount = epcount + 1
+						urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
+						hidereturn = getalltables(eid, urltemp, totallen, epcount)
+					}
+				}		
+			}
+			stata("qui compress")
 		}
-		stata("qui compress")
 		if (vlist != "") stata("keep " + vlist)
-		printf("\nData successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
+		if (metadataonly > 0) printf("Metadata successfully loaded into Stata and ready to view. Remove the " + `"""' + "metadata" + `"""' + " argument if you want to load the data itself.")
+		else printf("\nData successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
 		return("")
 	}
 

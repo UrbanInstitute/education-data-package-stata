@@ -1,13 +1,16 @@
 # Changelog for educationdata Stata Package
 
-#### 0.1.4 (Development Version, not yet released)
+#### 0.1.5 (Development Version, not yet released)
+
+- 
+
+#### 0.1.4 (Current Stable Version)
 
 - Adds option to specify pre-k and k grades as "-1" and "0", as specified in the documentation, adds this to Stata help
 - Fixes error in time estimate that produced blanks if the first API call had no records
 - Adds the ability to get the variable names, labels, and values only via "meta" or "metadata" option
-- 
 
-#### 0.1.3 (Current Stable Version) 
+#### 0.1.3 
 
 - Adds totals example to documentation, clarifies values for grade and level_of_study, and explains the use of 99 for totals only queries
 - Fixes year parsing error that did not correctly give all years of data for endpoints that skip years, so all data should now be returned for these calls

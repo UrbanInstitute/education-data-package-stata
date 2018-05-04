@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.1.3}
+{title:Education Data Package}{right:Version 0.1.4}
 
 {title:Syntax}
 
@@ -25,6 +25,11 @@ If you'd like to subset the data, or use other options, you can add options
 statements as follows:
 
     . educationdata using "dataset name here", optionnamehere(optionvaluehere)
+
+Or as follows:
+
+    . educationdata using "dataset name here", optionnamehere(optionvaluehere) 
+      anotheroptionhere
 
 {marker datasetname}{...}
 {title:Dataset Name Options}
@@ -292,6 +297,8 @@ sub(year=2010:2015), sub(year=2012:2016 fips=12), etc. if year and fips were
 valid variables in the dataset specified after the "using" statement.
 
 For {bf:grade}, the options include "pk", "k", 1 through 12, and 99 (total).
+Optionally, you may substitute "-1" for "pk" and "0" for "k", so the grades run
+from -1 to 12 or "pk","k", and 1 to 12.
 
 For {bf:level_of_study}, the options include "undergraduate","graduate",
 "first-professional", and "post-baccalaureate".
@@ -312,6 +319,11 @@ want a subset of variables. So, you might say:
 saving the new dataset. For example,
 
 . educationdata using "college ipeds directory", col(unitid year) clear 
+
+{bf:And the {opt meta:data}} option allows reads in the variable names, variable labels, 
+and value labels, without reading in the data. For example,
+
+. educationdata using "college ipeds directory", meta
 
 {title:Installing package dependencies}
 
@@ -345,6 +357,11 @@ you can install {bf:libjson} by running the following command:
 
     Download graduate rates for totals only, not race and sex breakdowns, for all years
         . educationdata using "college ipeds grad-rates", sub(race=99 sex=99)
+
+{bf:Getting only metadata}:
+
+    Get metadata for the full directory of colleges and universities
+        . educationdata using "college ipeds directory", meta
         
 {title:Author}
 
