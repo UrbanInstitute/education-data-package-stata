@@ -2,6 +2,7 @@
 
 #### 0.1.5 (Development Version, not yet released)
 
+- Functional change to underlying code to make it easy to change the base URL for launch
 - 
 
 #### 0.1.4 (Current Stable Version)

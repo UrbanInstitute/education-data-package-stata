@@ -8,6 +8,8 @@ end
 
 mata
 
+	st_global("base_url","https://ed-data-portal.urban.org")
+
 	// Beginning section above and some structure borrowed from insheetjson - thanks!;
 	// Helper function that returns results node
 	pointer (class libjson scalar) scalar getresults(string scalar url){
@@ -42,9 +44,9 @@ mata
 			}
 			varinfo[5,r] = trow->getString("format", "")
 			if (varinfo[5,r] != varinfo[1,r] && varinfo[5,r] != "string" && varinfo[5,r] != "numeric"){
-				result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + varinfo[5,r])	
+				result = getresults(st_global("base_url") + "/api/v1/api-values/?format_name=" + varinfo[5,r])	
 			}
-			else result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + varinfo[1,r])
+			else result = getresults(st_global("base_url") + "/api/v1/api-values/?format_name=" + varinfo[1,r])
 			numrowscheck = result->arrayLength()
 			if (numrowscheck == 0) varinfo[4,r] = "0"
 			else varinfo[4,r] = "1"
@@ -57,7 +59,7 @@ mata
 		pointer (class libjson scalar) scalar res1
 		pointer (class libjson scalar) scalar trow
 		string matrix endpointdata
-		res1 = getresults("https://ed-data-portal.urban.org/api/v1/api-endpoints/")
+		res1 = getresults(st_global("base_url") + "/api/v1/api-endpoints/")
 		numrows = res1->arrayLength()
 		endpointdata = J(3,numrows,"")
 		for (r=1; r<=numrows; r++){
@@ -404,9 +406,9 @@ mata
 		real scalar numrows
 		real scalar startvar
 		if (format1 != var1 && format1 != "string" && format1 != "numeric"){
-			result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + format1)	
+			result = getresults(st_global("base_url") + "/api/v1/api-values/?format_name=" + format1)	
 		}
-		else result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + var1)
+		else result = getresults(st_global("base_url") + "/api/v1/api-values/?format_name=" + var1)
 		numrows = result->arrayLength()
 		vardefs = J(2,numrows,"")
 		for (r=1; r<=numrows; r++){
@@ -522,7 +524,7 @@ mata
 		string matrix vardef
 		string scalar labeldef
 		string scalar labelshort
-		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
 			stata("qui label var " + varinfo[1,c] + " " + `"""' + varinfo[2,c] + `"""')
@@ -590,8 +592,8 @@ mata
 		real scalar countpage
 		real scalar timeper1
 		real scalar timeper2
-		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
-		root = libjson::webcall("https://ed-data-portal.urban.org" + url2,"");
+		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+		root = libjson::webcall(st_global("base_url") + url2,"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
@@ -612,7 +614,7 @@ mata
 			printf("Progress for each endpoint and call to the API will print to your screen. Please wait...\n")
 		}
 		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
-		nextpage = gettable("https://ed-data-portal.urban.org" + url2, spos, varinfo)
+		nextpage = gettable(st_global("base_url") + url2, spos, varinfo)
 		if (nextpage!="null"){
 			do {
 				spos = spos + pagesize
@@ -671,7 +673,7 @@ mata
 			return("")			
 		}
 		eid = endpoints[1,epid]
-		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		allopts = tokens(opts)
 		validopts = parseurls(endpoints[2,epid], "optional")
 		spops = J(2,length(validopts),"")
