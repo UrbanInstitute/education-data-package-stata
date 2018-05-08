@@ -66,3 +66,7 @@ ado uninstall educationdata
 ### Changes
 
 To view the changes made to the package over time, see the [changelog](https://github.com/UI-Research/education-data-package-stata/blob/master/changelog.md).
+
+### License
+
+This software is licensed under the [MIT License](https://github.com/UI-Research/education-data-package-stata/blob/master/license.txt).
