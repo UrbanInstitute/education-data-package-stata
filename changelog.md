@@ -3,6 +3,7 @@
 #### 0.1.5 (Development Version, not yet released)
 
 - Functional change to underlying code to make it easy to change the base URL for launch
+- Correct allowed values for grade and level_of_study in help file
 - 
 
 #### 0.1.4 (Current Stable Version)
