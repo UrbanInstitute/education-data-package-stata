@@ -31,7 +31,7 @@ mata
 		real scalar numrowscheck
 		res = getresults(url)
 		numrows = res->arrayLength()
-		varinfo = J(5,numrows,"")
+		varinfo = J(6,numrows,"")
 		for (r=1; r<=numrows; r++) {
 			trow = res->getArrayValue(r)
 			varinfo[1,r] = trow->getString("variable", "")
@@ -50,6 +50,7 @@ mata
 			numrowscheck = result->arrayLength()
 			if (numrowscheck == 0) varinfo[4,r] = "0"
 			else varinfo[4,r] = "1"
+			varinfo[6,r] = trow->getString("is_filter", "")
 		}
 		return(varinfo)		
 	}
@@ -634,6 +635,7 @@ mata
 		string rowvector allopts
 		string rowvector validopts
 		string rowvector res2
+		string rowvector respre
 		string rowvector temp1
 		string rowvector temp2
 		string scalar eid
@@ -641,6 +643,7 @@ mata
 		string scalar urladds
 		string scalar querystring
 		string scalar dataoptions1
+		string scalar validfilters
 		real scalar epid
 		real scalar spos
 		real scalar spos1
@@ -674,6 +677,16 @@ mata
 		}
 		eid = endpoints[1,epid]
 		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+		validfilters = ""
+		for (c=1; c<=length(varinfo[6,.]); c++){
+			if (varinfo[6,c] == "1" && varinfo[3,c] == "long"){
+				if (validfilters == "") validfilters = varinfo[1,c]
+				else validfilters = validfilters + ", " + varinfo[1,c]
+			}
+		}
+		t = tokeninit(", ")
+		s = tokenset(t, validfilters)
+		respre = tokengetall(t)
 		allopts = tokens(opts)
 		validopts = parseurls(endpoints[2,epid], "optional")
 		spops = J(2,length(validopts),"")
@@ -689,11 +702,22 @@ mata
 				else{
 					spos1 = stringpos(res2[1], varinfo[1,.])
 					if (spos1 > 0){
+						if (res2[2] != subinstr(subinstr(res2[2], ":", ""), ",", "")){
+							if (iteminlist(res2[1], respre) == 0){ 
+								printf("Error, option " + allopts[i] + " is not valid, because it may only be filtered on a single value, not multiple values.\n")
+								printf("Decimal variables may not be filtered at all. The variables that can be filtered on multiple values in this dataset are as follows:\n\n")
+								printf(validfilters)
+								return("\n\nDownload failed. Please try again.")
+							}
+							else{
+
+							}
+						}
 						if (urladds == "") urladds = urladds + allopts[i]
 						else urladds = urladds + ";" + allopts[i]
 					}
 					else {
-						printf("Error, option " + allopts[i] + " not valid. Valid variable selections are as follows:\n")
+						printf("Error, option " + allopts[i] + " is not valid. Valid variable selections are as follows:\n")
 						urladds = ""
 						for (c=1; c<=length(varinfo[1,.]); c++){
 							if (stringpos(strofreal(c),("1","6","11","16","21","26","31","36","41","46","51","56","61","66","71","76","81","86","91","96","101")) > 0) urladds = urladds + varinfo[1,c]
@@ -745,7 +769,11 @@ mata
 			stata("qui compress")
 		}
 		if (vlist != "") stata("keep " + vlist)
-		if (metadataonly > 0) printf("Metadata successfully loaded into Stata and ready to view. Remove the " + `"""' + "metadata" + `"""' + " argument if you want to load the data itself.")
+		if (metadataonly > 0) {
+			printf("Metadata successfully loaded into Stata and ready to view. Remove the " + `"""' + "metadata" + `"""' + " argument if you want to load the data itself.\n\n")
+			printf("Note: You may filter this dataset on any variable (as long as it does not have a decimal value) using a single value (e.g. grade=1), however only the following variables allow filtering on multiple values (e.g.grade=1:3 or grade=1,2):\n\n")
+			printf(validfilters)
+		}
 		else printf("\nData successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
 		return("")
 	}

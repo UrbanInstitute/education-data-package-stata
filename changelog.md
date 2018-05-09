@@ -4,6 +4,7 @@
 
 - Functional change to underlying code to make it easy to change the base URL for launch
 - Correct allowed values for grade and level_of_study in help file
+- Add error messages when a list of multiple filtered values is not valid
 - 
 
 #### 0.1.4 (Current Stable Version)
