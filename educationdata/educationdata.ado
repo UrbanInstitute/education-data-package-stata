@@ -38,7 +38,7 @@ mata
 			varinfo[2,r] = trow->getString("label", "")
 			tempvar = trow->getString("data_type", "")
 			if (tempvar == "integer") varinfo[3,r] = "long"
-			else if (tempvar == "float") varinfo[3,r] = "float"
+			else if (tempvar == "float") varinfo[3,r] = "double"
 			else if (tempvar == "string"){ 
 				varinfo[3,r] = "str" + trow->getString("string_length", "")
 			}
@@ -541,7 +541,7 @@ mata
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
-			else if (varinfo[3,c] == "long" || varinfo[3,c] == "float"){
+			else if (varinfo[3,c] == "long" || varinfo[3,c] == "double"){
 				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
