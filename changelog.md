@@ -1,14 +1,17 @@
 # Changelog for educationdata Stata Package
 
-#### 0.1.5 (Development Version, not yet released)
+#### 0.1.6 (Development Version, not yet released)
+
+- 
+
+#### 0.1.5 (Current Stable Version)
 
 - Functional change to underlying code to make it easy to change the base URL for launch
 - Correct allowed values for grade and level_of_study in help file
 - Add error messages when a list of multiple filtered values is not valid
 - Update float values to double, so that short decimals are stored efficiently, accurately and are easier to view
-- 
 
-#### 0.1.4 (Current Stable Version)
+#### 0.1.4
 
 - Adds option to specify pre-k and k grades as "-1" and "0", as specified in the documentation, adds this to Stata help
 - Fixes error in time estimate that produced blanks if the first API call had no records

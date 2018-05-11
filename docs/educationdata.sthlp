@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.1.4}
+{title:Education Data Package}{right:Version 0.1.5}
 
 {title:Syntax}
 
@@ -296,18 +296,19 @@ To be even more concrete, valid values might include sub(year=2011),
 sub(year=2010:2015), sub(year=2012:2016 fips=12), etc. if year and fips were 
 valid variables in the dataset specified after the "using" statement.
 
-For {bf:grade}, the options include "pk", "k", 1 through 12, and 99 (total).
-Optionally, you may substitute "-1" for "pk" and "0" for "k", so the grades run
-from -1 to 12 or "pk","k", and 1 to 12.
+For {bf:grade}, the options include "pk", "k", 1 through 12, 13, 14 (adult education),
+15, (ungraded), and 99 (total).
+
+Optionally, you may substitute "-1" for "pk" and "0" for "k".
 
 For {bf:level_of_study}, the options include "undergraduate","graduate",
-"first-professional", and "post-baccalaureate".
+"first-professional", "post-baccalaureate", and 99 (total).
 
-{bf:In general}, the code 99 indicates all categories combined, or "totals only".
-For example, race=99 or sex=99 indicates all races or all genders, while grade=99
-indicates total for all grades. Using the 99 filter can save time for those who
-only wish to request totals, and don't need by race, by grade, or by gender
-breakdowns.
+All variables follow a similar pattern to {bf:level_of_study}. {bf:In general}, the code 
+99 indicates all categories combined, or "totals only". For example, race=99 or sex=99 
+indicates all races or all genders, while grade=99 indicates total for all grades. 
+Using the 99 filter can save time for those who only wish to request totals, and don't 
+need by race, by grade, or by gender breakdowns.
 
 {marker columns}{...}
 2. {bf:{opt col:umns(str)}}: Specifies the variables you would like to select, if you only

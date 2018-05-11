@@ -1,7 +1,7 @@
-d 'EDUCATIONDATA': The package for accessing the Education Data Portal {break}
+d 'EDUCATIONDATA': The package for accessing the Education Data Portal
 d https://ed-data-portal.urban.org/
 d
-d Distribution-Date: 20180504
+d Distribution-Date: 20180511
 d
 F educationdata.ado
 F educationdata.sthlp

@@ -8,6 +8,8 @@ end
 
 mata
 
+	st_global("base_url","https://ed-data-portal.urban.org")
+
 	// Beginning section above and some structure borrowed from insheetjson - thanks!;
 	// Helper function that returns results node
 	pointer (class libjson scalar) scalar getresults(string scalar url){
@@ -29,25 +31,26 @@ mata
 		real scalar numrowscheck
 		res = getresults(url)
 		numrows = res->arrayLength()
-		varinfo = J(5,numrows,"")
+		varinfo = J(6,numrows,"")
 		for (r=1; r<=numrows; r++) {
 			trow = res->getArrayValue(r)
 			varinfo[1,r] = trow->getString("variable", "")
 			varinfo[2,r] = trow->getString("label", "")
 			tempvar = trow->getString("data_type", "")
 			if (tempvar == "integer") varinfo[3,r] = "long"
-			else if (tempvar == "float") varinfo[3,r] = "float"
+			else if (tempvar == "float") varinfo[3,r] = "double"
 			else if (tempvar == "string"){ 
 				varinfo[3,r] = "str" + trow->getString("string_length", "")
 			}
 			varinfo[5,r] = trow->getString("format", "")
 			if (varinfo[5,r] != varinfo[1,r] && varinfo[5,r] != "string" && varinfo[5,r] != "numeric"){
-				result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + varinfo[5,r])	
+				result = getresults(st_global("base_url") + "/api/v1/api-values/?format_name=" + varinfo[5,r])	
 			}
-			else result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + varinfo[1,r])
+			else result = getresults(st_global("base_url") + "/api/v1/api-values/?format_name=" + varinfo[1,r])
 			numrowscheck = result->arrayLength()
 			if (numrowscheck == 0) varinfo[4,r] = "0"
 			else varinfo[4,r] = "1"
+			varinfo[6,r] = trow->getString("is_filter", "")
 		}
 		return(varinfo)		
 	}
@@ -57,7 +60,7 @@ mata
 		pointer (class libjson scalar) scalar res1
 		pointer (class libjson scalar) scalar trow
 		string matrix endpointdata
-		res1 = getresults("https://ed-data-portal.urban.org/api/v1/api-endpoints/")
+		res1 = getresults(st_global("base_url") + "/api/v1/api-endpoints/")
 		numrows = res1->arrayLength()
 		endpointdata = J(3,numrows,"")
 		for (r=1; r<=numrows; r++){
@@ -404,9 +407,9 @@ mata
 		real scalar numrows
 		real scalar startvar
 		if (format1 != var1 && format1 != "string" && format1 != "numeric"){
-			result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + format1)	
+			result = getresults(st_global("base_url") + "/api/v1/api-values/?format_name=" + format1)	
 		}
-		else result = getresults("https://ed-data-portal.urban.org/api/v1/api-values/?format_name=" + var1)
+		else result = getresults(st_global("base_url") + "/api/v1/api-values/?format_name=" + var1)
 		numrows = result->arrayLength()
 		vardefs = J(2,numrows,"")
 		for (r=1; r<=numrows; r++){
@@ -522,7 +525,7 @@ mata
 		string matrix vardef
 		string scalar labeldef
 		string scalar labelshort
-		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
 			stata("qui label var " + varinfo[1,c] + " " + `"""' + varinfo[2,c] + `"""')
@@ -538,7 +541,7 @@ mata
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
-			else if (varinfo[3,c] == "long" || varinfo[3,c] == "float"){
+			else if (varinfo[3,c] == "long" || varinfo[3,c] == "double"){
 				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
@@ -590,8 +593,8 @@ mata
 		real scalar countpage
 		real scalar timeper1
 		real scalar timeper2
-		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
-		root = libjson::webcall("https://ed-data-portal.urban.org" + url2,"");
+		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+		root = libjson::webcall(st_global("base_url") + url2,"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
@@ -612,7 +615,7 @@ mata
 			printf("Progress for each endpoint and call to the API will print to your screen. Please wait...\n")
 		}
 		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
-		nextpage = gettable("https://ed-data-portal.urban.org" + url2, spos, varinfo)
+		nextpage = gettable(st_global("base_url") + url2, spos, varinfo)
 		if (nextpage!="null"){
 			do {
 				spos = spos + pagesize
@@ -632,6 +635,7 @@ mata
 		string rowvector allopts
 		string rowvector validopts
 		string rowvector res2
+		string rowvector respre
 		string rowvector temp1
 		string rowvector temp2
 		string scalar eid
@@ -639,6 +643,7 @@ mata
 		string scalar urladds
 		string scalar querystring
 		string scalar dataoptions1
+		string scalar validfilters
 		real scalar epid
 		real scalar spos
 		real scalar spos1
@@ -671,7 +676,17 @@ mata
 			return("")			
 		}
 		eid = endpoints[1,epid]
-		varinfo = getvarinfo("https://ed-data-portal.urban.org/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+		validfilters = ""
+		for (c=1; c<=length(varinfo[6,.]); c++){
+			if (varinfo[6,c] == "1" && varinfo[3,c] == "long"){
+				if (validfilters == "") validfilters = varinfo[1,c]
+				else validfilters = validfilters + ", " + varinfo[1,c]
+			}
+		}
+		t = tokeninit(", ")
+		s = tokenset(t, validfilters)
+		respre = tokengetall(t)
 		allopts = tokens(opts)
 		validopts = parseurls(endpoints[2,epid], "optional")
 		spops = J(2,length(validopts),"")
@@ -687,11 +702,22 @@ mata
 				else{
 					spos1 = stringpos(res2[1], varinfo[1,.])
 					if (spos1 > 0){
+						if (res2[2] != subinstr(subinstr(res2[2], ":", ""), ",", "")){
+							if (iteminlist(res2[1], respre) == 0){ 
+								printf("Error, option " + allopts[i] + " is not valid, because it may only be filtered on a single value, not multiple values.\n")
+								printf("Decimal variables may not be filtered at all. The variables that can be filtered on multiple values in this dataset are as follows:\n\n")
+								printf(validfilters)
+								return("\n\nDownload failed. Please try again.")
+							}
+							else{
+
+							}
+						}
 						if (urladds == "") urladds = urladds + allopts[i]
 						else urladds = urladds + ";" + allopts[i]
 					}
 					else {
-						printf("Error, option " + allopts[i] + " not valid. Valid variable selections are as follows:\n")
+						printf("Error, option " + allopts[i] + " is not valid. Valid variable selections are as follows:\n")
 						urladds = ""
 						for (c=1; c<=length(varinfo[1,.]); c++){
 							if (stringpos(strofreal(c),("1","6","11","16","21","26","31","36","41","46","51","56","61","66","71","76","81","86","91","96","101")) > 0) urladds = urladds + varinfo[1,c]
@@ -743,7 +769,11 @@ mata
 			stata("qui compress")
 		}
 		if (vlist != "") stata("keep " + vlist)
-		if (metadataonly > 0) printf("Metadata successfully loaded into Stata and ready to view. Remove the " + `"""' + "metadata" + `"""' + " argument if you want to load the data itself.")
+		if (metadataonly > 0) {
+			printf("Metadata successfully loaded into Stata and ready to view. Remove the " + `"""' + "metadata" + `"""' + " argument if you want to load the data itself.\n\n")
+			printf("Note: You may filter this dataset on any variable (as long as it does not have a decimal value) using a single value (e.g. grade=1), however only the following variables allow filtering on multiple values (e.g.grade=1:3 or grade=1,2):\n\n")
+			printf(validfilters)
+		}
 		else printf("\nData successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
 		return("")
 	}
