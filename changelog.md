@@ -2,7 +2,7 @@
 
 #### 0.1.6 (Development Version, not yet released)
 
-- 
+- Small wording improvements to error messages
 
 #### 0.1.5 (Current Stable Version)
 

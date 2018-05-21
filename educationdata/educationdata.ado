@@ -611,7 +611,7 @@ mata
 			if (timetaken1 == "less than one minute" && timetaken2 == "less than one minute") printf(timea + "less than one minute.\n")
 			else if (timetaken1 == "less than one minute" && timetaken2 != "less than one minute") printf(timea + "less than " + timetaken2 + ".\n")
 			else printf(timea + "between %s and %s.\n", timetaken1, timetaken2)
-			printf("I only used the first endpoint to measure this, so actual time may vary due to internet speed and file size differences.\n\n")
+			printf("This is only an estimate, so actual time may vary due to internet speed and file size differences.\n\n")
 			printf("Progress for each endpoint and call to the API will print to your screen. Please wait...\n")
 		}
 		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
