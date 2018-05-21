@@ -10,6 +10,12 @@ If you don't have `libjson` installed, the package will automatically install it
 net install educationdata, replace from("https://ui-research.github.io/education-data-package-stata/")
 ```
 
+If you are running Stata 14 or later, and you allowed the program to install libjson for you, run the following:
+
+```stata
+adoupdate
+```
+
 If you have trouble with this command, uninstall any existing installations using the instructions below, close and re-open Stata, then re-run the command above.
 
 #### Error r(672) - Server refused to send file
