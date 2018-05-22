@@ -7,7 +7,7 @@ Welcome to the Education Data Portal Stata Package repository. You'll need an in
 If you don't have `libjson` installed, the package will automatically install it for you once you run your first `educationdata` command. Or, you can type `ssc install libjson`. The following command will install, or if the package is already installed, update the education data package.
 
 ```stata
-net install educationdata, replace from("https://ui-research.github.io/education-data-package-stata/")
+net install educationdata, replace from("https://urbaninstitute.github.io/education-data-package-stata/")
 ```
 
 If you are running Stata 14 or later, and you allowed the program to install libjson for you, run the following:
@@ -23,7 +23,7 @@ If you have trouble with this command, uninstall any existing installations usin
 If you run into the error `server refused to send file`, your firewall may be blocking access to Stata's ability to download content. Note that this may also block your ability to download data via an API, so this may not solve all concerns. First, download the zip file of the package, by copying the following to your browser:
 
 ```
-https://ui-research.github.io/education-data-package-stata/educationdata.zip
+https://urbaninstitute.github.io/education-data-package-stata/educationdata.zip
 ```
 
 Unzip the file, and do one of two things:
@@ -71,8 +71,8 @@ ado uninstall educationdata
 
 ### Changes
 
-To view the changes made to the package over time, see the [changelog](https://github.com/UI-Research/education-data-package-stata/blob/master/changelog.md).
+To view the changes made to the package over time, see the [changelog](https://github.com/UrbanInstitute/education-data-package-stata/blob/master/changelog.md).
 
 ### License
 
-This software is licensed under the [MIT License](https://github.com/UI-Research/education-data-package-stata/blob/master/license.txt).
+This software is licensed under the [MIT License](https://github.com/UrbanInstitute/education-data-package-stata/blob/master/license.txt).
