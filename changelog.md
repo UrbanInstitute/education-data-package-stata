@@ -1,10 +1,15 @@
 # Changelog for educationdata Stata Package
 
-#### 0.1.6 (Development Version, not yet released)
+#### 0.1.7 (Development Version, not yet released)
+
+- 
+
+#### 0.1.6 (Current Stable Version)
 
 - Small wording improvements to error messages
+- Add staging option to give advanced users the option to test against the staging server, which may contain errors, bugs, or issues (do not use for normal purposes)
 
-#### 0.1.5 (Current Stable Version)
+#### 0.1.5
 
 - Functional change to underlying code to make it easy to change the base URL for launch
 - Correct allowed values for grade and level_of_study in help file

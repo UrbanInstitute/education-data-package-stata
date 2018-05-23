@@ -2,13 +2,11 @@ program educationdata
 version 11.0
 mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
-syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR] [METAdata]
-mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"),strlen("`metadata'"));
+syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR] [METAdata] [STAGING]
+mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"),strlen("`metadata'"),strlen("`staging'"));
 end
 
 mata
-
-	st_global("base_url","https://ed-data-portal.urban.org")
 
 	// Beginning section above and some structure borrowed from insheetjson - thanks!;
 	// Helper function that returns results node
@@ -611,7 +609,7 @@ mata
 			if (timetaken1 == "less than one minute" && timetaken2 == "less than one minute") printf(timea + "less than one minute.\n")
 			else if (timetaken1 == "less than one minute" && timetaken2 != "less than one minute") printf(timea + "less than " + timetaken2 + ".\n")
 			else printf(timea + "between %s and %s.\n", timetaken1, timetaken2)
-			printf("I only used the first endpoint to measure this, so actual time may vary due to internet speed and file size differences.\n\n")
+			printf("This is only an estimate, so actual time may vary due to internet speed and file size differences.\n\n")
 			printf("Progress for each endpoint and call to the API will print to your screen. Please wait...\n")
 		}
 		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
@@ -628,7 +626,7 @@ mata
 	}
 	
 	// Main function to get data based on Stata request - calls other helper functions
-	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly){
+	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly, real scalar staging){
 		string matrix endpoints
 		string matrix spops
 		string matrix varinfo
@@ -651,6 +649,9 @@ mata
 		real scalar totallen
 		real scalar epcount
 		real scalar tempdata
+		st_global("base_url","https://educationdata.urban.org")
+		st_global("staging_url","https://educationdata-stg.urban.org")
+		if (staging > 0) st_global("base_url",st_global("staging_url"))
 		X = st_data(.,.)
 		if (clearme > 0) stata("clear")
 		else{

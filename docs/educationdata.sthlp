@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.1.5}
+{title:Education Data Package}{right:Version 0.1.6}
 
 {title:Syntax}
 
@@ -11,7 +11,7 @@
 
 The {bf:educationdata} package makes it easy for you to download and format
 the school, school district, and college & university data from the 
-{browse "https://ed-data-portal.urban.org/":Education Data Portal} Application Programming Interface (API). Per the 
+{browse "https://educationdata.urban.org/":Education Data Portal} Application Programming Interface (API). Per the 
 "Installing Package Dependencies" section below, you will need to install 
 the SSC package {bf:libjson} before using this package.
 
@@ -151,14 +151,6 @@ August 1 and October 31. Submission of enrollment by age categories is optional
 in even-numbered years. Available levels of study are undergraduate, graduate,
 and first-professional (through 2008 only); in 2000, only undergraduate data
 are available.
-
-{bf:"college ipeds enrollment-headcount"}: This endpoint contains the
-unduplicated head count of students enrolled over a 12-month period for both
-undergraduate and graduate levels. These enrollment data are particularly
-valuable for institutions that use non-traditional calendar systems and offer
-short-term programs. Because this enrollment measure encompasses an entire
-year, it provides a more complete picture of the number of students these
-schools serve. Counts are available by level of study, sex, and race/ethnicity.
 
 {bf:"college ipeds fall-retention"}: The first-year retention rate data
 measures the percentage of first-year students who had persisted in or
