@@ -113,14 +113,6 @@ in even-numbered years. Available levels of study are undergraduate, graduate,
 and first-professional (through 2008 only); in 2000, only undergraduate data
 are available.
 
-{bf:"college ipeds enrollment-headcount"}: This endpoint contains the
-unduplicated head count of students enrolled over a 12-month period for both
-undergraduate and graduate levels. These enrollment data are particularly
-valuable for institutions that use non-traditional calendar systems and offer
-short-term programs. Because this enrollment measure encompasses an entire
-year, it provides a more complete picture of the number of students these
-schools serve. Counts are available by level of study, sex, and race/ethnicity.
-
 {bf:"college ipeds fall-retention"}: The first-year retention rate data
 measures the percentage of first-year students who had persisted in or
 completed their educational program a year later.
