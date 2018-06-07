@@ -18,9 +18,9 @@ adoupdate
 
 If you have trouble with this command, uninstall any existing installations using the instructions below, close and re-open Stata, then re-run the command above.
 
-#### Error r(672) - Server refused to send file
+#### Error r(672) - Server refused to send file OR similar errors in installation
 
-If you run into the error `server refused to send file`, your firewall may be blocking access to Stata's ability to download content. Note that this may also block your ability to download data via an API, so this may not solve all concerns. First, download the zip file of the package, by copying the following to your browser:
+If you run into the error `server refused to send file` or similar errors, your firewall may be blocking access to Stata's ability to download content, or Stata may have a conflict with other programs installed on your operating system or in your organization. Note that this may also block your ability to download data via an API, so this may not solve all concerns, but in most tested cases, this method should solve the problem. First, download the zip file of the package, by copying the following to your browser:
 
 ```
 https://urbaninstitute.github.io/education-data-package-stata/educationdata.zip

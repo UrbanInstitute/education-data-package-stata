@@ -139,7 +139,7 @@ mata
 		string scalar yrstring2
 		endpoints = endpointstrings()
 		yrs = endpoints[3,matid]
-		if (subinstr(subinstr(yrs, ",", ""), "–", "") == yrs){
+		if (subinstr(subinstr(yrs, ",", ""), "-", "") == yrs){
 			returnyears = (yrs)
 		}
 		else if (subinstr(yrs, "and", "") != yrs){
@@ -148,7 +148,7 @@ mata
 			s = tokenset(t, yrs)
 			getit = tokengetall(t)
 			yrstring = subinstr(yrs, "," + getit[length(getit)], "")
-			t = tokeninit("–")
+			t = tokeninit("-")
 			s = tokenset(t, getit[length(getit)])
 			getit = tokengetall(t)
 			for (y=strtoreal(getit[1]); y<=strtoreal(getit[2]); y++){
@@ -164,8 +164,8 @@ mata
 			getit = tokengetall(t)
 			yrstring = ""
 			for (c=1; c<=length(getit); c++){
-				if (subinstr(getit[c], "–", "") != getit[c]){
-					t = tokeninit("–")
+				if (subinstr(getit[c], "-", "") != getit[c]){
+					t = tokeninit("-")
 					s = tokenset(t, getit[c])
 					getit2 = tokengetall(t)
 					if (c == 1) yrstring = getit2[c]
@@ -184,7 +184,7 @@ mata
 			returnyears = tokengetall(t)		
 		}
 		else {
-			t = tokeninit("–")
+			t = tokeninit("-")
 			s = tokenset(t, yrs)
 			getit = tokengetall(t)
 			yrstring = getit[1]

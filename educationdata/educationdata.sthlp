@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.1.6}
+{title:Education Data Package}{right:Version 0.1.7}
 
 {title:Syntax}
 
@@ -131,8 +131,8 @@ and post-baccalaureate (through 1998 only).
 
 {bf:"college ipeds fall-enrollment age"}: This endpoint contains the number
 of students enrolled in the fall, by age categories, full-time/part-time status
-and level of study. Institutions with traditional academic year calendar
-systems (semester, quarter, trimester or 4-1-4) report their enrollment as of
+and level of study.åÊ Institutions with traditional academic year calendar
+systems (semester, quarter, trimester oråÊ 4-1-4) report their enrollment as of
 October 15 or the official fall reporting date of the institution. Institutions
 with calendar systems that differ by program or allow continuous enrollment
 report students that are enrolled at any time between August 1 and October 31.
@@ -142,8 +142,8 @@ Available levels of study are undergraduate, graduate, and first-professional
 
 {bf:"college ipeds fall-enrollment age sex"}: This endpoint contains the
 number of students enrolled in the fall, by age categories, sex,
-full-time/part-time status and level of study. Institutions with traditional
-academic year calendar systems (semester, quarter, trimester or 4-1-4) report
+full-time/part-time status and level of study.åÊ Institutions with traditional
+academic year calendar systems (semester, quarter, trimester oråÊ 4-1-4) report
 their enrollment as of October 15 or the official fall reporting date of the
 institution. Institutions with calendar systems that differ by program or allow
 continuous enrollment report students that are enrolled at any time between
