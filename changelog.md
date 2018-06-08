@@ -1,10 +1,14 @@
 # Changelog for educationdata Stata Package
 
-#### 0.1.8 (Development Version, not yet released)
+#### 0.2.0 (Development Version, not yet released)
 
 - 
 
-#### 0.1.7 (Current Stable Version)
+#### 0.1.8 (Current Stable Version)
+
+- Fix year parsing error in api-endpoints, that changed normal dash to ndash, to correctly parse years
+
+#### 0.1.7 
 
 - Fix year parsing error in api-endpoints, that changed mdash to normal dash, to correctly parse years
 
