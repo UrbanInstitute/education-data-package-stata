@@ -2,6 +2,7 @@
 
 #### 0.2.0 (Development Version, not yet released)
 
+- Improve error messages, fix error message errors for fields in which the user types invalid values
 - 
 
 #### 0.1.8 (Current Stable Version)

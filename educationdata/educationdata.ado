@@ -227,7 +227,7 @@ mata
 	}
 
 	// Helper function to validate against list
-	string rowvector checkinglist(string rowvector alist, string scalar tocheck){
+	string rowvector checkinglist(string rowvector alist, string scalar tocheck, string rowvector yearlist){
 		string rowvector tochecklist
 		string rowvector toaddlist
 		if (tocheck == "grade") { 
@@ -236,6 +236,7 @@ mata
 		}
 		else if (tocheck == "level_of_study") tochecklist = ("undergraduate","graduate","first-professional","post-baccalaureate","1","2","3","4")
 		else if (tocheck == "fed_aid_type") tochecklist = ("fed","sub-stafford","no-pell-stafford","1","2","3")
+		else if (tocheck == "year") tochecklist = yearlist
 		else return(alist)
 		for (c=1; c<=length(alist); c++){
 			if (iteminlist(alist[c],tochecklist) == 0) {
@@ -279,17 +280,18 @@ mata
 			levels = ("undergraduate","graduate","first-professional","post-baccalaureate")
 			fedaids = ("fed","sub-stafford","no-pell-stafford")
 			if (getit[1] == "year") years = parseyears(epid)
+			else years = ("fake","data")
 			if (getit[2] != "alldata"){
 				if (subinstr(subinstr(getit[2], ",", ""), ":", "") == getit[2]){
-					checklist = checkinglist((getit[2]), getit[1])
-					if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
+					checklist = checkinglist((getit[2]), getit[1], years)
+					if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
 					else return(checklist)
 				}
 				else if (subinstr(getit[2], ",", "") != getit[2]){
 					t = tokeninit(",")
 					s = tokenset(t, getit[2])
-					checklist = checkinglist(tokengetall(t), getit[1])
-					if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
+					checklist = checkinglist(tokengetall(t), getit[1], years)
+					if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
 					else return(checklist)	
 				}
 				else{
@@ -315,8 +317,8 @@ mata
 						}
 						t = tokeninit(",")
 						s = tokenset(t, getstring)
-						checklist = checkinglist(tokengetall(t), getit[1])
-						if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
+						checklist = checkinglist(tokengetall(t), getit[1], years)
+						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
 						else return(checklist)	
 					}
 					else if (isgrade == 1 && (isvalid(getit[1], grades_alt) == 1 && isvalid(getit[2], grades_alt) == 1)){
@@ -328,13 +330,13 @@ mata
 						}
 						t = tokeninit(",")
 						s = tokenset(t, getstring)
-						checklist = checkinglist(tokengetall(t), getit[1])
-						if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
+						checklist = checkinglist(tokengetall(t), getit[1], years)
+						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
 						else return(checklist)	
 					}
 					else {
-						if (isvalid(getit[1], tlev) == 0) return(("Invalid Option selection: " + getit[1] + " in " + getit[1] + ":" + getit[2]))
-						else return(("Invalid Option selection: " + getit[2] + " in " + getit[1] + ":" + getit[2]))
+						if (isvalid(getit[1], tlev) == 0) return(("Invalid Option selection: " + getit[1] + " in " + getit[1] + ":" + getit[2], ""))
+						else return(("Invalid Option selection: " + getit[2] + " in " + getit[1] + ":" + getit[2], ""))
 					}
 				}
 			}
