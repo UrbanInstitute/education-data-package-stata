@@ -579,35 +579,61 @@ mata
 		return(timetaken)
 	}
 
+	// Provide CSV download with numbered list of columns that should be strings
+	string scalar numliststr(){
+
+	}
+
+	// Label CSV dataset appropriately when it is loaded in
+	real scalar labelcsv(){
+		
+	}
+
 	// Download from CSV instead
-	real scalar downloadcsv(string scalar eid1, string matrix spops1, string scalar ds1){
+	real scalar downloadcsv(string scalar eid1, string matrix spops1, string scalar ds1, real scalar epid1){
 		pointer (class libjson scalar) scalar results1
 		pointer (class libjson scalar) scalar trow
+		string rowvector yearslist
 		string scalar tval
 		string scalar tbaseurl
+		real scalar dlyear
 		real scalar numresults
 		tbaseurl = st_global("base_url") + "/csv/" + ds1 + "/"
 		results1 = getresults(st_global("base_url") + "/api/v1/api-downloads/?endpoint_id=" + eid1)
+		yearslist = validoptions(spops1[2,1], epid1)
 		numresults = results1->arrayLength()
 		if (numresults == 1){
 			return(0)
 		}
 		if (numresults == 2){
-			tval->getArrayValue(2)->getString("file_name", "")
+			printf("Downloading file, please wait...\n")
+			tval = results1->getArrayValue(2)->getString("file_name", "")
 			stata("import delimited " + tbaseurl + subinstr(tval, " ", ""))
 		}
 		else{
+			printf("Progress for each CSV file will print to your screen. Please wait...\n\n")
 			for (r=1; r<=numresults; r++){
+				printf("Processing file " + strofreal(r) + " of " + strofreal(numresults) + "\n")
 				trow = results1->getArrayValue(r);
-				for(c=1; c<=length(svarnames); c++) {
-					tval = trow->getString("file_name","");
-					if (subinstr(tval, ".csv", "") != tval){
-						// Read data into memory and append
-					}
+				tval = trow->getString("file_name","");
+				dlyear = 0
+				if (subinstr(tval, ".csv", "") != tval) dlyear = dlyear + 1
+				else dlyear = -10
+				for (c=1; c<=length(yearslist); c++){
+					if (subinstr(tval, yearslist[c], "") != tval) dlyear = dlyear + 1
+				}
+				if (dlyear == 2){
+					stata("qui preserve")
+					stata("qui import delimited " + tbaseurl + subinstr(tval, " ", "") + ", clear")
+					stata("qui save temp_eddata_file_gen_012345, replace")
+					stata("qui restore")
+					stata("qui append using temp_eddata_file_gen_012345")
 				}
 			}
+			stata("qui rm temp_eddata_file_gen_012345.dta")
 		}
 		// Add value and variable labels
+		stata("qui compress")
 		return(1)
 	}
 
@@ -775,16 +801,16 @@ mata
 			return("")
 		}
 		epcount = 0
-		if (metadataonly <= 0) printf("Please be patient - downloading data. I'll give you a time estimate shortly.\n")
+		if (metadataonly <= 0) printf("Please be patient - downloading data.\n")
+		tempdata = createdataset(eid)
 		if (csv > 0 && metadataonly <= 0){
 			ds = tokens(dataoptions)[2]
-			temp3 = downloadcsv(eid,spops,ds)
+			temp3 = downloadcsv(eid,spops,ds,epid)
 			if (temp3 == 0){
 				printf("Error: Sorry, there is no CSV file available for download for this dataset at this time.")
 			}
 		}
 		else{
-			tempdata = createdataset(eid)
 			if (metadataonly <= 0){
 				if (length(spops[1,.]) == 1){
 					totallen = length(temp1)
