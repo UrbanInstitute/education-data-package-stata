@@ -226,6 +226,16 @@ mata
 		return(isinlist)
 	}
 
+	// Helper function to check number of item in list
+	real scalar iteminlistnum(string scalar i, string rowvector tlist){
+		real scalar isinlist
+		isinlist = 0
+		for (r=1; r<=length(tlist); r++){
+			if (i == tlist[r]) isinlist = r
+		}
+		return(isinlist)
+	}
+
 	// Helper function to validate against list
 	string rowvector checkinglist(string rowvector alist, string scalar tocheck, string rowvector yearlist){
 		string rowvector tochecklist
@@ -581,12 +591,16 @@ mata
 
 	// Provide CSV download with numbered list of columns that should be strings
 	string scalar numliststr(string matrix varinfo2){
+		string rowvector varnames
 		string scalar nliststr
+		real scalar listnum
+		varnames = st_varname((1..st_nvar()))
 		nliststr = ""
 		for (c=1; c<=length(varinfo2[1,.]); c++){
 			if (varinfo2[5,c] == "string"){
-				if (nliststr == "") nliststr = strofreal(c)
-				else nliststr = nliststr + " " + strofreal(c)
+				listnum = iteminlistnum(varinfo2[1,c], varnames)
+				if (nliststr == "") nliststr = strofreal(listnum)
+				else nliststr = nliststr + " " + strofreal(listnum)
 			}
 		}
 		return(nliststr)
@@ -625,7 +639,7 @@ mata
 	}
 
 	// Subset and keep relevant variables - keep if inlist(varname,val1,val2,etc.)
-	real scalar subsetkeep(string matrix spops2, string scalar querystring2, real scalar epid2){
+	real scalar subsetkeep(string matrix spops2, string scalar querystring2, real scalar epid2, string scalar vlist2){
 		string rowvector spopsres
 		string rowvector voptions
 		string rowvector queryparams
@@ -659,11 +673,12 @@ mata
 			keepstate = keepbase + queryparamvals[1] + "," + queryparamvals[2] + ")"
 			stata(keepstate)
 		}
+		if (vlist2 != "") stata("keep " + vlist2)
 		return(1)
 	}
 
 	// Download from CSV instead
-	real scalar downloadcsv(string scalar eid1, string matrix spops1, string scalar ds1, real scalar epid1, string matrix varinfo1, string scalar querystring1){
+	real scalar downloadcsv(string scalar eid1, string matrix spops1, string scalar ds1, real scalar epid1, string matrix varinfo1, string scalar querystring1, string scalar vlist1){
 		pointer (class libjson scalar) scalar results1
 		pointer (class libjson scalar) scalar trow
 		string rowvector yearslist
@@ -689,15 +704,18 @@ mata
 		if (numresults == 2){
 			printf("Downloading file, please wait...\n")
 			tval = results1->getArrayValue(2)->getString("file_name", "")
+			stata("qui import delimited " + tbaseurl + subinstr(tval, " ", "") + ", clear rowrange(1:1)")
 			liststrings = numliststr(varinfo1)
 			if (liststrings == "") addstrings = ""
 			else addstrings = " stringcols(" + liststrings + ")"
 			stata("qui import delimited " + tbaseurl + subinstr(tval, " ", "") + ", clear" + addstrings)
 			temp1 = labelcsv(varinfo1, 1)
-			temp2 = subsetkeep(spops1, querystring1, epid1)
+			temp2 = subsetkeep(spops1, querystring1, epid1, vlist1)
 		}
 		else{
 			printf("Progress for each CSV file will print to your screen. Please wait...\n\n")
+			tval = results1->getArrayValue(2)->getString("file_name","");
+			stata("qui import delimited " + tbaseurl + subinstr(tval, " ", "") + ", clear rowrange(1:1)")
 			liststrings = numliststr(varinfo1)
 			if (liststrings == "") addstrings = ""
 			else addstrings = " stringcols(" + liststrings + ")"
@@ -725,7 +743,7 @@ mata
 				stata("qui import delimited " + tbaseurl + subinstr(relfiles[r], " ", "") + ", clear" + addstrings)
 				if (temp1 == 0) temp1 = labelcsv(varinfo1, 1)
 				else temp1 = labelcsv(varinfo1, 0)
-				temp2 = subsetkeep(spops1, querystring1, epid1)
+				temp2 = subsetkeep(spops1, querystring1, epid1, vlist1)
 				stata("qui save temp_eddata_file_gen_012345, replace")
 				stata("qui restore")
 				stata("qui append using temp_eddata_file_gen_012345")
@@ -903,7 +921,7 @@ mata
 		if (metadataonly <= 0) printf("Please be patient - downloading data.\n")
 		if (csv > 0 && metadataonly <= 0){
 			ds = tokens(dataoptions)[2]
-			temp3 = downloadcsv(eid,spops,ds,epid,varinfo,querystring)
+			temp3 = downloadcsv(eid,spops,ds,epid,varinfo,querystring,vlist)
 			if (temp3 == 0){
 				printf("Error: Sorry, there is no CSV file available for download for this dataset at this time.")
 			}
