@@ -580,40 +580,95 @@ mata
 	}
 
 	// Provide CSV download with numbered list of columns that should be strings
-	string scalar numliststr(){
-
+	string scalar numliststr(string matrix varinfo2){
+		string scalar nliststr
+		nliststr = ""
+		for (c=1; c<=length(varinfo2[1,.]); c++){
+			if (varinfo2[5,c] == "string"){
+				if (nliststr == "") nliststr = strofreal(c)
+				else nliststr = nliststr + " " + strofreal(c)
+			}
+		}
+		return(nliststr)
 	}
 
 	// Label CSV dataset appropriately when it is loaded in
-	real scalar labelcsv(){
-		
+	real scalar labelcsv(string matrix varinfo2, real scalar init1){
+		string matrix vardef
+		string scalar labeldef
+		string scalar labelshort
+		for (c=1; c<=length(varinfo2[1,.]); c++){
+			stata("qui label var " + varinfo2[1,c] + " " + `"""' + varinfo2[2,c] + `"""')
+			if (strlen(varinfo2[1,c]) > 30) labelshort = substr(varinfo2[1,c], 1, 30) + "df"
+			else labelshort = varinfo2[1,c] + "df"
+			if (varinfo2[4,c] == "1"){
+				if (init1 == 1){
+					vardef = getvardefs(varinfo2[1,c], varinfo2[5,c])
+					labeldef = "qui label define " + labelshort + " "
+					for (r=1; r<=length(vardef[1,.]); r++){
+						labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
+						if (r != length(vardef[1,.])) labeldef = labeldef + " "
+					}
+					stata(labeldef)
+				}
+				stata("qui label values " + varinfo2[1,c] + " " + labelshort)
+			}
+			else if (varinfo2[3,c] == "long" || varinfo2[3,c] == "double"){
+				if (init1 == 1){
+					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+					stata(labeldef)
+				}
+				stata("qui label values " + varinfo2[1,c] + " " + labelshort)
+			}
+		}
+		return(1)		
+	}
+
+	// Subset and keep relevant variables
+	real scalar subsetkeep(){
+
 	}
 
 	// Download from CSV instead
-	real scalar downloadcsv(string scalar eid1, string matrix spops1, string scalar ds1, real scalar epid1){
+	real scalar downloadcsv(string scalar eid1, string matrix spops1, string scalar ds1, real scalar epid1, string matrix varinfo1){
 		pointer (class libjson scalar) scalar results1
 		pointer (class libjson scalar) scalar trow
 		string rowvector yearslist
+		string rowvector relfiles
 		string scalar tval
 		string scalar tbaseurl
+		string scalar addstrings
+		string scalar liststrings
+		string scalar relfilesstr
 		real scalar dlyear
 		real scalar numresults
+		real scalar temp1
+		real scalar countfiles
 		tbaseurl = st_global("base_url") + "/csv/" + ds1 + "/"
 		results1 = getresults(st_global("base_url") + "/api/v1/api-downloads/?endpoint_id=" + eid1)
 		yearslist = validoptions(spops1[2,1], epid1)
 		numresults = results1->arrayLength()
+		temp1 = 0
 		if (numresults == 1){
 			return(0)
 		}
 		if (numresults == 2){
 			printf("Downloading file, please wait...\n")
 			tval = results1->getArrayValue(2)->getString("file_name", "")
-			stata("import delimited " + tbaseurl + subinstr(tval, " ", ""))
+			liststrings = numliststr(varinfo1)
+			if (liststrings == "") addstrings = ""
+			else addstrings = " stringcols(" + liststrings + ")"
+			stata("qui import delimited " + tbaseurl + subinstr(tval, " ", "") + ", clear" + addstrings)
+			temp1 = labelcsv(varinfo1, 1)
+			// Subset and keep relevant variables
 		}
 		else{
 			printf("Progress for each CSV file will print to your screen. Please wait...\n\n")
+			liststrings = numliststr(varinfo1)
+			if (liststrings == "") addstrings = ""
+			else addstrings = " stringcols(" + liststrings + ")"
+			relfilesstr = ""
 			for (r=1; r<=numresults; r++){
-				printf("Processing file " + strofreal(r) + " of " + strofreal(numresults) + "\n")
 				trow = results1->getArrayValue(r);
 				tval = trow->getString("file_name","");
 				dlyear = 0
@@ -623,16 +678,26 @@ mata
 					if (subinstr(tval, yearslist[c], "") != tval) dlyear = dlyear + 1
 				}
 				if (dlyear == 2){
-					stata("qui preserve")
-					stata("qui import delimited " + tbaseurl + subinstr(tval, " ", "") + ", clear")
-					stata("qui save temp_eddata_file_gen_012345, replace")
-					stata("qui restore")
-					stata("qui append using temp_eddata_file_gen_012345")
+					if (relfilesstr == "") relfilesstr = tval
+					else relfilesstr = relfilesstr + ";" + tval
 				}
+			}
+			t = tokeninit(";")
+			s = tokenset(t, relfilesstr)
+			relfiles = tokengetall(t)
+			for (r=1; r<=length(relfiles); r++){
+				printf("Processing file " + strofreal(r) + " of " + strofreal(length(relfiles)) + "\n")
+				stata("qui preserve")
+				stata("qui import delimited " + tbaseurl + subinstr(relfiles[r], " ", "") + ", clear" + addstrings)
+				stata("qui save temp_eddata_file_gen_012345, replace")
+				stata("qui restore")
+				stata("qui append using temp_eddata_file_gen_012345")
+				if (temp1 == 0) temp1 = labelcsv(varinfo1, 1)
+				else temp1 = labelcsv(varinfo1, 0)
+				// Subset and keep relevant variables
 			}
 			stata("qui rm temp_eddata_file_gen_012345.dta")
 		}
-		// Add value and variable labels
 		stata("qui compress")
 		return(1)
 	}
@@ -802,15 +867,15 @@ mata
 		}
 		epcount = 0
 		if (metadataonly <= 0) printf("Please be patient - downloading data.\n")
-		tempdata = createdataset(eid)
 		if (csv > 0 && metadataonly <= 0){
 			ds = tokens(dataoptions)[2]
-			temp3 = downloadcsv(eid,spops,ds,epid)
+			temp3 = downloadcsv(eid,spops,ds,epid,varinfo)
 			if (temp3 == 0){
 				printf("Error: Sorry, there is no CSV file available for download for this dataset at this time.")
 			}
 		}
 		else{
+			tempdata = createdataset(eid)
 			if (metadataonly <= 0){
 				if (length(spops[1,.]) == 1){
 					totallen = length(temp1)
