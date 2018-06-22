@@ -624,13 +624,46 @@ mata
 		return(1)		
 	}
 
-	// Subset and keep relevant variables
-	real scalar subsetkeep(){
-
+	// Subset and keep relevant variables - keep if inlist(varname,val1,val2,etc.)
+	real scalar subsetkeep(string matrix spops2, string scalar querystring2, real scalar epid2){
+		string rowvector spopsres
+		string rowvector voptions
+		string rowvector queryparams
+		string rowvector queryparamvals
+		string rowvector queryparamlist
+		string scalar keepstate
+		string scalar keepbase
+		keepbase = "qui keep if inlist("
+		for (r=1; r<=2; r++){
+			t = tokeninit("=")
+			s = tokenset(t, spops2[2,r])
+			spopsres = tokengetall(t)
+			keepstate = keepbase + spops2[1,r]
+			if (spopsres[2] != "alldata"){
+				voptions = validoptions(spops2[2,r], epid2)
+				for (c=1; c<=length(voptions); c++){
+					keepstate = keepstate + "," + voptions[c]
+				}
+				keepstate = keepstate + ")"
+				stata(keepstate)
+			}
+		}
+		querystring2 = subinstr(querystring2, "?", "")
+		t = tokeninit("&")
+		s = tokenset(t, querystring2)
+		queryparams = tokengetall(t)
+		for (r=1; r<=length(queryparams); r++){
+			t = tokeninit("=")
+			s = tokenset(t, queryparams[r])
+			queryparamvals = tokengetall(t)
+			keepstate = keepbase + queryparamvals[1] + "," + queryparamvals[2] + ")"
+			stata(keepstate)
+		}
+		return(1)
 	}
 
 	// Download from CSV instead
-	real scalar downloadcsv(string scalar eid1, string matrix spops1, string scalar ds1, real scalar epid1, string matrix varinfo1){
+	real scalar downloadcsv(string scalar eid1, string matrix spops1, string scalar ds1, real scalar epid1, string matrix varinfo1, string scalar querystring1){
 		pointer (class libjson scalar) scalar results1
 		pointer (class libjson scalar) scalar trow
 		string rowvector yearslist
@@ -643,6 +676,7 @@ mata
 		real scalar dlyear
 		real scalar numresults
 		real scalar temp1
+		real scalar temp2
 		real scalar countfiles
 		tbaseurl = st_global("base_url") + "/csv/" + ds1 + "/"
 		results1 = getresults(st_global("base_url") + "/api/v1/api-downloads/?endpoint_id=" + eid1)
@@ -660,7 +694,7 @@ mata
 			else addstrings = " stringcols(" + liststrings + ")"
 			stata("qui import delimited " + tbaseurl + subinstr(tval, " ", "") + ", clear" + addstrings)
 			temp1 = labelcsv(varinfo1, 1)
-			// Subset and keep relevant variables
+			temp2 = subsetkeep(spops1, querystring1, epid1)
 		}
 		else{
 			printf("Progress for each CSV file will print to your screen. Please wait...\n\n")
@@ -689,12 +723,12 @@ mata
 				printf("Processing file " + strofreal(r) + " of " + strofreal(length(relfiles)) + "\n")
 				stata("qui preserve")
 				stata("qui import delimited " + tbaseurl + subinstr(relfiles[r], " ", "") + ", clear" + addstrings)
+				if (temp1 == 0) temp1 = labelcsv(varinfo1, 1)
+				else temp1 = labelcsv(varinfo1, 0)
+				temp2 = subsetkeep(spops1, querystring1, epid1)
 				stata("qui save temp_eddata_file_gen_012345, replace")
 				stata("qui restore")
 				stata("qui append using temp_eddata_file_gen_012345")
-				if (temp1 == 0) temp1 = labelcsv(varinfo1, 1)
-				else temp1 = labelcsv(varinfo1, 0)
-				// Subset and keep relevant variables
 			}
 			stata("qui rm temp_eddata_file_gen_012345.dta")
 		}
@@ -869,7 +903,7 @@ mata
 		if (metadataonly <= 0) printf("Please be patient - downloading data.\n")
 		if (csv > 0 && metadataonly <= 0){
 			ds = tokens(dataoptions)[2]
-			temp3 = downloadcsv(eid,spops,ds,epid,varinfo)
+			temp3 = downloadcsv(eid,spops,ds,epid,varinfo,querystring)
 			if (temp3 == 0){
 				printf("Error: Sorry, there is no CSV file available for download for this dataset at this time.")
 			}
