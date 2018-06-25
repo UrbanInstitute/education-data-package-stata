@@ -648,7 +648,7 @@ mata
 		string scalar keepstate
 		string scalar keepbase
 		keepbase = "qui keep if inlist("
-		for (r=1; r<=2; r++){
+		for (r=1; r<=length(spops2[1,.]); r++){
 			t = tokeninit("=")
 			s = tokenset(t, spops2[2,r])
 			spopsres = tokengetall(t)
@@ -677,6 +677,13 @@ mata
 		return(1)
 	}
 
+	// Download Local CSV to parse column order, keep it
+	real scalar copycsv(string scalar tval1, string scalar tbaseurl1){
+		stata("qui copy " + tbaseurl1 + subinstr(tval1, " ", "") + " temp_eddata_file_gen_012345.csv, replace")
+		stata("qui import delimited temp_eddata_file_gen_012345.csv, clear rowrange(1:1)")
+		return(1)
+	}
+
 	// Download from CSV instead
 	real scalar downloadcsv(string scalar eid1, string matrix spops1, string scalar ds1, real scalar epid1, string matrix varinfo1, string scalar querystring1, string scalar vlist1){
 		pointer (class libjson scalar) scalar results1
@@ -692,6 +699,7 @@ mata
 		real scalar numresults
 		real scalar temp1
 		real scalar temp2
+		real scalar temp3
 		real scalar countfiles
 		tbaseurl = st_global("base_url") + "/csv/" + ds1 + "/"
 		results1 = getresults(st_global("base_url") + "/api/v1/api-downloads/?endpoint_id=" + eid1)
@@ -704,21 +712,18 @@ mata
 		if (numresults == 2){
 			printf("Downloading file, please wait...\n")
 			tval = results1->getArrayValue(2)->getString("file_name", "")
-			stata("qui import delimited " + tbaseurl + subinstr(tval, " ", "") + ", clear rowrange(1:1)")
+			temp3 = copycsv(tval, tbaseurl)
 			liststrings = numliststr(varinfo1)
 			if (liststrings == "") addstrings = ""
 			else addstrings = " stringcols(" + liststrings + ")"
-			stata("qui import delimited " + tbaseurl + subinstr(tval, " ", "") + ", clear" + addstrings)
+			stata("clear")
+			stata("qui import delimited temp_eddata_file_gen_012345.csv, clear" + addstrings)
+			stata("qui rm temp_eddata_file_gen_012345.csv")
 			temp1 = labelcsv(varinfo1, 1)
 			temp2 = subsetkeep(spops1, querystring1, epid1, vlist1)
 		}
 		else{
 			printf("Progress for each CSV file will print to your screen. Please wait...\n\n")
-			tval = results1->getArrayValue(2)->getString("file_name","");
-			stata("qui import delimited " + tbaseurl + subinstr(tval, " ", "") + ", clear rowrange(1:1)")
-			liststrings = numliststr(varinfo1)
-			if (liststrings == "") addstrings = ""
-			else addstrings = " stringcols(" + liststrings + ")"
 			relfilesstr = ""
 			for (r=1; r<=numresults; r++){
 				trow = results1->getArrayValue(r);
@@ -738,9 +743,20 @@ mata
 			s = tokenset(t, relfilesstr)
 			relfiles = tokengetall(t)
 			for (r=1; r<=length(relfiles); r++){
+				if (r == 1){
+					temp3 = copycsv(relfiles[r], tbaseurl)
+					liststrings = numliststr(varinfo1)
+					if (liststrings == "") addstrings = ""
+					else addstrings = " stringcols(" + liststrings + ")"
+					stata("clear")
+				}
 				printf("Processing file " + strofreal(r) + " of " + strofreal(length(relfiles)) + "\n")
 				stata("qui preserve")
-				stata("qui import delimited " + tbaseurl + subinstr(relfiles[r], " ", "") + ", clear" + addstrings)
+				if (r == 1) {
+					stata("qui import delimited temp_eddata_file_gen_012345.csv, clear" + addstrings)
+					stata("qui rm temp_eddata_file_gen_012345.csv")
+				}
+				else stata("qui import delimited " + tbaseurl + subinstr(relfiles[r], " ", "") + ", clear" + addstrings)
 				if (temp1 == 0) temp1 = labelcsv(varinfo1, 1)
 				else temp1 = labelcsv(varinfo1, 0)
 				temp2 = subsetkeep(spops1, querystring1, epid1, vlist1)
@@ -788,7 +804,7 @@ mata
 			else printf(timea + "between %s and %s.\n", timetaken1, timetaken2)
 			printf("This is only an estimate, so actual time may vary due to internet speed and file size differences.\n\n")
 			printf("Progress for each endpoint and call to the API will print to your screen. Please wait...\n")
-			printf("If this time is too long for you to wait, try adding the " + `"""' + "csv" + `"""' + " option to the end of your command to download the full csv directly.")
+			printf("If this time is too long for you to wait, try adding the " + `"""' + "csv" + `"""' + " option to the end of your command to download the full csv directly.\n")
 		}
 		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
 		nextpage = gettable(st_global("base_url") + url2, spos, varinfo)

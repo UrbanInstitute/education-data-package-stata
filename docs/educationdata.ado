@@ -2,8 +2,8 @@ program educationdata
 version 11.0
 mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
-syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR] [METAdata] [STAGING]
-mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"),strlen("`metadata'"),strlen("`staging'"));
+syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR] [METAdata] [STAGING] [CSV]
+mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"),strlen("`metadata'"),strlen("`staging'"),strlen("`csv'"));
 end
 
 mata
@@ -226,8 +226,18 @@ mata
 		return(isinlist)
 	}
 
+	// Helper function to check number of item in list
+	real scalar iteminlistnum(string scalar i, string rowvector tlist){
+		real scalar isinlist
+		isinlist = 0
+		for (r=1; r<=length(tlist); r++){
+			if (i == tlist[r]) isinlist = r
+		}
+		return(isinlist)
+	}
+
 	// Helper function to validate against list
-	string rowvector checkinglist(string rowvector alist, string scalar tocheck){
+	string rowvector checkinglist(string rowvector alist, string scalar tocheck, string rowvector yearlist){
 		string rowvector tochecklist
 		string rowvector toaddlist
 		if (tocheck == "grade") { 
@@ -236,6 +246,7 @@ mata
 		}
 		else if (tocheck == "level_of_study") tochecklist = ("undergraduate","graduate","first-professional","post-baccalaureate","1","2","3","4")
 		else if (tocheck == "fed_aid_type") tochecklist = ("fed","sub-stafford","no-pell-stafford","1","2","3")
+		else if (tocheck == "year") tochecklist = yearlist
 		else return(alist)
 		for (c=1; c<=length(alist); c++){
 			if (iteminlist(alist[c],tochecklist) == 0) {
@@ -279,17 +290,18 @@ mata
 			levels = ("undergraduate","graduate","first-professional","post-baccalaureate")
 			fedaids = ("fed","sub-stafford","no-pell-stafford")
 			if (getit[1] == "year") years = parseyears(epid)
+			else years = ("fake","data")
 			if (getit[2] != "alldata"){
 				if (subinstr(subinstr(getit[2], ",", ""), ":", "") == getit[2]){
-					checklist = checkinglist((getit[2]), getit[1])
-					if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
+					checklist = checkinglist((getit[2]), getit[1], years)
+					if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
 					else return(checklist)
 				}
 				else if (subinstr(getit[2], ",", "") != getit[2]){
 					t = tokeninit(",")
 					s = tokenset(t, getit[2])
-					checklist = checkinglist(tokengetall(t), getit[1])
-					if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
+					checklist = checkinglist(tokengetall(t), getit[1], years)
+					if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
 					else return(checklist)	
 				}
 				else{
@@ -315,8 +327,8 @@ mata
 						}
 						t = tokeninit(",")
 						s = tokenset(t, getstring)
-						checklist = checkinglist(tokengetall(t), getit[1])
-						if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
+						checklist = checkinglist(tokengetall(t), getit[1], years)
+						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
 						else return(checklist)	
 					}
 					else if (isgrade == 1 && (isvalid(getit[1], grades_alt) == 1 && isvalid(getit[2], grades_alt) == 1)){
@@ -328,13 +340,13 @@ mata
 						}
 						t = tokeninit(",")
 						s = tokenset(t, getstring)
-						checklist = checkinglist(tokengetall(t), getit[1])
-						if (checklist[1] == "Error") return(("Invalid Option: " + checkinglist[2] + " in " + getit[1]))
+						checklist = checkinglist(tokengetall(t), getit[1], years)
+						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
 						else return(checklist)	
 					}
 					else {
-						if (isvalid(getit[1], tlev) == 0) return(("Invalid Option selection: " + getit[1] + " in " + getit[1] + ":" + getit[2]))
-						else return(("Invalid Option selection: " + getit[2] + " in " + getit[1] + ":" + getit[2]))
+						if (isvalid(getit[1], tlev) == 0) return(("Invalid Option selection: " + getit[1] + " in " + getit[1] + ":" + getit[2], ""))
+						else return(("Invalid Option selection: " + getit[2] + " in " + getit[1] + ":" + getit[2], ""))
 					}
 				}
 			}
@@ -577,6 +589,187 @@ mata
 		return(timetaken)
 	}
 
+	// Provide CSV download with numbered list of columns that should be strings
+	string scalar numliststr(string matrix varinfo2){
+		string rowvector varnames
+		string scalar nliststr
+		real scalar listnum
+		varnames = st_varname((1..st_nvar()))
+		nliststr = ""
+		for (c=1; c<=length(varinfo2[1,.]); c++){
+			if (varinfo2[5,c] == "string"){
+				listnum = iteminlistnum(varinfo2[1,c], varnames)
+				if (nliststr == "") nliststr = strofreal(listnum)
+				else nliststr = nliststr + " " + strofreal(listnum)
+			}
+		}
+		return(nliststr)
+	}
+
+	// Label CSV dataset appropriately when it is loaded in
+	real scalar labelcsv(string matrix varinfo2, real scalar init1){
+		string matrix vardef
+		string scalar labeldef
+		string scalar labelshort
+		for (c=1; c<=length(varinfo2[1,.]); c++){
+			stata("qui label var " + varinfo2[1,c] + " " + `"""' + varinfo2[2,c] + `"""')
+			if (strlen(varinfo2[1,c]) > 30) labelshort = substr(varinfo2[1,c], 1, 30) + "df"
+			else labelshort = varinfo2[1,c] + "df"
+			if (varinfo2[4,c] == "1"){
+				if (init1 == 1){
+					vardef = getvardefs(varinfo2[1,c], varinfo2[5,c])
+					labeldef = "qui label define " + labelshort + " "
+					for (r=1; r<=length(vardef[1,.]); r++){
+						labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
+						if (r != length(vardef[1,.])) labeldef = labeldef + " "
+					}
+					stata(labeldef)
+				}
+				stata("qui label values " + varinfo2[1,c] + " " + labelshort)
+			}
+			else if (varinfo2[3,c] == "long" || varinfo2[3,c] == "double"){
+				if (init1 == 1){
+					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+					stata(labeldef)
+				}
+				stata("qui label values " + varinfo2[1,c] + " " + labelshort)
+			}
+		}
+		return(1)		
+	}
+
+	// Subset and keep relevant variables - keep if inlist(varname,val1,val2,etc.)
+	real scalar subsetkeep(string matrix spops2, string scalar querystring2, real scalar epid2, string scalar vlist2){
+		string rowvector spopsres
+		string rowvector voptions
+		string rowvector queryparams
+		string rowvector queryparamvals
+		string rowvector queryparamlist
+		string scalar keepstate
+		string scalar keepbase
+		keepbase = "qui keep if inlist("
+		for (r=1; r<=length(spops2[1,.]); r++){
+			t = tokeninit("=")
+			s = tokenset(t, spops2[2,r])
+			spopsres = tokengetall(t)
+			keepstate = keepbase + spops2[1,r]
+			if (spopsres[2] != "alldata"){
+				voptions = validoptions(spops2[2,r], epid2)
+				for (c=1; c<=length(voptions); c++){
+					keepstate = keepstate + "," + voptions[c]
+				}
+				keepstate = keepstate + ")"
+				stata(keepstate)
+			}
+		}
+		querystring2 = subinstr(querystring2, "?", "")
+		t = tokeninit("&")
+		s = tokenset(t, querystring2)
+		queryparams = tokengetall(t)
+		for (r=1; r<=length(queryparams); r++){
+			t = tokeninit("=")
+			s = tokenset(t, queryparams[r])
+			queryparamvals = tokengetall(t)
+			keepstate = keepbase + queryparamvals[1] + "," + queryparamvals[2] + ")"
+			stata(keepstate)
+		}
+		if (vlist2 != "") stata("keep " + vlist2)
+		return(1)
+	}
+
+	// Download Local CSV to parse column order, keep it
+	real scalar copycsv(string scalar tval1, string scalar tbaseurl1){
+		stata("qui copy " + tbaseurl1 + subinstr(tval1, " ", "") + " temp_eddata_file_gen_012345.csv, replace")
+		stata("qui import delimited temp_eddata_file_gen_012345.csv, clear rowrange(1:1)")
+		return(1)
+	}
+
+	// Download from CSV instead
+	real scalar downloadcsv(string scalar eid1, string matrix spops1, string scalar ds1, real scalar epid1, string matrix varinfo1, string scalar querystring1, string scalar vlist1){
+		pointer (class libjson scalar) scalar results1
+		pointer (class libjson scalar) scalar trow
+		string rowvector yearslist
+		string rowvector relfiles
+		string scalar tval
+		string scalar tbaseurl
+		string scalar addstrings
+		string scalar liststrings
+		string scalar relfilesstr
+		real scalar dlyear
+		real scalar numresults
+		real scalar temp1
+		real scalar temp2
+		real scalar temp3
+		real scalar countfiles
+		tbaseurl = st_global("base_url") + "/csv/" + ds1 + "/"
+		results1 = getresults(st_global("base_url") + "/api/v1/api-downloads/?endpoint_id=" + eid1)
+		yearslist = validoptions(spops1[2,1], epid1)
+		numresults = results1->arrayLength()
+		temp1 = 0
+		if (numresults == 1){
+			return(0)
+		}
+		if (numresults == 2){
+			printf("Downloading file, please wait...\n")
+			tval = results1->getArrayValue(2)->getString("file_name", "")
+			temp3 = copycsv(tval, tbaseurl)
+			liststrings = numliststr(varinfo1)
+			if (liststrings == "") addstrings = ""
+			else addstrings = " stringcols(" + liststrings + ")"
+			stata("clear")
+			stata("qui import delimited temp_eddata_file_gen_012345.csv, clear" + addstrings)
+			stata("qui rm temp_eddata_file_gen_012345.csv")
+			temp1 = labelcsv(varinfo1, 1)
+			temp2 = subsetkeep(spops1, querystring1, epid1, vlist1)
+		}
+		else{
+			printf("Progress for each CSV file will print to your screen. Please wait...\n\n")
+			relfilesstr = ""
+			for (r=1; r<=numresults; r++){
+				trow = results1->getArrayValue(r);
+				tval = trow->getString("file_name","");
+				dlyear = 0
+				if (subinstr(tval, ".csv", "") != tval) dlyear = dlyear + 1
+				else dlyear = -10
+				for (c=1; c<=length(yearslist); c++){
+					if (subinstr(tval, yearslist[c], "") != tval) dlyear = dlyear + 1
+				}
+				if (dlyear == 2){
+					if (relfilesstr == "") relfilesstr = tval
+					else relfilesstr = relfilesstr + ";" + tval
+				}
+			}
+			t = tokeninit(";")
+			s = tokenset(t, relfilesstr)
+			relfiles = tokengetall(t)
+			for (r=1; r<=length(relfiles); r++){
+				if (r == 1){
+					temp3 = copycsv(relfiles[r], tbaseurl)
+					liststrings = numliststr(varinfo1)
+					if (liststrings == "") addstrings = ""
+					else addstrings = " stringcols(" + liststrings + ")"
+					stata("clear")
+				}
+				printf("Processing file " + strofreal(r) + " of " + strofreal(length(relfiles)) + "\n")
+				stata("qui preserve")
+				if (r == 1) {
+					stata("qui import delimited temp_eddata_file_gen_012345.csv, clear" + addstrings)
+					stata("qui rm temp_eddata_file_gen_012345.csv")
+				}
+				else stata("qui import delimited " + tbaseurl + subinstr(relfiles[r], " ", "") + ", clear" + addstrings)
+				if (temp1 == 0) temp1 = labelcsv(varinfo1, 1)
+				else temp1 = labelcsv(varinfo1, 0)
+				temp2 = subsetkeep(spops1, querystring1, epid1, vlist1)
+				stata("qui save temp_eddata_file_gen_012345, replace")
+				stata("qui restore")
+				stata("qui append using temp_eddata_file_gen_012345")
+			}
+			stata("qui rm temp_eddata_file_gen_012345.dta")
+		}
+		stata("qui compress")
+		return(1)
+	}
+
 	// Gets all tables, using API to get the varlist and vartypes, and looping through all "nexts", calling gettable
 	real scalar getalltables(string scalar eid, string scalar url2, real scalar totallen1, real scalar epcount1){
 		pointer (class libjson scalar) scalar root
@@ -611,6 +804,7 @@ mata
 			else printf(timea + "between %s and %s.\n", timetaken1, timetaken2)
 			printf("This is only an estimate, so actual time may vary due to internet speed and file size differences.\n\n")
 			printf("Progress for each endpoint and call to the API will print to your screen. Please wait...\n")
+			printf("If this time is too long for you to wait, try adding the " + `"""' + "csv" + `"""' + " option to the end of your command to download the full csv directly.\n")
 		}
 		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
 		nextpage = gettable(st_global("base_url") + url2, spos, varinfo)
@@ -626,7 +820,7 @@ mata
 	}
 	
 	// Main function to get data based on Stata request - calls other helper functions
-	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly, real scalar staging){
+	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly, real scalar staging, real scalar csv){
 		string matrix endpoints
 		string matrix spops
 		string matrix varinfo
@@ -642,6 +836,7 @@ mata
 		string scalar querystring
 		string scalar dataoptions1
 		string scalar validfilters
+		string scalar ds
 		real scalar epid
 		real scalar spos
 		real scalar spos1
@@ -649,6 +844,7 @@ mata
 		real scalar totallen
 		real scalar epcount
 		real scalar tempdata
+		real scalar temp3
 		st_global("base_url","https://educationdata.urban.org")
 		st_global("staging_url","https://educationdata-stg.urban.org")
 		if (staging > 0) st_global("base_url",st_global("staging_url"))
@@ -710,9 +906,6 @@ mata
 								printf(validfilters)
 								return("\n\nDownload failed. Please try again.")
 							}
-							else{
-
-							}
 						}
 						if (urladds == "") urladds = urladds + allopts[i]
 						else urladds = urladds + ";" + allopts[i]
@@ -741,40 +934,49 @@ mata
 			return("")
 		}
 		epcount = 0
-		if (metadataonly <= 0) printf("Please be patient - Downloading data from API. I'll give you a time estimate shortly.\n")
-		tempdata = createdataset(eid)
-		if (metadataonly <= 0){
-			if (length(spops[1,.]) == 1){
-				totallen = length(temp1)
-				for (i=1; i<=length(temp1); i++){
-					epcount = epcount + 1
-					urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
-					hidereturn = getalltables(eid, urltemp, totallen, epcount)
-				}
+		if (metadataonly <= 0) printf("Please be patient - downloading data.\n")
+		if (csv > 0 && metadataonly <= 0){
+			ds = tokens(dataoptions)[2]
+			temp3 = downloadcsv(eid,spops,ds,epid,varinfo,querystring,vlist)
+			if (temp3 == 0){
+				printf("Error: Sorry, there is no CSV file available for download for this dataset at this time.")
 			}
-			else{
-				temp2 = validoptions(spops[2,2], epid)
-				if (tokens(temp2[1])[1] == "Invalid"){ 
-					printf(temp2[1])
-					return("")
-				}
-				totallen = length(temp1) * length(temp2)
-				for (i=1; i<=length(temp1); i++){
-					for (j=1; j<=length(temp2); j++){
+		}
+		else{
+			tempdata = createdataset(eid)
+			if (metadataonly <= 0){
+				if (length(spops[1,.]) == 1){
+					totallen = length(temp1)
+					for (i=1; i<=length(temp1); i++){
 						epcount = epcount + 1
-						urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
+						urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
 						hidereturn = getalltables(eid, urltemp, totallen, epcount)
 					}
-				}		
+				}
+				else{
+					temp2 = validoptions(spops[2,2], epid)
+					if (tokens(temp2[1])[1] == "Invalid"){ 
+						printf(temp2[1])
+						return("")
+					}
+					totallen = length(temp1) * length(temp2)
+					for (i=1; i<=length(temp1); i++){
+						for (j=1; j<=length(temp2); j++){
+							epcount = epcount + 1
+							urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
+							hidereturn = getalltables(eid, urltemp, totallen, epcount)
+						}
+					}		
+				}
+				stata("qui compress")
 			}
-			stata("qui compress")
+			if (metadataonly > 0) {
+				printf("Metadata successfully loaded into Stata and ready to view. Remove the " + `"""' + "metadata" + `"""' + " argument if you want to load the data itself.\n\n")
+				printf("Note: You may filter this dataset on any variable (as long as it does not have a decimal value) using a single value (e.g. grade=1), however only the following variables allow filtering on multiple values (e.g.grade=1:3 or grade=1,2):\n\n")
+				printf(validfilters)
+			}
 		}
 		if (vlist != "") stata("keep " + vlist)
-		if (metadataonly > 0) {
-			printf("Metadata successfully loaded into Stata and ready to view. Remove the " + `"""' + "metadata" + `"""' + " argument if you want to load the data itself.\n\n")
-			printf("Note: You may filter this dataset on any variable (as long as it does not have a decimal value) using a single value (e.g. grade=1), however only the following variables allow filtering on multiple values (e.g.grade=1:3 or grade=1,2):\n\n")
-			printf(validfilters)
-		}
 		else printf("\nData successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
 		return("")
 	}

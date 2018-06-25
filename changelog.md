@@ -1,11 +1,16 @@
 # Changelog for educationdata Stata Package
 
-#### 0.2.0 (Development Version, not yet released)
+#### 0.2.1 (Development Version, not yet released) 
 
-- Improve error messages, fix error message errors for fields in which the user types invalid values
 - 
 
-#### 0.1.8 (Current Stable Version)
+#### 0.2.0 (Current Stable Version)
+
+- Add csv option to allow users of larger extracts to download from the CSV
+- Improve error messages, fix error message errors for fields in which the user types invalid values
+- Clear up documentation to add description of clear, csv options
+
+#### 0.1.8
 
 - Fix year parsing error in api-endpoints, that changed normal dash to ndash, to correctly parse years
 
