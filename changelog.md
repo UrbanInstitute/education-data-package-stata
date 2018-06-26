@@ -5,6 +5,7 @@
 - More clear instructions in the documentation and program for the csv option, specifically setting the working directory
 - Clear documentation on additional resources available in the Stata help file
 - Harmonize errors for invalid option selection so they are consistent, display correct list of options on error to help user
+- Fix error subsetting grade options for csv
 
 #### 0.2.0 (Current Stable Version)
 

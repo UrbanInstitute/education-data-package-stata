@@ -656,6 +656,13 @@ mata
 		return(1)		
 	}
 
+	// Correct grade list for subsetting CSV files
+	string scalar correctgrade(string scalar vopt1){
+		if (vopt1 == "grade-pk" || vopt1 == "pk") return("-1")
+		else if (vopt1 == "grade-k" || vopt1 == "k") return("0")
+		else return(subinstr(vopt1, "grade-", ""))
+	}
+
 	// Subset and keep relevant variables - keep if inlist(varname,val1,val2,etc.)
 	real scalar subsetkeep(string matrix spops2, string scalar querystring2, real scalar epid2, string scalar vlist2){
 		string rowvector spopsres
@@ -674,7 +681,7 @@ mata
 			if (spopsres[2] != "alldata"){
 				voptions = validoptions(spops2[2,r], epid2)
 				for (c=1; c<=length(voptions); c++){
-					keepstate = keepstate + "," + voptions[c]
+					keepstate = keepstate + "," + correctgrade(voptions[c])
 				}
 				keepstate = keepstate + ")"
 				stata(keepstate)
@@ -955,7 +962,7 @@ mata
 		if (metadataonly <= 0) printf("Please be patient - downloading data.\n")
 		if (csv > 0 && metadataonly <= 0){
 			printf("\nNote that this function writes data to the current working directory.\n")
-			printf("If you do not have read and write privileges to the current directory, please change them.\n")
+			printf("If you do not have read and write privileges to the current directory, please change your working directory.\n")
 			printf("For example, you can enter " + `"""' + "cd D:/Users/[Your username here]/Documents" + `"""' + ".\n\n")
 			ds = tokens(dataoptions)[2]
 			temp3 = downloadcsv(eid,spops,ds,epid,varinfo,querystring,vlist)
