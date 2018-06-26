@@ -225,7 +225,11 @@ this endpoint.
 
 The {bf:educationdata {opt csv}} option allows you to request CSV files instead of 
 downloading data from the API directly. This is particularly useful in saving you time 
-when you wish to download a large extract.
+when you wish to download a large extract. Note that this option requires you
+to have read and write privileges to the current working directory. If you do not have 
+these priveleges, change to a working directory where you do. For example,
+
+. cd D:/Users/[your username here]/Documents
 
 The {bf:educationdata} command takes two options for only collecting a subset
 of the dataset you request:

@@ -2,7 +2,7 @@
 
 #### 0.2.1 (Development Version, not yet released) 
 
-- 
+- More clear instructions in the documentation and program for the csv option, specifically setting the working directory
 
 #### 0.2.0 (Current Stable Version)
 
