@@ -954,9 +954,9 @@ mata
 		epcount = 0
 		if (metadataonly <= 0) printf("Please be patient - downloading data.\n")
 		if (csv > 0 && metadataonly <= 0){
-			printf("Note that this function writes data to the current working directory.\n")
+			printf("\nNote that this function writes data to the current working directory.\n")
 			printf("If you do not have read and write privileges to the current directory, please change them.\n")
-			printf("For example, you can enter " + `"""' + "cd D:/Users/[Your username here]/Documents" + `"""' + ".\n")
+			printf("For example, you can enter " + `"""' + "cd D:/Users/[Your username here]/Documents" + `"""' + ".\n\n")
 			ds = tokens(dataoptions)[2]
 			temp3 = downloadcsv(eid,spops,ds,epid,varinfo,querystring,vlist)
 			if (temp3 == 0){
