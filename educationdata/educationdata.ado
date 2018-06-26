@@ -240,6 +240,8 @@ mata
 	string rowvector checkinglist(string rowvector alist, string scalar tocheck, string rowvector yearlist){
 		string rowvector tochecklist
 		string rowvector toaddlist
+		string rowvector validlist
+		string scalar returnlist
 		if (tocheck == "grade") { 
 			tochecklist = ("grade-pk","grade-k","grade-1","grade-2","grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-10","grade-11","grade-12","grade-99")
 			toaddlist = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
@@ -254,7 +256,15 @@ mata
 					if (alist[c] == "-1") alist[c] = "grade-pk"
 					else alist[c] = "grade-k"
 				}
-				else if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0) return(("Error",alist[c]))
+				else if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0){
+					if (tocheck == "grade") validlist = toaddlist
+					else validlist = tochecklist
+					for (r=1; r<=length(validlist); r++){
+						if (r == 1) returnlist = validlist[r]
+						else returnlist = returnlist + ", " + validlist[r]
+					}
+					return(("Error",alist[c],returnlist))	
+				} 
 				else alist[c] = "grade-" + alist[c]
 			}
 		}
@@ -274,6 +284,7 @@ mata
 		string rowvector checklist
 		string scalar getstring
 		string scalar tempadd
+		string scalar keepg1
 		real scalar isopt1
 		real scalar spos1
 		real scalar spos2
@@ -294,14 +305,14 @@ mata
 			if (getit[2] != "alldata"){
 				if (subinstr(subinstr(getit[2], ",", ""), ":", "") == getit[2]){
 					checklist = checkinglist((getit[2]), getit[1], years)
-					if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
+					if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1] + "\nValid options are: " + checklist[3], ""))
 					else return(checklist)
 				}
 				else if (subinstr(getit[2], ",", "") != getit[2]){
 					t = tokeninit(",")
 					s = tokenset(t, getit[2])
 					checklist = checkinglist(tokengetall(t), getit[1], years)
-					if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
+					if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1] + "\nValid options are: " + checklist[3], ""))
 					else return(checklist)	
 				}
 				else{
@@ -315,6 +326,7 @@ mata
 					}
 					else if (getit[1] == "level_of_study") tlev = levels
 					else if (getit[1] == "fed_aid_type") tlev = fedaids
+					keepg1 = getit[1]
 					t = tokeninit(":")
 					s = tokenset(t, getit[2])
 					getit = tokengetall(t)
@@ -328,7 +340,7 @@ mata
 						t = tokeninit(",")
 						s = tokenset(t, getstring)
 						checklist = checkinglist(tokengetall(t), getit[1], years)
-						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
+						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1] + "\nValid options are: " + checklist[3], ""))
 						else return(checklist)	
 					}
 					else if (isgrade == 1 && (isvalid(getit[1], grades_alt) == 1 && isvalid(getit[2], grades_alt) == 1)){
@@ -341,12 +353,18 @@ mata
 						t = tokeninit(",")
 						s = tokenset(t, getstring)
 						checklist = checkinglist(tokengetall(t), getit[1], years)
-						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
+						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1] + "\nValid options are: " + checklist[3], ""))
 						else return(checklist)	
 					}
 					else {
-						if (isvalid(getit[1], tlev) == 0) return(("Invalid Option selection: " + getit[1] + " in " + getit[1] + ":" + getit[2], ""))
-						else return(("Invalid Option selection: " + getit[2] + " in " + getit[1] + ":" + getit[2], ""))
+						if (isvalid(getit[1], tlev) == 0){
+							checklist = checkinglist((getit[1]),keepg1, years)
+							return(("Invalid Option selection: " + getit[1] + " in " + keepg1 + "\nValid options are: " + checklist[3], ""))
+						}
+						else{
+							checklist = checkinglist((getit[2]),keepg1, years)
+							return(("Invalid Option selection: " + getit[2] + " in " + keepg1 + "\nValid options are: " + checklist[3], ""))
+						}
 					}
 				}
 			}
