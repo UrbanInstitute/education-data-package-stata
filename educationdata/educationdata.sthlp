@@ -35,9 +35,11 @@ Or as follows:
 {title:Dataset Name Options}
 
 The following are dataset names that should be inserted into quotes after
-the {bf:using} command, as described in the description above.
+the {bf:using} command, as described in the description above. For more
+information, such as valid filter variables and values, please see the
+"Read Complete Documentation" links provided.
 
-{bf:"College"}
+{bf:College} - {browse "https://educationdata.urban.org/documentation/colleges.html":Read Complete Documentation}
 
 {bf:"college ipeds directory"}: This file contains directory information for
 every institution in the IPEDS universe. Includes name, address, city, state,
@@ -184,7 +186,7 @@ available from 1991 to 2015. IPEDS reported data at the 2-digit CIP level until
 2001; after that, the 6-digit CIP data were collapsed to the 2-digit level
 until 2015.
 
-{bf:"District"}
+{bf:District} - {browse "https://educationdata.urban.org/documentation/school-districts.html":Read Complete Documentation}
 
 {bf:"district saipe"}: This endpoint contains district level data on the size
 of the population, the size of the school age population, and the size of the
@@ -194,7 +196,7 @@ school age population that is in poverty.
 data including revenues from federal, state, and local governments and
 expenditures.
 
-{bf:"School"}
+{bf:School} - {browse "https://educationdata.urban.org/documentation/schools.html":Read Complete Documentation}
 
 {bf:"school ccd directory"}: This endpoint contains school level information on
 location, mailing addresses, school types, highest and lowest grades offered,
@@ -328,6 +330,9 @@ you can install {bf:libjson} by running the following command:
         . educationdata using "college ipeds directory", meta
 
 {bf:Downloading from CSV instead of the API}:
+
+	First, set your working directory to a location where you have read-write access
+		. cd D:/Users/[your username here]/Documents
 
     Download the full directory of colleges and universities
         . educationdata using "college ipeds directory", csv

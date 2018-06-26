@@ -55,12 +55,13 @@ keep_str = sorted(keep_str, key=itemgetter(1,2))
 prev_cat = ""
 perm_str = ""
 sover = 0
+dsname = {"college":"colleges","district":"school-districts","school":"schools"}
 for i in range(len(keep_str)):
 	if keep_str[i][1] != prev_cat: 
 		sover = 0
 		prev_cat = keep_str[i][1]
 	if sover == 0: 
-		perm_str += '{bf:"' + translate[keep_str[i][1]].title() + '"}\n\n'
+		perm_str += '{bf:' + translate[keep_str[i][1]].title() + '} - {browse "https://educationdata.urban.org/documentation/' + dsname[translate[keep_str[i][1]]] + '.html":Read Complete Documentation}\n\n'
 		sover = 1
 	perm_str += keep_str[i][0]
 

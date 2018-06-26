@@ -1,4 +1,4 @@
-{bf:"College"}
+{bf:College} - {browse "https://educationdata.urban.org/documentation/colleges.html":Read Complete Documentation}
 
 {bf:"college ipeds directory"}: This file contains directory information for
 every institution in the IPEDS universe. Includes name, address, city, state,
@@ -145,7 +145,7 @@ available from 1991 to 2015. IPEDS reported data at the 2-digit CIP level until
 2001; after that, the 6-digit CIP data were collapsed to the 2-digit level
 until 2015.
 
-{bf:"District"}
+{bf:District} - {browse "https://educationdata.urban.org/documentation/school-districts.html":Read Complete Documentation}
 
 {bf:"district saipe"}: This endpoint contains district level data on the size
 of the population, the size of the school age population, and the size of the
@@ -155,7 +155,7 @@ school age population that is in poverty.
 data including revenues from federal, state, and local governments and
 expenditures.
 
-{bf:"School"}
+{bf:School} - {browse "https://educationdata.urban.org/documentation/schools.html":Read Complete Documentation}
 
 {bf:"school ccd directory"}: This endpoint contains school level information on
 location, mailing addresses, school types, highest and lowest grades offered,
