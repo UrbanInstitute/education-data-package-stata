@@ -1,6 +1,6 @@
 # Education Data Portal - Package for Stata
 
-Welcome to the Education Data Portal Stata Package repository. You'll need an internet connection to install and use the package.
+Welcome to the [Education Data Portal](https://educationdata.urban.org) Stata Package repository. You'll need an internet connection to install and use the package.
 
 ### Install or Update the Package
 
