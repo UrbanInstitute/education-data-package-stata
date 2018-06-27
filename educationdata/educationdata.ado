@@ -13,7 +13,7 @@ mata
 	pointer (class libjson scalar) scalar getresults(string scalar url){
 		pointer (class libjson scalar) scalar root
 		pointer (class libjson scalar) scalar result
-		root = libjson::webcall(url ,"");
+		root = libjson::webcall(urlmode(url) ,"");
 		result = root->getNode("results")
 		return(result)
 	}
@@ -234,6 +234,13 @@ mata
 			if (i == tlist[r]) isinlist = r
 		}
 		return(isinlist)
+	}
+
+	// Helper function to add mode logging to URLs for API tracking
+	string scalar urlmode(string scalar url3){
+		if (subinstr(url3, "?", "") == url3) url3 = url3 + "?mode=stata"
+		else url3 = url3 + "&mode=stata"
+		return(url3)
 	}
 
 	// Helper function to validate against list
@@ -469,7 +476,7 @@ mata
 		real matrix rdata
 		real scalar numrows
 		real scalar endpos
-		root = libjson::webcall(url ,"");
+		root = libjson::webcall(urlmode(url) ,"");
 		result = root->getNode("results")
 		numrows = result->arrayLength()
 		if (numrows > 0){
@@ -810,7 +817,7 @@ mata
 		real scalar timeper1
 		real scalar timeper2
 		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
-		root = libjson::webcall(st_global("base_url") + url2,"");
+		root = libjson::webcall(urlmode(st_global("base_url") + url2),"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
@@ -1005,7 +1012,7 @@ mata
 			}
 		}
 		if (vlist != "") stata("keep " + vlist)
-		else printf("\nData successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
+		else printf("\nData successfully loaded into Stata and ready to use.")
 		return("")
 	}
 

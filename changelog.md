@@ -6,6 +6,7 @@
 - Clear documentation on additional resources available in the Stata help file
 - Harmonize errors for invalid option selection so they are consistent, display correct list of options on error to help user
 - Fix error subsetting grade options for csv
+- Add mode=stata argument to all URLs to track usage of API from Stata
 
 #### 0.2.0 (Current Stable Version)
 
