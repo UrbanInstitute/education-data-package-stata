@@ -1,6 +1,10 @@
 # Changelog for educationdata Stata Package
 
-#### 0.2.1 (Development Version, not yet released) 
+#### 0.2.2 (Development Version, not yet released)
+
+- 
+
+#### 0.2.1 (Current Stable Version)
 
 - More clear instructions in the documentation and program for the csv option, specifically setting the working directory
 - Clear documentation on additional resources available in the Stata help file
@@ -8,7 +12,7 @@
 - Fix error subsetting grade options for csv
 - Add mode=stata argument to all URLs to track usage of API from Stata
 
-#### 0.2.0 (Current Stable Version)
+#### 0.2.0
 
 - Add csv option to allow users of larger extracts to download from the CSV
 - Improve error messages, fix error message errors for fields in which the user types invalid values

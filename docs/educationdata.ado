@@ -13,7 +13,7 @@ mata
 	pointer (class libjson scalar) scalar getresults(string scalar url){
 		pointer (class libjson scalar) scalar root
 		pointer (class libjson scalar) scalar result
-		root = libjson::webcall(url ,"");
+		root = libjson::webcall(urlmode(url) ,"");
 		result = root->getNode("results")
 		return(result)
 	}
@@ -236,10 +236,19 @@ mata
 		return(isinlist)
 	}
 
+	// Helper function to add mode logging to URLs for API tracking
+	string scalar urlmode(string scalar url3){
+		if (subinstr(url3, "?", "") == url3) url3 = url3 + "?mode=stata"
+		else url3 = url3 + "&mode=stata"
+		return(url3)
+	}
+
 	// Helper function to validate against list
 	string rowvector checkinglist(string rowvector alist, string scalar tocheck, string rowvector yearlist){
 		string rowvector tochecklist
 		string rowvector toaddlist
+		string rowvector validlist
+		string scalar returnlist
 		if (tocheck == "grade") { 
 			tochecklist = ("grade-pk","grade-k","grade-1","grade-2","grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-10","grade-11","grade-12","grade-99")
 			toaddlist = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
@@ -254,7 +263,15 @@ mata
 					if (alist[c] == "-1") alist[c] = "grade-pk"
 					else alist[c] = "grade-k"
 				}
-				else if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0) return(("Error",alist[c]))
+				else if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0){
+					if (tocheck == "grade") validlist = toaddlist
+					else validlist = tochecklist
+					for (r=1; r<=length(validlist); r++){
+						if (r == 1) returnlist = validlist[r]
+						else returnlist = returnlist + ", " + validlist[r]
+					}
+					return(("Error",alist[c],returnlist))	
+				} 
 				else alist[c] = "grade-" + alist[c]
 			}
 		}
@@ -274,6 +291,7 @@ mata
 		string rowvector checklist
 		string scalar getstring
 		string scalar tempadd
+		string scalar keepg1
 		real scalar isopt1
 		real scalar spos1
 		real scalar spos2
@@ -294,14 +312,14 @@ mata
 			if (getit[2] != "alldata"){
 				if (subinstr(subinstr(getit[2], ",", ""), ":", "") == getit[2]){
 					checklist = checkinglist((getit[2]), getit[1], years)
-					if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
+					if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1] + "\nValid options are: " + checklist[3], ""))
 					else return(checklist)
 				}
 				else if (subinstr(getit[2], ",", "") != getit[2]){
 					t = tokeninit(",")
 					s = tokenset(t, getit[2])
 					checklist = checkinglist(tokengetall(t), getit[1], years)
-					if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
+					if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1] + "\nValid options are: " + checklist[3], ""))
 					else return(checklist)	
 				}
 				else{
@@ -315,6 +333,7 @@ mata
 					}
 					else if (getit[1] == "level_of_study") tlev = levels
 					else if (getit[1] == "fed_aid_type") tlev = fedaids
+					keepg1 = getit[1]
 					t = tokeninit(":")
 					s = tokenset(t, getit[2])
 					getit = tokengetall(t)
@@ -328,7 +347,7 @@ mata
 						t = tokeninit(",")
 						s = tokenset(t, getstring)
 						checklist = checkinglist(tokengetall(t), getit[1], years)
-						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
+						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1] + "\nValid options are: " + checklist[3], ""))
 						else return(checklist)	
 					}
 					else if (isgrade == 1 && (isvalid(getit[1], grades_alt) == 1 && isvalid(getit[2], grades_alt) == 1)){
@@ -341,12 +360,18 @@ mata
 						t = tokeninit(",")
 						s = tokenset(t, getstring)
 						checklist = checkinglist(tokengetall(t), getit[1], years)
-						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1], ""))
+						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1] + "\nValid options are: " + checklist[3], ""))
 						else return(checklist)	
 					}
 					else {
-						if (isvalid(getit[1], tlev) == 0) return(("Invalid Option selection: " + getit[1] + " in " + getit[1] + ":" + getit[2], ""))
-						else return(("Invalid Option selection: " + getit[2] + " in " + getit[1] + ":" + getit[2], ""))
+						if (isvalid(getit[1], tlev) == 0){
+							checklist = checkinglist((getit[1]),keepg1, years)
+							return(("Invalid Option selection: " + getit[1] + " in " + keepg1 + "\nValid options are: " + checklist[3], ""))
+						}
+						else{
+							checklist = checkinglist((getit[2]),keepg1, years)
+							return(("Invalid Option selection: " + getit[2] + " in " + keepg1 + "\nValid options are: " + checklist[3], ""))
+						}
 					}
 				}
 			}
@@ -451,7 +476,7 @@ mata
 		real matrix rdata
 		real scalar numrows
 		real scalar endpos
-		root = libjson::webcall(url ,"");
+		root = libjson::webcall(urlmode(url) ,"");
 		result = root->getNode("results")
 		numrows = result->arrayLength()
 		if (numrows > 0){
@@ -638,6 +663,13 @@ mata
 		return(1)		
 	}
 
+	// Correct grade list for subsetting CSV files
+	string scalar correctgrade(string scalar vopt1){
+		if (vopt1 == "grade-pk" || vopt1 == "pk") return("-1")
+		else if (vopt1 == "grade-k" || vopt1 == "k") return("0")
+		else return(subinstr(vopt1, "grade-", ""))
+	}
+
 	// Subset and keep relevant variables - keep if inlist(varname,val1,val2,etc.)
 	real scalar subsetkeep(string matrix spops2, string scalar querystring2, real scalar epid2, string scalar vlist2){
 		string rowvector spopsres
@@ -656,7 +688,7 @@ mata
 			if (spopsres[2] != "alldata"){
 				voptions = validoptions(spops2[2,r], epid2)
 				for (c=1; c<=length(voptions); c++){
-					keepstate = keepstate + "," + voptions[c]
+					keepstate = keepstate + "," + correctgrade(voptions[c])
 				}
 				keepstate = keepstate + ")"
 				stata(keepstate)
@@ -785,7 +817,7 @@ mata
 		real scalar timeper1
 		real scalar timeper2
 		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
-		root = libjson::webcall(st_global("base_url") + url2,"");
+		root = libjson::webcall(urlmode(st_global("base_url") + url2),"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
@@ -936,6 +968,9 @@ mata
 		epcount = 0
 		if (metadataonly <= 0) printf("Please be patient - downloading data.\n")
 		if (csv > 0 && metadataonly <= 0){
+			printf("\nNote that this function writes data to the current working directory.\n")
+			printf("If you do not have read and write privileges to the current directory, please change your working directory.\n")
+			printf("For example, you can enter " + `"""' + "cd D:/Users/[Your username here]/Documents" + `"""' + ".\n\n")
 			ds = tokens(dataoptions)[2]
 			temp3 = downloadcsv(eid,spops,ds,epid,varinfo,querystring,vlist)
 			if (temp3 == 0){
@@ -977,7 +1012,7 @@ mata
 			}
 		}
 		if (vlist != "") stata("keep " + vlist)
-		else printf("\nData successfully loaded into Stata and ready to use. We recommend saving the file to disk at this time.")
+		else printf("\nData successfully loaded into Stata and ready to use.")
 		return("")
 	}
 
