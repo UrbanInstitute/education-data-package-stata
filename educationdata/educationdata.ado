@@ -2,8 +2,8 @@ program educationdata
 version 11.0
 mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
-syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR] [METAdata] [STAGING] [CSV]
-mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"),strlen("`metadata'"),strlen("`staging'"),strlen("`csv'"));
+syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR] [METAdata] [STAGING] [CSV] [CACHE]
+mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"),strlen("`metadata'"),strlen("`staging'"),strlen("`csv'"),strlen("`cache'"));
 end
 
 mata
@@ -238,8 +238,11 @@ mata
 
 	// Helper function to add mode logging to URLs for API tracking
 	string scalar urlmode(string scalar url3){
+		string scalar strnum
 		if (subinstr(url3, "?", "") == url3) url3 = url3 + "?mode=stata"
 		else url3 = url3 + "&mode=stata"
+		strnum = strofreal(round(runiform(1,1)*100000))
+		if (st_global("cc") == "1") url3 = url3 + "&a=" + strnum
 		return(url3)
 	}
 
@@ -852,7 +855,7 @@ mata
 	}
 	
 	// Main function to get data based on Stata request - calls other helper functions
-	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly, real scalar staging, real scalar csv){
+	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly, real scalar staging, real scalar csv real scalar clearcache){
 		string matrix endpoints
 		string matrix spops
 		string matrix varinfo
@@ -880,6 +883,8 @@ mata
 		st_global("base_url","https://educationdata.urban.org")
 		st_global("staging_url","https://educationdata-stg.urban.org")
 		if (staging > 0) st_global("base_url",st_global("staging_url"))
+		st_global("cc","0")
+		if (clearcache > 0) st_global("cc","1")
 		X = st_data(.,.)
 		if (clearme > 0) stata("clear")
 		else{
