@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.2.1}
+{title:Education Data Package}{right:Version 0.2.2}
 
 {title:Syntax}
 
@@ -42,14 +42,14 @@ information, such as valid filter variables and values, please see the
 {bf:College} - {browse "https://educationdata.urban.org/documentation/colleges.html":Read Complete Documentation}
 
 {bf:"college ipeds directory"}: This file contains directory information for
-every institution in the IPEDS universe. Includes name, address, city, state,
-zip code and various URL links to the institution's home page, admissions,
-financial aid offices and the net price calculator. Identifies institutions as
-currently active, institutions that participate in Title IV federal financial
-aid programs for which IPEDS is mandatory. It also includes variables derived
-from the Institutional Characteristics survey, such as control and level of
-institution, highest level and highest degree offered and Carnegie
-classifications.
+every institution in the IPEDS universe. This includes name, address, city,
+state, zip code, and various URL links to the institution's home page,
+admissions, financial aid offices, and the net price calculator. Identifies
+institutions as currently active and institutions that participate in Title IV
+federal financial aid programs for which IPEDS is mandatory. It also includes
+variables derived from the Institutional Characteristics survey, such as
+control and level of institution, highest level and highest degree offered and
+Carnegie classifications.
 
 {bf:"college ipeds institutional-characteristics"}: This endpoint contains
 data on program and award level offerings, control and affiliation of
@@ -60,8 +60,8 @@ included.
 
 {bf:"college ipeds admissions-enrollment"}: This endpoint contains data on
 applicants and admissions by sex and enrollees by sex and full-time/part-time
-status. These data are limited to undergraduate first-time,
-degree/certificate-seeking students.
+status. These data are limited to undergraduate first-time, degree- or
+certificate-seeking students.
 
 {bf:"college ipeds admissions-requirements"}: This endpoint contains data on
 admissions considerations for the undergraduate selection process. SAT and ACT
@@ -80,38 +80,38 @@ enrollments for both undergraduate and graduate levels. The graduate level does
 not include credit hours for doctoral professional practice students.
 Institutions can choose to accept the derived FTE or report their own FTE. Both
 reported and estimated/derived FTE are available in this data table. In
-addition, the reported FTE of Doctoral Professional practice students are also
+addition, the reported FTE of doctoral professional practice students are also
 included. These data are only available at the undergraduate, graduate, and
 first professional level.
 
 {bf:"college ipeds fall-enrollment race sex"}: This endpoint contains the
-number of students enrolled in the fall, by race, sex, full-time/part-time
+number of students enrolled in the fall by race, sex, full-time/part-time
 status, and level of study. For undergraduates, this is further broken down by
-degree-seeking/non-degree-seeking, and degree-seeking is broken down by class
-level. Institutions with traditional academic year calendar systems (semester,
-quarter, trimester or 4-1-4) report their enrollment as of October 15 or the
-official fall reporting date of the institution. Institutions with calendar
-systems that differ by program or allow continuous enrollment report students
-that are enrolled at any time between August 1 and October 31. Available levels
-of study are undergraduate, graduate, first-professional (through 2008 only),
-and post-baccalaureate (through 1998 only).
+degree-seeking/non&ndash;degree-seeking, and degree-seeking is broken down by
+class level. Institutions with traditional academic year calendar systems
+(semester, quarter, trimester, or 4-1-4) report their enrollment as of October
+15 or the official fall reporting date of the institution. Institutions with
+calendar systems that differ by program or allow continuous enrollment report
+students who are enrolled at any time between August 1 and October 31.
+Available levels of study are undergraduate, graduate, first-professional
+(through 2008 only), and postbaccalaureate (through 1998 only).
 
 {bf:"college ipeds fall-enrollment age sex"}: This endpoint contains the
-number of students enrolled in the fall, by age categories, sex,
-full-time/part-time status and level of study. Institutions with traditional
-academic year calendar systems (semester, quarter, trimester or 4-1-4) report
+number of students enrolled in the fall by age categories, sex,
+full-time/part-time status, and level of study. Institutions with traditional
+academic year calendar systems (semester, quarter, trimester, or 4-1-4) report
 their enrollment as of October 15 or the official fall reporting date of the
 institution. Institutions with calendar systems that differ by program or allow
-continuous enrollment report students that are enrolled at any time between
+continuous enrollment report students who are enrolled at any time between
 August 1 and October 31. Submission of enrollment by age categories is optional
 in even-numbered years. Available levels of study are undergraduate, graduate,
 and first-professional (through 2008 only); in 2000, only undergraduate data
 are available.
 
 {bf:"college ipeds fall-retention"}: The first-year retention rate data
-measures the percentage of first-year students who had persisted in or
-completed their educational program a year later. This is provided for
-full-time and part-time students.
+measures the percentage of first-year students who persisted in or completed
+their educational program a year later. This is provided for full-time and
+part-time students.
 
 {bf:"college ipeds student-faculty-ratio"}: Student-to-faculty ratio is
 defined as total FTE students not in graduate or professional programs divided
@@ -121,70 +121,72 @@ undergraduate students.
 
 {bf:"college ipeds grad-rates"}: This endpoint contains the graduation rate
 status as of August 31, at the end of the academic year, for the cohort of
-full-time, first-time degree/certificate-seeking undergraduates, by race and
-sex. Data for four year institutions include the number of bachelor
-degree-seeking students who enrolled six academic years prior, the number of
-bachelor degree seeking students who completed any degree/certificate within
-150 percent of normal time, the number who completed a bachelor's degree within
-100, 125 or 150 percent on normal time, and the number of bachelor's
-degree-seeking students who transferred out. Data for students seeking a
-degree/certificate other than a bachelor's degree are also included for four
-year institutions. Data for two year institutions include the number of
-full-time, first-time students who enrolled three academic years prior, the
-number of students who completed any degree/certificate within 100 or 150
-percent of normal time and the number of students who transferred out. The
-number of students who completed a degree/certificate within 100 percent of
-normal time is not available by race and sex.
+full-time, first-time degree- or certificate-seeking undergraduates, by race
+and sex. Data for four-year institutions include the number of bachelor's
+degree&ndash;seeking students who enrolled six academic years earlier, the
+number of bachelor's degree&ndash;seeking students who completed any degree or
+certificate within 150 percent of normal time, the number who completed a
+bachelor's degree within 100, 125 or 150 percent on normal time, and the number
+of bachelor's degree&ndash;seeking students who transferred out. Data for
+students seeking a degree or certificate other than a bachelor's degree are
+also included for four-year institutions. Data for two-year institutions
+include the number of full-time, first-time students who enrolled three
+academic years earlier, the number of students who completed any degree or
+certificate within 100 or 150 percent of normal time and the number of students
+who transferred out. The number of students who completed a degree or
+certificate within 100 percent of normal time is not available by race and sex.
 
 {bf:"college ipeds grad-rates-200pct"}: This endpoint contains the
 graduation rate status as of August 31, at the end of the academic year, for
-the cohort of full-time, first-time degree/certificate-seeking undergraduates.
-Data for four year institutions include the number of bachelor degree-seeking
-students who enrolled eight academic years prior, the number of bachelor degree
-seeking students who completed a bachelor's degree within 100, 150 or 200
-percent on normal time. Data for less than 4-year institutions include the
-number of full-time, first-time students who enrolled four academic years
-prior, the number of students who completed any degree/certificate within 100,
-150, or 200 percent of normal time.
+the cohort of full-time, first-time degree- or certificate-seeking
+undergraduates. Data for four-year institutions include the number of
+bachelor's degree&ndash;seeking students who enrolled eight academic years
+earlier, the number of bachelor's degree&ndash;seeking students who completed a
+bachelor's degree within 100, 150 or 200 percent on normal time. Data for less
+than four-year institutions include the number of full-time, first-time
+students who enrolled four academic years earlier, the number of students who
+completed any degree or certificate within 100, 150, or 200 percent of normal
+time.
 
 {bf:"college ipeds grad-rates-pell"}: This endpoint contains the graduation
 rate status as of August 31, at the end of the academic year, for three
-subcohorts of full-time, first-time degree/certificate-seeking undergraduates.
-The three subcohorts are students who received a Pell grant; students who
-received a subsidized Stafford Loan and did "NOT" receive a Pell grant; and
-students who did not receive either a Pell grant or Stafford Loan. In four year
-institutions each of the subcohorts will include the number of bachelor
-degree-seeking students who enrolled six academic years prior, the number of
-bachelor degree seeking students who completed any degree/certificate within
-150 percent of normal time, the number who completed a bachelor's degree within
-150 percent on normal time. Data for students seeking a degree/certificate
-other than a bachelor's degree are also included for four year institutions.
-Data for two year and less-than 2-year institutions include the number of
-full-time, first-time students who enrolled three academic years prior, the
-number of students who completed any degree/certificate 150 percent of normal
-time.
+subcohorts of full-time, first-time degree- or certificate-seeking
+undergraduates. The three subcohorts are students who received a Pell grant,
+students who received a subsidized Stafford loan and did not receive a Pell
+grant, and students who did not receive either a Pell grant or Stafford loan.
+In four-year institutions each of the subcohorts will include the number of
+bachelor's degree&ndash;seeking students who enrolled six academic years
+earlier, the number of bachelor's degree&ndash;seeking students who completed
+any degree or certificate within 150 percent of normal time, the number who
+completed a bachelor's degree within 150 percent on normal time. Data for
+students seeking a degree or certificate other than a bachelor's degree are
+also included for four-year institutions. Data for two-year and less-than
+two-year institutions include the number of full-time, first-time students who
+enrolled three academic years earlier and the number of students who completed
+any degree or certificate 150 percent of normal time.
 
 {bf:"college ipeds outcome-measures"}: This endpoint contains award and
 enrollment data from degree-granting institutions on four undergraduate cohorts
 that entered an institution eight academic years ago at two points in time: six
 academic years after entry and eight academic years after entry. The four
-cohorts of degree/certificate-seeking undergraduates are: full-time, first-time
-entering; part-time, first-time entering; full-time, non-first-time entering;
-and part-time, non-first-time entering.
+cohorts of degree- or certificate-seeking undergraduates are full-time,
+first-time entering; part-time, first-time entering; full-time, non-first-time
+entering; and part-time, non-first-time entering.
 
 {bf:"college ipeds completers"}: This endpoint contains the number of
-students who completed any degree or certificate by race/ethnicity and gender.
+students who completed any degree or certificate by race and ethnicity and
+gender.
 
 {bf:"college ipeds completions-cip"}: This endpoint contains the number of
 awards by type of program, level of award (certificate or degree), first or
-second major and by race/ethnicity and gender. Type of program is categorized
-according to the 2-digit Classification of Instructional Programs (CIP), a
-detailed coding system for postsecondary instructional programs, which groups
-the 6-digit CIPs into their families. There are some exceptions, such as law
-and medical fields, which were reported as 6-digits by IPEDS. These data are
-available from 1991 to 2015. IPEDS reported data at the 2-digit CIP level until
-2001; after that, the 6-digit CIP data were collapsed to the 2-digit level
-until 2015.
+second major, and by race and ethnicity and gender. Type of program is
+categorized according to the 2-digit Classification of Instructional Programs
+(CIP), a detailed coding system for postsecondary instructional programs, which
+groups the 6-digit CIPs into their families. There are some exceptions, such as
+law and medical fields, which were reported as 6-digits by the Integrated
+Postsecondary Education Data System. These data are available from 1991 to
+2015. IPEDS reported data at the 2-digit CIP level until 2001; after that, the
+6-digit CIP data were collapsed to the 2-digit level until 2015.
 
 {bf:District} - {browse "https://educationdata.urban.org/documentation/school-districts.html":Read Complete Documentation}
 
@@ -198,9 +200,9 @@ expenditures.
 
 {bf:School} - {browse "https://educationdata.urban.org/documentation/schools.html":Read Complete Documentation}
 
-{bf:"school ccd directory"}: This endpoint contains school level information on
+{bf:"school ccd directory"}: This endpoint contains school-level information on
 location, mailing addresses, school types, highest and lowest grades offered,
-and free and reduced price lunch. This endpoint also contains the school level
+and free and reduced-price lunch. This endpoint also contains the school-level
 data on the number of full-time eqivalent teachers.
 
 {bf:"school ccd enrollment"}: This endpoint contains student membership data for each
@@ -282,6 +284,15 @@ saving the new dataset. For example,
 and value labels, without reading in the data. For example,
 
 . educationdata using "college ipeds directory", meta
+
+The {bf:{opt cache}} option is for situations in which the data have been updated recently
+on the portal, but you are still seeing the older data when you make a call. Typically,
+the technical team will clear the cache on the server, so this will not be an issue. We
+provide this option in case you are still seeing old data but think you should be seeing
+new data. We do not recommend using this option in any other case, as it will lead to 
+slower data download times.
+
+. educationdata using "college ipeds directory", cache
 
 {bf:And finally the {opt clear}} option clears existing datasets from memory before
 reading in the data from the Education Data Portal. For example,

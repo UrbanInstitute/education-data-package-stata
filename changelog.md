@@ -1,10 +1,14 @@
 # Changelog for educationdata Stata Package
 
-#### 0.2.2 (Development Version, not yet released)
+#### 0.2.3 (Development Version, not yet released)
 
 - 
 
-#### 0.2.1 (Current Stable Version)
+#### 0.2.2 (Current Stable Version)
+
+- Add option to allow users to clear cache, for recent data updates when the technical team has not yet cleared the cache on the server
+
+#### 0.2.1
 
 - More clear instructions in the documentation and program for the csv option, specifically setting the working directory
 - Clear documentation on additional resources available in the Stata help file

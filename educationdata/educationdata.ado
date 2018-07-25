@@ -855,7 +855,7 @@ mata
 	}
 	
 	// Main function to get data based on Stata request - calls other helper functions
-	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly, real scalar staging, real scalar csv real scalar clearcache){
+	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly, real scalar staging, real scalar csv, real scalar clearcache){
 		string matrix endpoints
 		string matrix spops
 		string matrix varinfo
