@@ -7,6 +7,49 @@
 {cmd: educationdata} {cmd: using} "{help educationdata##datasetname:{it:datasetname}}" [{cmd:,} {help educationdata##options:{it:options}}]
 {p_end}
 
+{title:Examples}
+
+{bf:Examples of downloading full datasets}: 
+
+    Download the full directory of primary and secondary school information:
+        . educationdata using "school ccd directory"
+
+    Download the full primary and secondary school enrollment totals by grade:
+        . educationdata using "school ccd enrollment"
+
+    (Note that when downloading full datasets we recommend using the "csv" option, 
+	described above and with examples provided at the end of this section.)
+        
+{bf:Examples of subsetting datasets}:
+        
+    Download the full directory of colleges and universities for 2011
+        . educationdata using "college ipeds directory", sub(year=2011)
+        
+    Download the full directory of colleges and universities for 2011 to 2013 in Florida.
+        . educationdata using "college ipeds directory", sub(year=2011:2013 fips=12)
+
+    Download the full directory for 2011 to 2013 in Florida and keep only the unitid and year variables.
+    	. educationdata using "college ipeds directory", sub(year=2011:2013 fips=12) col(unitid year)
+
+    Download graduate rates for totals only, not race and sex breakdowns, for all years
+        . educationdata using "college ipeds grad-rates", sub(race=99 sex=99)
+
+{bf:Getting only metadata}:
+
+    Get metadata for the full directory of colleges and universities
+        . educationdata using "college ipeds directory", meta
+
+{bf:Downloading from CSV instead of the API}:
+
+	First, set your working directory to a location where you have read-write access
+		. cd D:/Users/[your username here]/Documents
+
+    Download the full directory of colleges and universities
+        . educationdata using "college ipeds directory", csv
+
+    Download the full directory of colleges and universities for 2011 to 2013 in Florida.
+        . educationdata using "college ipeds directory", sub(year=2011:2013 fips=12) csv   
+
 {title:Description}
 
 The {bf:educationdata} package makes it easy for you to download and format
@@ -306,50 +349,7 @@ package. If you do not have {bf:libjson} installed, it will be installed automat
 after first running the {bf:educationdata} command. Or, before running the package,
 you can install {bf:libjson} by running the following command:
 
-    . ssc install libjson
-
-{title:Examples}
-
-{bf:Examples of downloading full datasets}: 
-
-    Download the full directory of primary and secondary school information:
-        . educationdata using "school ccd directory"
-
-    Download the full primary and secondary school enrollment totals by grade:
-        . educationdata using "school ccd enrollment"
-
-    (Note that when downloading full datasets we recommend using the "csv" option, 
-	described above and with examples provided at the end of this section.)
-        
-{bf:Examples of subsetting datasets}:
-        
-    Download the full directory of colleges and universities for 2011
-        . educationdata using "college ipeds directory", sub(year=2011)
-        
-    Download the full directory of colleges and universities for 2011 in Florida.
-        . educationdata using "college ipeds directory", sub(year=2011 fips=12)
-
-    Download the full directory for 2011 in Florida and keep only the unitid and year variables.
-    	. educationdata using "college ipeds directory", sub(year=2011 fips=12) col(unitid year)
-
-    Download graduate rates for totals only, not race and sex breakdowns, for all years
-        . educationdata using "college ipeds grad-rates", sub(race=99 sex=99)
-
-{bf:Getting only metadata}:
-
-    Get metadata for the full directory of colleges and universities
-        . educationdata using "college ipeds directory", meta
-
-{bf:Downloading from CSV instead of the API}:
-
-	First, set your working directory to a location where you have read-write access
-		. cd D:/Users/[your username here]/Documents
-
-    Download the full directory of colleges and universities
-        . educationdata using "college ipeds directory", csv
-
-    Download the full directory of colleges and universities for 2011 in Florida.
-        . educationdata using "college ipeds directory", sub(year=2011 fips=12) csv    
+    . ssc install libjson 
         
 {title:Author}
 

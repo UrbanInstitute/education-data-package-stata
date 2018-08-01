@@ -1,10 +1,14 @@
 # Changelog for educationdata Stata Package
 
-#### 0.2.3 (Development Version, not yet released)
+#### 0.2.4 (Development Version, not yet released)
 
 - 
 
-#### 0.2.2 (Current Stable Version)
+#### 0.2.3 (Current Stable Version)
+
+- Add multiple year examples, move examples to the top of the documentation, per user feedback
+
+#### 0.2.2
 
 - Add option to allow users to clear cache, for recent data updates when the technical team has not yet cleared the cache on the server
 
