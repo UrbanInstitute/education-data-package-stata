@@ -11,14 +11,14 @@
 
 {bf:Examples of downloading full datasets}: 
 
+    (Note that when downloading full datasets we recommend using the "csv" option, 
+    described above and with examples provided at the end of this section.)
+
     Download the full directory of primary and secondary school information:
         . educationdata using "school ccd directory"
 
     Download the full primary and secondary school enrollment totals by grade:
         . educationdata using "school ccd enrollment"
-
-    (Note that when downloading full datasets we recommend using the "csv" option, 
-	described above and with examples provided at the end of this section.)
         
 {bf:Examples of subsetting datasets}:
         
@@ -41,8 +41,8 @@
 
 {bf:Downloading from CSV instead of the API}:
 
-	First, set your working directory to a location where you have read-write access
-		. cd D:/Users/[your username here]/Documents
+    First, set your working directory to a location where you have read-write access
+        . cd D:/Users/[your username here]/Documents
 
     Download the full directory of colleges and universities
         . educationdata using "college ipeds directory", csv
