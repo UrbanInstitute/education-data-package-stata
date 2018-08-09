@@ -2,7 +2,7 @@
 
 #### 0.2.4 (Development Version, not yet released)
 
-- 
+- Remove instructions to quote strings in subset, clarify the no space requirement between = in documentation.
 
 #### 0.2.3 (Current Stable Version)
 
