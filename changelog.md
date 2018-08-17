@@ -1,10 +1,14 @@
 # Changelog for educationdata Stata Package
 
-#### 0.2.4 (Development Version, not yet released)
+#### 0.2.5 (Development Version, not yet released) 
+
+- 
+
+#### 0.2.4 (Current Stable Version)
 
 - Remove instructions to quote strings in subset, clarify the no space requirement between = in documentation.
 
-#### 0.2.3 (Current Stable Version)
+#### 0.2.3 
 
 - Add multiple year examples, move examples to the top of the documentation, per user feedback
 

@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.2.2}
+{title:Education Data Package}{right:Version 0.2.3}
 
 {title:Syntax}
 
@@ -11,17 +11,19 @@
 
 {bf:Examples of downloading full datasets}: 
 
+    (Note that when downloading full datasets we recommend using the "csv" option, 
+    described above and with examples provided at the end of this section.)
+
     Download the full directory of primary and secondary school information:
         . educationdata using "school ccd directory"
 
     Download the full primary and secondary school enrollment totals by grade:
         . educationdata using "school ccd enrollment"
-
-    (Note that when downloading full datasets we recommend using the "csv" option, 
-	described above and with examples provided at the end of this section.)
         
 {bf:Examples of subsetting datasets}:
         
+    Note that there can be no spaces around the equals sign (e.g., use sub(year=2011), not sub(year = 2011)).
+
     Download the full directory of colleges and universities for 2011
         . educationdata using "college ipeds directory", sub(year=2011)
         
@@ -41,8 +43,8 @@
 
 {bf:Downloading from CSV instead of the API}:
 
-	First, set your working directory to a location where you have read-write access
-		. cd D:/Users/[your username here]/Documents
+    First, set your working directory to a location where you have read-write access
+        . cd D:/Users/[your username here]/Documents
 
     Download the full directory of colleges and universities
         . educationdata using "college ipeds directory", csv
@@ -282,10 +284,12 @@ The {bf:educationdata} command takes two options for only collecting a subset
 of the dataset you request:
 
 1. {bf:{opt sub:set(str)}}: Specifies a single subset or list of subsets of the dataset
-along as many valid variables as the dataset contains. The string argument must be in
-quotations, multiple subset variables must be separated by a space, and multiple
+along as many valid variables as the dataset contains. Multiple subset variables must be 
+separated by a space (e.g., sub(variable1=value1 variable2=value2)), and multiple
 subset values for a variable must either take the form of a continuous list separated
-by a colon, or a list of values separated by a comma. 
+by a colon, or a list of values separated by a comma. Note that there can be no spaces
+between the variable, the equals sign, and the value (e.g., sub(variable1=value1), not
+sub(variable1 = value1)).
 
 To be concrete, while not a complete list of options, subset conditions may take the 
 form of sub(variable1=value1), sub(variable1=value1,value2), 
