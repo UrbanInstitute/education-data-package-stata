@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.2.3}
+{title:Education Data Package}{right:Version 0.2.4}
 
 {title:Syntax}
 
