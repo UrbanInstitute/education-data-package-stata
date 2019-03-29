@@ -4,19 +4,25 @@ Welcome to the [Education Data Portal](https://educationdata.urban.org) Stata Pa
 
 ### Install or Update the Package
 
-If you don't have `libjson` installed, the package will automatically install it for you once you run your first `educationdata` command. Or, you can type `ssc install libjson`. The following command will install, or if the package is already installed, update the education data package.
+*Before you install the package, run the following:*
+
+```stata
+ssc install libjson
+```
+
+Then, the following command will install, or if the package is already installed, update the education data package.
 
 ```stata
 net install educationdata, replace from("https://urbaninstitute.github.io/education-data-package-stata/")
 ```
 
-If you are running Stata 14 or later, and you allowed the program to install libjson for you, run the following:
+If you are having trouble, first try running the following:
 
 ```stata
 adoupdate
 ```
 
-If you have trouble with this command, uninstall any existing installations using the instructions below, close and re-open Stata, then re-run the command above.
+If you're still having trouble with this command, uninstall any existing installations using the instructions below, close and re-open Stata, then re-run the commands above.
 
 #### Error r(672) - Server refused to send file OR similar errors in installation
 

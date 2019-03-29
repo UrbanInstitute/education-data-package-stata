@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.2.4}
+{title:Education Data Package}{right:Version 0.2.5}
 
 {title:Syntax}
 
@@ -110,7 +110,7 @@ certificate-seeking students.
 
 {bf:"college ipeds admissions-requirements"}: This endpoint contains data on
 admissions considerations for the undergraduate selection process. SAT and ACT
-test scores are included for institutions, that require test scores for
+test scores are included for institutions that require test scores for
 admission. These data are applicable for institutions that do not have an open
 admissions policy for entering first-time students. Writing scores for both SAT
 and ACT are no longer collected. The possible values for the admission
@@ -152,6 +152,14 @@ August 1 and October 31. Submission of enrollment by age categories is optional
 in even-numbered years. Available levels of study are undergraduate, graduate,
 and first-professional (through 2008 only); in 2000, only undergraduate data
 are available.
+
+{bf:"college ipeds enrollment-headcount"}: This endpoint contains the
+unduplicated head count of students enrolled over a 12-month period for both
+undergraduate and graduate levels. These enrollment data are particularly
+valuable for institutions that use non-traditional calendar systems and offer
+short-term programs. Because this enrollment measure encompasses an entire
+year, it provides a more complete picture of the number of students these
+schools serve. Counts are available by level of study, sex, and race/ethnicity.
 
 {bf:"college ipeds fall-retention"}: The first-year retention rate data
 measures the percentage of first-year students who persisted in or completed
@@ -222,7 +230,7 @@ entering; and part-time, non-first-time entering.
 students who completed any degree or certificate by race and ethnicity and
 gender.
 
-{bf:"college ipeds completions-cip"}: This endpoint contains the number of
+{bf:"college ipeds completions-cip-2"}: This endpoint contains the number of
 awards by type of program, level of award (certificate or degree), first or
 second major, and by race and ethnicity and gender. Type of program is
 categorized according to the 2-digit Classification of Instructional Programs
@@ -233,15 +241,102 @@ Postsecondary Education Data System. These data are available from 1991 to
 2015. IPEDS reported data at the 2-digit CIP level until 2001; after that, the
 6-digit CIP data were collapsed to the 2-digit level until 2015.
 
+{bf:"college ipeds completions-cip-6"}: This endpoint contains the number of
+awards by type of program, level of award (certificate or degree), first or
+second major, and by race and ethnicity and gender. Type of program is
+categorized according to the 6-digit Classification of Instructional Programs
+(CIP), a detailed coding system for postsecondary instructional programs, which
+changes over time. These data are available from 1991 to 2015.
+
+{bf:"college ipeds academic-libraries"}: This endpoint contains information
+on the academic institution's electronic and physical library, collections,
+expenditures, and services. These data are available only for degree-granting
+institutions, and expenditure data are available only for institutions with
+total expenditures above $100,000.
+
+{bf:"college scorecard institutional-characteristics"}: This endpoint
+contains institutional characteristics for each college or university,
+primarily including flags for minority-serving institutions. To avoid
+duplication, we exclude data that College Scorecard sourced from IPEDS. For
+these data, you can see the other Institutional Characteristics and Directory
+endpoints. Notably, most of the information contained in this endpoint can be
+found in 2016 and aside from identification and year, only predominant degree
+awarded is available in other years.
+
+{bf:"college scorecard student-characteristics aid-applicants"}: This
+endpoint contains detailed data on student aid applicants in each institution,
+including income level, dependency status, number of college students sent Free
+Application for Federal Student Aid (FAFSA) forms to, and other student
+demographics. These data are produced for rolling two-year pooled entry cohorts
+by the National Student Loan Data System (e.g., the 1997 data represent
+information from two cohorts, assessment year 1996&ndash;97 and assessment year
+1997&ndash;98).
+
+{bf:"college scorecard student-characteristics home-neighborhood"}: This
+endpoint contains detailed demographic information on cohorts of students,
+based on when they enroll in college. These data describe the population
+residing in the students' home zip codes, including information about race,
+education level, nationality, poverty status, household income, and employment
+status. The US Treasury Department calculated these data elements using census
+data for two-year pooled cohorts at each institution (e.g., the 2005 file
+includes the 2004&ndash;05 and 2005&ndash;06 earnings cohorts). Home zip codes
+are determined using information from when the student first applied for
+financial aid.
+
+{bf:"college scorecard earnings"}: This endpoint contains information on
+earnings for former students, by their pooled entry cohort and institution.
+This information may be available 6, 7, 8, 9, and 10 years after the pooled
+cohort entered college, but availability varies by cohort. For example, the
+assessment year (AY) 1996&ndash;97 and AY 1997&ndash;98 pooled cohort has
+earnings data available 6, 7, 8, 9, and 10 years after entry, but the AY
+2001-02 and AY 2002&ndash;03 pooled cohort only has earnings data 10 years
+after entry and the AY 2003&ndash;04 and AY 2004&ndash;05 pooled cohort only
+has earnings data 8 years after entry.
+
+{bf:"college scorecard default"}: This endpoint contains information on the
+default rates by cohort for two or three years after students entered
+repayment. The two-year default rate is available from 1996 to 2012, and the
+three-year default rate is available starting in 2011. The cohorts are those
+that entered repayment two or three years before the year of measurement. For
+example, those who entered repayment between October 1, 2012, and September 30,
+2013 (which we identify as cohort 2012, but corresponds with fiscal year 2013),
+have their three-year default rate measured as of September 30, 2015 (year
+2015).
+
+{bf:"college scorecard repayment"}: This endpoint contains detailed
+repayment data by pooled cohort and institution. These data are also available
+by subgroup, including dependency status, Pell recipiency, first-generation
+status, sex, and income level. These repayment rates are measured one, three,
+five, and seven years after the cohort enters repayment. For example the
+one-year repayment rate for fiscal year (FY) 2008 and FY 2009 cohorts
+(cohort_year 2008) are measured in FY 2009 and FY 2010 (year 2009),
+respectively.
+
 {bf:District} - {browse "https://educationdata.urban.org/documentation/school-districts.html":Read Complete Documentation}
+
+{bf:"district ccd directory"}: This endpoint contains school district (local
+education agency identification)-level geographic and mailing information,
+agency type, highest and lowest grades offered, special education students and
+English language learners, and full-time equivalent teachers and other staff.
+
+{bf:"district ccd enrollment"}: This endpoint contains student membership data
+for each school district by grade.
+
+{bf:"district ccd enrollment race"}: This endpoint contains student membership
+data for each school district by grade and race.
+
+{bf:"district ccd enrollment sex"}: This endpoint contains student membership
+data for each school district by grade and sex.
+
+{bf:"district ccd enrollment race sex"}: This endpoint contains student
+membership data for each school district by grade, race, and sex.
+
+{bf:"district ccd finance"}: This endpoint contains district level finance data
+including revenues from federal, state, and local governments and expenditures.
 
 {bf:"district saipe"}: This endpoint contains district level data on the size
 of the population, the size of the school age population, and the size of the
 school age population that is in poverty.
-
-{bf:"district ccd finance"}: This endpoint contains disctrict level finance
-data including revenues from federal, state, and local governments and
-expenditures.
 
 {bf:School} - {browse "https://educationdata.urban.org/documentation/schools.html":Read Complete Documentation}
 
@@ -268,6 +363,149 @@ endpoint.
 for each school by grade, race, and sex. Only operational schools serving one
 or more grades are required to report membership and only these are included in
 this endpoint.
+
+{bf:"school crdc directory"}: This endpoint contains school-level geographic
+information, grades offered, and information on school type (including charter,
+magnet, and alternative schools).
+
+{bf:"school crdc enrollment race sex"}: This endpoint contains student enrollment for
+each school by students' race and sex. This includes only K&ndash;12 students.
+
+{bf:"school crdc enrollment disability sex"}: This endpoint contains student
+enrollment for each school by students' disability status and sex. This only
+includes students in grades K-12.
+
+{bf:"school crdc enrollment lep sex"}: This endpoint contains student enrollment for
+each school by students' Limited English Proficiency status and sex. This only
+includes students in grades K-12.
+
+{bf:"school crdc discipline disability sex"}: This endpoint contains student
+discipline information for each school, including suspensions, expulsions,
+arrests, referrals, and corporal punishment by students' race and sex.
+
+{bf:"school crdc discipline disability race sex"}: This endpoint contains student
+discipline information for each school, including suspensions, expulsions,
+arrests, referrals, and corporal punishment by students' disability status and
+sex.
+
+{bf:"school crdc discipline disability lep sex"}: This endpoint contains student
+discipline information for each school, including suspensions, expulsions,
+arrests, referrals, and corporal punishment by students' limited English
+proficiency status and sex.
+
+{bf:"school crdc harassment-or-bullying allegations"}: This endpoint contains the
+number of allegations of harassment or bullying on the basis of sex; on the
+basis of race, color, or national origin; or on the basis of disability. This
+only includes students in grades K-12 and comparable ungraded levels.
+
+{bf:"school crdc harassment-or-bullying race sex"}: This endpoint contains the number
+of students who reported being harassed or bullied and the number of students
+who were disciplined for harassment or bullying, by students' race and sex.
+These reports and disciplines could be on the basis of sex; on the basis of
+race, color, or national origin; or on the basis of disability. This includes
+only students in grades K&ndash;12 and comparable ungraded levels.
+
+{bf:"school crdc harassment-or-bullying disability sex"}: This endpoint contains the
+number of students who reported being harassed or bullied and the number of
+students who were disciplined for harassment or bullying, by students'
+disability status and sex. These reports and disciplines could be on the basis
+of sex, on the basis of race, color, or national origin, or on the basis of
+disability. This only includes students in grades K-12 and comparable ungraded
+levels.
+
+{bf:"school crdc harassment-or-bullying lep sex"}: This endpoint contains the number
+of students who reported being harassed or bullied and the number of students
+who were disciplined for harassment or bullying, by students' limited English
+proficiency status and sex. These reports and disciplines could be on the basis
+of sex, on the basis of race, color, or national origin, or on the basis of
+disability. This only includes students in grades K-12 and comparable ungraded
+levels.
+
+{bf:"school crdc chronic-absenteeism race sex"}: This endpoint contains the number of
+students who were chronically absent, by race and sex. Chronic absenteeism is
+defined as being absent 15 or more school days during the school year. A
+student is absent if he or she is not physically on school grounds and is not
+participating in instruction or instruction-related activities at an approved
+off-grounds location for the school day. Chronically absent students include
+students who are absent for any reason (e.g., illness, suspension, the need to
+care for a family member), regardless of whether absences are excused or
+unexcused.
+
+{bf:"school crdc chronic-absenteeism disability sex"}: This endpoint contains the
+number of students who were chronically absent, by disability status and sex.
+Chronic absenteeism is defined as being absent 15 or more school days during
+the school year. A student is absent if he or she is not physically on school
+grounds and is not participating in instruction or instruction-related
+activities at an approved off-grounds location for the school day. Chronically
+absent students include students who are absent for any reason (e.g., illness,
+suspension, the need to care for a family member), regardless of whether
+absences are excused or unexcused.
+
+{bf:"school crdc chronic-absenteeism lep sex"}: This endpoint contains the number of
+students who were chronically absent, by limited English proficiency status and
+sex. Chronic absenteeism is defined as being absent 15 or more school days
+during the school year. A student is absent if he or she is not physically on
+school grounds and is not participating in instruction or instruction-related
+activities at an approved off-grounds location for the school day. Chronically
+absent students include students who are absent for any reason (e.g., illness,
+suspension, the need to care for a family member), regardless of whether
+absences are excused or unexcused.
+
+{bf:"school crdc restraint-and-seclusion instances"}: This endpoint contains the
+number of instances of restraint or seclusion, by student's disability status.
+This includes only students in grades K&ndash;12 and comparable ungraded
+levels.
+
+{bf:"school crdc restraint-and-seclusion disability sex"}: This endpoint contains the
+number of students who were subjected to restraint or seclusion, by disability
+status and sex. This includes only students in grades K&ndash;12 and comparable
+ungraded levels.
+
+{bf:"school crdc restraint-and-seclusion disability race sex"}: This endpoint contains
+the number of students who were subjected to restraint or seclusion, by
+disability status, race, and sex. This includes only students in grades
+K&ndash;12 and comparable ungraded levels.
+
+{bf:"school crdc restraint-and-seclusion disability lep sex"}: This endpoint contains
+the number of students who were subjected to restraint or seclusion, by
+disability status, limited English proficiency status, and sex. This includes
+only students in grades K&ndash;12 and comparable ungraded levels.
+
+{bf:"school crdc ap-ib-enrollment race sex"}: This endpoint contains the number of
+students enrolled in Advanced Placement (AP) courses, the International
+Baccalaureate (IB) Diploma Programme, and gifted and talented (GT) programs, by
+race and sex.
+
+{bf:"school crdc ap-ib-enrollment disability sex"}: This endpoint contains the number
+of students enrolled in Advanced Placement (AP) courses, the International
+Baccalaureate (IB) Diploma Programme, and gifted and talented (GT) programs, by
+disability and sex.
+
+{bf:"school crdc ap-ib-enrollment lep sex"}: This endpoint contains the number of
+students enrolled in Advanced Placement (AP) courses, the International
+Baccalaureate (IB) Diploma Programme, and gifted and talented (GT) programs, by
+limited English proficiency status and sex.
+
+{bf:"school crdc ap-exams race sex"}: This endpoint contains the number of students
+taking AP exams, and the number of students passing AP exams, by students' race
+and sex.
+
+{bf:"school crdc ap-exams disability sex"}: This endpoint contains the number of
+students taking AP exams, and the number of students passing AP exams, by
+students' disability status and sex.
+
+{bf:"school crdc ap-exams lep sex"}: This endpoint contains the number of students
+taking AP exams, and the number of students passing AP exams, by students'
+Limited English Proficiency status and sex.
+
+{bf:"school crdc sat-act-participation race sex"}: This endpoint contains the number
+of students taking the SAT or ACT, by race and sex.
+
+{bf:"school crdc sat-act-participation disability sex"}: This endpoint contains the
+number of students taking the SAT or ACT, by disability status and sex.
+
+{bf:"school crdc sat-act-participation lep sex"}: This endpoint contains the number of
+students taking the SAT or ACT, by limited English proficiency status and sex.
 
 {marker options}{...}
 {title:Command Options}
