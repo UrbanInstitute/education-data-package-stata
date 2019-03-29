@@ -2,6 +2,7 @@
 
 #### 0.2.6 (Development Version, not yet released) 
 
+- Fix bug that added redundant "mode=stata" additions to URL
 - 
 
 #### 0.2.5  (Current Stable Version)
