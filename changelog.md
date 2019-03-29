@@ -7,6 +7,7 @@
 #### 0.2.5  (Current Stable Version)
 
 - Updated package help to include new endpoints from latest release
+- Updated educationdata command to allow debug option for error reporting
 
 #### 0.2.4
 

@@ -2,8 +2,8 @@ program educationdata
 version 11.0
 mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
-syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR] [METAdata] [STAGING] [CSV] [CACHE]
-mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"),strlen("`metadata'"),strlen("`staging'"),strlen("`csv'"),strlen("`cache'"));
+syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR] [METAdata] [STAGING] [CSV] [CACHE] [DEBUG]
+mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"),strlen("`metadata'"),strlen("`staging'"),strlen("`csv'"),strlen("`cache'"),strlen("`debug'"));
 end
 
 mata
@@ -13,6 +13,7 @@ mata
 	pointer (class libjson scalar) scalar getresults(string scalar url){
 		pointer (class libjson scalar) scalar root
 		pointer (class libjson scalar) scalar result
+		if (st_global("debug_ind") == "1") printf(urlmode(url) + "\n")
 		root = libjson::webcall(urlmode(url) ,"");
 		result = root->getNode("results")
 		return(result)
@@ -479,6 +480,7 @@ mata
 		real matrix rdata
 		real scalar numrows
 		real scalar endpos
+		if (st_global("debug_ind") == "1") printf(urlmode(url) + "\n")
 		root = libjson::webcall(urlmode(url) ,"");
 		result = root->getNode("results")
 		numrows = result->arrayLength()
@@ -820,6 +822,7 @@ mata
 		real scalar timeper1
 		real scalar timeper2
 		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+		if (st_global("debug_ind") == "1") printf(urlmode(st_global("base_url") + url2) + "\n")
 		root = libjson::webcall(urlmode(st_global("base_url") + url2),"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
@@ -855,7 +858,7 @@ mata
 	}
 	
 	// Main function to get data based on Stata request - calls other helper functions
-	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly, real scalar staging, real scalar csv, real scalar clearcache){
+	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly, real scalar staging, real scalar csv, real scalar clearcache, real scalar debugind){
 		string matrix endpoints
 		string matrix spops
 		string matrix varinfo
@@ -885,6 +888,8 @@ mata
 		if (staging > 0) st_global("base_url",st_global("staging_url"))
 		st_global("cc","0")
 		if (clearcache > 0) st_global("cc","1")
+		st_global("debug_ind", "0")
+		if (debugind > 0) st_global("debug_ind", "1")
 		X = st_data(.,.)
 		if (clearme > 0) stata("clear")
 		else{
