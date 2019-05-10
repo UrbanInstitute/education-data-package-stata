@@ -902,7 +902,7 @@ mata
 			else stata("clear")
 		}
 		endpoints = endpointstrings()
-		dataoptions1 = shorttolongname(dataoptions, endpoints)
+		dataoptions1 = shorttolongname(strlower(dataoptions), endpoints)
 		if (dataoptions1 == "Error1"){
 			printf("Error: You must enter the complete name of a dataset in the 'using' statement. The first is the 'short' name for the data category, and the remaining words are the unique name of the dataset. E.g., using " + `"""' + "school directory" + `"""' + ". Type " + `"""' + "help educationdata" + `"""' + " to learn more.")
 			return("")

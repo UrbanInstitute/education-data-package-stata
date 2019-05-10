@@ -1,9 +1,9 @@
 # Changelog for educationdata Stata Package
 
-#### 0.2.6 (Development Version, not yet released) 
+#### 0.2.6 (Development Version, not yet released)
 
 - Fix bug that added redundant "mode=stata" additions to URL
-- 
+- Change the data options to force all commands to lowercase
 
 #### 0.2.5  (Current Stable Version)
 
@@ -14,7 +14,7 @@
 
 - Remove instructions to quote strings in subset, clarify the no space requirement between = in documentation.
 
-#### 0.2.3 
+#### 0.2.3
 
 - Add multiple year examples, move examples to the top of the documentation, per user feedback
 
@@ -40,7 +40,7 @@
 
 - Fix year parsing error in api-endpoints, that changed normal dash to ndash, to correctly parse years
 
-#### 0.1.7 
+#### 0.1.7
 
 - Fix year parsing error in api-endpoints, that changed mdash to normal dash, to correctly parse years
 
@@ -62,20 +62,20 @@
 - Fixes error in time estimate that produced blanks if the first API call had no records
 - Adds the ability to get the variable names, labels, and values only via "meta" or "metadata" option
 
-#### 0.1.3 
+#### 0.1.3
 
 - Adds totals example to documentation, clarifies values for grade and level_of_study, and explains the use of 99 for totals only queries
 - Fixes year parsing error that did not correctly give all years of data for endpoints that skip years, so all data should now be returned for these calls
 - More helpful error message telling the user the specific option value that caused the error so they can correct it
 - Literal strings showing up as "" in Stata datasets should now all be blank
 
-#### 0.1.2 
+#### 0.1.2
 
 - Fixes to documentation to ensure line-wraps are included
 - Fixes to documentation to include working FIPS example
 - Removes debugging statement from function that printed out the URL of each endpoint
 
-#### 0.1.1 
+#### 0.1.1
 
 - Update documentation to reflect that you do not need to use quotes around the `subset()` and `columns()` arguments
 - Adds functionality that checks whether libjson is installed and installs it on first command if it is not
