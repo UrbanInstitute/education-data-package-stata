@@ -1,11 +1,15 @@
 # Changelog for educationdata Stata Package
 
-#### 0.2.6 (Development Version, not yet released)
+#### 0.2.7 (Development Version, not yet released)
+
+- 
+
+#### 0.2.6 (Current Stable Version)
 
 - Fix bug that added redundant "mode=stata" additions to URL
 - Change the data options to force all commands to lowercase
 
-#### 0.2.5  (Current Stable Version)
+#### 0.2.5
 
 - Updated package help to include new endpoints from latest release
 - Updated educationdata command to allow debug option for error reporting
