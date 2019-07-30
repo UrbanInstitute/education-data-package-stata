@@ -4,7 +4,7 @@ import re
 from operator import itemgetter
 
 # Python program to convert API endpoint to Stata help document
-url = 'https://ed-data-portal.urban.org/api/v1/api-endpoints/'
+url = 'https://educationdata-stg.urban.org/api/v1/api-endpoints/'
 res = requests.get(url).text
 data = json.loads(res)
 keep_str = []
@@ -47,7 +47,7 @@ for i in data["results"]:
 	term = translate[rsplit[0]]
 	for j in range(1,len(rsplit)):
 		term += " " + rsplit[j]
-	if res_str not in hide and i["hide"] == "0":
+	if res_str not in hide and i["hide"] == 0:
 		keep_str.append(['{bf:"' + term + '"}: ' + i["description"] + '\n'.replace('\n\n\n','\n\n').replace('\n\n\n','\n\n'),res_str.split()[0],int(i["order"])])
 
 # To do - sort and convert to string, and convert long names to short

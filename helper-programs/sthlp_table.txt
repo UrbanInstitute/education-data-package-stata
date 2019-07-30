@@ -38,10 +38,10 @@ hour activity data are used to derive 12-month full-time equivalent (FTE)
 enrollments for both undergraduate and graduate levels. The graduate level does
 not include credit hours for doctoral professional practice students.
 Institutions can choose to accept the derived FTE or report their own FTE. Both
-reported and estimated/derived FTE are available in this data table. In
-addition, the reported FTE of doctoral professional practice students are also
-included. These data are only available at the undergraduate, graduate, and
-first professional level.
+reported and estimated/derived FTE are available in this data table for 2003
+and later. In addition, the reported FTE of doctoral professional practice
+students are also included. These data are only available at the undergraduate,
+graduate, and first professional level.
 
 {bf:"college ipeds fall-enrollment race sex"}: This endpoint contains the
 number of students enrolled in the fall by race, sex, full-time/part-time
@@ -66,6 +66,17 @@ August 1 and October 31. Submission of enrollment by age categories is optional
 in even-numbered years. Available levels of study are undergraduate, graduate,
 and first-professional (through 2008 only); in 2000, only undergraduate data
 are available.
+
+{bf:"college ipeds fall-enrollment residence"}: This endpoint contains the
+number of first-time freshmen by state of residence, along with data on the
+number who graduated from high school the previous year. Institutions with
+traditional academic year calendar systems (i.e., semester, quarter, trimester,
+or 4-1-4) report their enrollment as of October 15 or the institution’s
+official fall reporting date. Institutions with calendar systems that differ by
+program or allow continuous enrollment report students that are enrolled at any
+time between August 1 and October 31. Submission of enrollment of first-time
+undergraduate students by residency is mandatory in even-numbered years and
+optional in odd-numbered years.
 
 {bf:"college ipeds enrollment-headcount"}: This endpoint contains the
 unduplicated head count of students enrolled over a 12-month period for both
@@ -133,12 +144,25 @@ enrolled three academic years earlier and the number of students who completed
 any degree or certificate 150 percent of normal time.
 
 {bf:"college ipeds outcome-measures"}: This endpoint contains award and
-enrollment data from degree-granting institutions on four undergraduate cohorts
-that entered an institution eight academic years ago at two points in time: six
-academic years after entry and eight academic years after entry. The four
-cohorts of degree- or certificate-seeking undergraduates are full-time,
-first-time entering; part-time, first-time entering; full-time, non-first-time
-entering; and part-time, non-first-time entering.
+enrollment data from degree-granting institutions on undergraduate cohorts that
+entered an institution eight academic years ago. The two years of data
+currently available have slightly different definitions for cohorts and
+information available. In 2015, there is information on four cohorts collected
+at two points in time: six academic years and eight academic years after entry.
+The four cohorts of degree- or certificate-seeking undergraduates are
+full-time, first-time entering; part-time, first-time entering; full-time,
+non-first-time entering; and part-time, non-first-time entering. In 2016, there
+is information on eight cohorts collected at three points in time: four
+academic years, six academic years, and eight academic years after entry. The
+eight cohorts are the four cohorts described for 2015, but for each, they
+further disaggregate by Pell recipients and non-Pell recipients. Additionally,
+in 2016, they collect more detailed information about the types of awards
+completed, such as a certificate, Associate's degree, or Bachelor's degree.
+Finally, the cohort definitions between the two years change. In 2015, the
+completion rate at 6 and 8 years after entry uses the adjusted cohort from the
+corresponding year after entry as the denominator, whereas in 2016, one
+adjusted cohort is used as the denominator in all rates, regardless of years
+after entry.
 
 {bf:"college ipeds completers"}: This endpoint contains the number of
 students who completed any degree or certificate by race and ethnicity and
@@ -251,6 +275,51 @@ including revenues from federal, state, and local governments and expenditures.
 {bf:"district saipe"}: This endpoint contains district level data on the size
 of the population, the size of the school age population, and the size of the
 school age population that is in poverty.
+
+{bf:"district edfacts assessments"}: This endpoint contains district-level
+achievement results for state assessments in mathematics and reading or
+language arts, by grade. It includes the number of students who completed each
+assessment for whom a proficiency level was assigned and the proficiency share.
+The proficiency share is reported as a range, unless there are more than 300
+students in the subgroup, with the magnitude of the range decreasing as the
+number of students reported increases. States can change their statewide
+assessments, academic standards, or thresholds for proficiency levels, leading
+to changes in the proficiency share from year to year.
+
+{bf:"district edfacts assessments race"}: This endpoint contains district-level
+achievement results for state assessments in mathematics and reading or
+language arts, by grade and race or ethnicity. It includes the number of
+students who completed each assessment for whom a proficiency level was
+assigned and the proficiency share. The proficiency share is reported as a
+range, unless there are more than 300 students in the subgroup, with the
+magnitude of the range decreasing as the number of students reported increases.
+States can change their statewide assessments, academic standards, or
+thresholds for proficiency levels, leading to changes in the proficiency share
+from year to year.
+
+{bf:"district edfacts assessments sex"}: This endpoint contains district-level
+achievement results for state assessments in mathematics and reading or
+language arts, by grade and sex. It includes the number of students who
+completed each assessment for whom a proficiency level was assigned and the
+proficiency share. The proficiency share is reported as a range, unless there
+are more than 300 students in the subgroup, with the magnitude of the range
+decreasing as the number of students reported increases. States can change
+their statewide assessments, academic standards, or thresholds for proficiency
+levels, leading to changes in the proficiency share from year to year.
+
+{bf:"district edfacts assessments special-populations"}: This endpoint contains
+district-level achievement results for state assessments in mathematics and
+reading or language arts, by grade and special population subgroups. It
+includes the number of students who completed each assessment for whom a
+proficiency level was assigned and the proficiency share. The proficiency share
+is reported as a range, unless there are more than 300 students in the
+subgroup, with the magnitude of the range decreasing as the number of students
+reported increases. Special population subgroups include children with one or
+more disabilities, economically disadvantaged students, students who are
+homeless, migrant students, and students with limited English proficiency.
+States can change their statewide assessments, academic standards, or
+thresholds for proficiency levels, leading to changes in the proficiency share
+from year to year.
 
 {bf:School} - {browse "https://educationdata.urban.org/documentation/schools.html":Read Complete Documentation}
 
@@ -420,4 +489,49 @@ number of students taking the SAT or ACT, by disability status and sex.
 
 {bf:"school crdc sat-act-participation lep sex"}: This endpoint contains the number of
 students taking the SAT or ACT, by limited English proficiency status and sex.
+
+{bf:"school edfacts assessments"}: This endpoint contains school-level achievement
+results for state assessments in mathematics and reading or language arts, by
+grade. It includes the number of students who completed each assessment for
+whom a proficiency level was assigned and the proficiency share. The
+proficiency share is reported as a range, unless there are more than 300
+students in the subgroup, with the magnitude of the range decreasing as the
+number of students reported increases. States can change their statewide
+assessments, academic standards, or thresholds for proficiency levels, leading
+to changes in the proficiency share from year to year.
+
+{bf:"school edfacts assessments race"}: This endpoint contains school-level
+achievement results for state assessments in mathematics and reading or
+language arts, by grade and race or ethnicity. It includes the number of
+students who completed each assessment for whom a proficiency level was
+assigned and the proficiency share. The proficiency share is reported as a
+range, unless there are more than 300 students in the subgroup, with the
+magnitude of the range decreasing as the number of students reported increases.
+States can change their statewide assessments, academic standards, or
+thresholds for proficiency levels, leading to changes in the proficiency share
+from year to year.
+
+{bf:"school edfacts assessments sex"}: This endpoint contains school-level achievement
+results for state assessments in mathematics and reading or language arts, by
+grade and sex. It includes the number of students who completed each assessment
+for whom a proficiency level was assigned and the proficiency share. The
+proficiency share is reported as a range, unless there are more than 300
+students in the subgroup, with the magnitude of the range decreasing as the
+number of students reported increases. States can change their statewide
+assessments, academic standards, or thresholds for proficiency levels, leading
+to changes in the proficiency share from year to year.
+
+{bf:"school edfacts assessments special-populations"}: This endpoint contains
+school-level achievement results for state assessments in mathematics and
+reading or language arts, by grade and special population subgroups. It
+includes the number of students who completed each assessment for whom a
+proficiency level was assigned and the proficiency share. The proficiency share
+is reported as a range, unless there are more than 300 students in the
+subgroup, with the magnitude of the range decreasing as the number of students
+reported increases. Special population subgroups include children with one or
+more disabilities, economically disadvantaged students, students who are
+homeless, migrant students, and students with limited English proficiency.
+States can change their statewide assessments, academic standards, or
+thresholds for proficiency levels, leading to changes in the proficiency share
+from year to year.
 

@@ -1,10 +1,15 @@
 # Changelog for educationdata Stata Package
 
-#### 0.2.7 (Development Version, not yet released)
+#### 0.3.1 (Development Version, not yet released)
 
 - 
 
-#### 0.2.6 (Current Stable Version)
+#### 0.3.0 (Current Stable Version)
+
+- Add additional parser for grade_edfacts for 7/31/2019 release, requiring major code update
+- Manually update valid grades for CCD and EDFacts
+
+#### 0.2.6
 
 - Fix bug that added redundant "mode=stata" additions to URL
 - Change the data options to force all commands to lowercase
