@@ -256,8 +256,12 @@ mata
 		string rowvector validlist
 		string scalar returnlist
 		if (tocheck == "grade") { 
-			tochecklist = ("grade-pk","grade-k","grade-1","grade-2","grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-10","grade-11","grade-12","grade-99")
-			toaddlist = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
+			tochecklist = ("grade-pk","grade-k","grade-1","grade-2","grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-10","grade-11","grade-12","grade-13","grade-14","grade-15","grade-99","grade-999")
+			toaddlist = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","99","999")
+		}
+		else if (tocheck == "grade_edfacts") {
+			tochecklist = ("grade-3","grade-4","grade-5","grade-6","grade-7","grade-8","grade-9","grade-99")
+			toaddlist = ("3","4","5","6","7","8","9","99")
 		}
 		else if (tocheck == "level_of_study") tochecklist = ("undergraduate","graduate","first-professional","post-baccalaureate","1","2","3","4")
 		else if (tocheck == "fed_aid_type") tochecklist = ("fed","sub-stafford","no-pell-stafford","1","2","3")
@@ -265,12 +269,12 @@ mata
 		else return(alist)
 		for (c=1; c<=length(alist); c++){
 			if (iteminlist(alist[c],tochecklist) == 0) {
-				if (tocheck == "grade" && (alist[c] == "-1" || alist[c] == "0")){
+				if ((tocheck == "grade" || tocheck == "grade_edfacts") && (alist[c] == "-1" || alist[c] == "0")){
 					if (alist[c] == "-1") alist[c] = "grade-pk"
 					else alist[c] = "grade-k"
 				}
-				else if (tocheck != "grade" || iteminlist(alist[c],toaddlist) == 0){
-					if (tocheck == "grade") validlist = toaddlist
+				else if ((tocheck != "grade" && tocheck != "grade_edfacts") || iteminlist(alist[c],toaddlist) == 0){
+					if (tocheck == "grade" || tocheck == "grade_edfacts") validlist = toaddlist
 					else validlist = tochecklist
 					for (r=1; r<=length(validlist); r++){
 						if (r == 1) returnlist = validlist[r]
@@ -309,8 +313,10 @@ mata
 		vopts = parseurls(endpoints[2,epid], "optional")
 		isopt1 = isvalid(getit[1], vopts)
 		if (isopt1 == 1){
-			grades = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","99")
-			grades_alt = ("-1","0","1","2","3","4","5","6","7","8","9","10","11","12","99")
+			grades = ("pk","k","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","99","999","-2","-3")
+			grades_alt = ("-1","0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","99","999","-2","-3")
+			gradesed = ("3","4","5","6","7","8","9","99","-2","-3")
+			gradesed_alt = ("3","4","5","6","7","8","9","99","-2","-3")
 			levels = ("undergraduate","graduate","first-professional","post-baccalaureate")
 			fedaids = ("fed","sub-stafford","no-pell-stafford")
 			if (getit[1] == "year") years = parseyears(epid)
@@ -336,6 +342,11 @@ mata
 						tlev = grades
 						tempadd = "grade-"
 						isgrade = 1
+					}
+					else if (getit[1] == "grade_edfacts"){
+						tlev = gradesed
+						tempadd = "grade-"
+						isgrade = 2				
 					}
 					else if (getit[1] == "level_of_study") tlev = levels
 					else if (getit[1] == "fed_aid_type") tlev = fedaids
@@ -369,6 +380,19 @@ mata
 						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1] + "\nValid options are: " + checklist[3], ""))
 						else return(checklist)	
 					}
+					else if (isgrade == 2 && (isvalid(getit[1], gradesed_alt) == 1 && isvalid(getit[2], gradesed_alt) == 1)){
+						spos1 = stringpos(getit[1], gradesed_alt)
+						spos2 = stringpos(getit[2], gradesed_alt)
+						getstring = tempadd + tlev[spos1]
+						for (c=spos1 + 1; c<=spos2; c++){
+							getstring = getstring + "," + tempadd + tlev[c]
+						}
+						t = tokeninit(",")
+						s = tokenset(t, getstring)
+						checklist = checkinglist(tokengetall(t), getit[1], years)
+						if (checklist[1] == "Error") return(("Invalid Option: " + checklist[2] + " in " + getit[1] + "\nValid options are: " + checklist[3], ""))
+						else return(checklist)	
+					}
 					else {
 						if (isvalid(getit[1], tlev) == 0){
 							checklist = checkinglist((getit[1]),keepg1, years)
@@ -386,6 +410,10 @@ mata
 				if (getit[1] == "year") tlev = years
 				else if (getit[1] == "grade"){
 					tlev = grades
+					tempadd = "grade-"
+				}
+				else if (getit[1] == "grade_edfacts"){
+					tlev = gradesed
 					tempadd = "grade-"
 				}
 				else if (getit[1] == "level_of_study") tlev = levels
