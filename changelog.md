@@ -1,10 +1,14 @@
 # Changelog for educationdata Stata Package
 
-#### 0.3.1 (Development Version, not yet released)
+#### 0.3.2 (Development Version, not yet released)
 
 - 
 
-#### 0.3.0 (Current Stable Version)
+#### 0.3.1 (Current Stable Version)
+
+- Fix flaw where Stata reads in variables automatically as lowercase, conflicting with metadata. Converts all variables automatically to full lowercase
+
+#### 0.3.0 
 
 - Add additional parser for grade_edfacts for 7/31/2019 release, requiring major code update
 - Manually update valid grades for CCD and EDFacts

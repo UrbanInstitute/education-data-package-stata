@@ -596,6 +596,9 @@ mata
 		string scalar labeldef
 		string scalar labelshort
 		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+		for (c=1; c<=length(varinfo[1,.]); c++){
+			varinfo[1,c] = strlower(varinfo[1,c])
+		}
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
 			stata("qui label var " + varinfo[1,c] + " " + `"""' + varinfo[2,c] + `"""')
@@ -852,6 +855,9 @@ mata
 		real scalar timeper1
 		real scalar timeper2
 		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+		for (c=1; c<=length(varinfo[1,.]); c++){
+			varinfo[1,c] = strlower(varinfo[1,c])
+		}
 		if (st_global("debug_ind") == "1") printf(urlmode(st_global("base_url") + url2) + "\n")
 		root = libjson::webcall(urlmode(st_global("base_url") + url2),"");
 		results1 = root->getNode("results")
@@ -946,6 +952,9 @@ mata
 		}
 		eid = endpoints[1,epid]
 		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+		for (c=1; c<=length(varinfo[1,.]); c++){
+			varinfo[1,c] = strlower(varinfo[1,c])
+		}
 		validfilters = ""
 		for (c=1; c<=length(varinfo[6,.]); c++){
 			if (varinfo[6,c] == "1" && varinfo[3,c] == "long"){
