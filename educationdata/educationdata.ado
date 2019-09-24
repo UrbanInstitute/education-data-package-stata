@@ -494,6 +494,7 @@ mata
 				if (i != length(tokenstemp)) tempstring = tempstring + " "
 			}
 			vardefs[2,r] = subinstr(tempstring, " - ", "-")
+			vardefs[2,r] = subinstr(tempstring, "&ndash;", "-")
 		}
 		return(vardefs)
 	}

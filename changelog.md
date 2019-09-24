@@ -2,7 +2,7 @@
 
 #### 0.3.2 (Development Version, not yet released)
 
-- 
+- Fix the value labels where display html codes
 
 #### 0.3.1 (Current Stable Version)
 
