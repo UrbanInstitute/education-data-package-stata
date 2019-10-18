@@ -1,10 +1,13 @@
 # Changelog for educationdata Stata Package
 
-#### 0.3.2 (Development Version, not yet released)
+#### 0.3.3 (Development Version, not yet released)
 
-- Fix the value labels where display html codes
 
-#### 0.3.1 (Current Stable Version)
+#### 0.3.2 (Current Stable Version)
+
+- Fix the variable labels and value labels where display html codes
+
+#### 0.3.1
 
 - Fix flaw where Stata reads in variables automatically as lowercase, conflicting with metadata. Converts all variables automatically to full lowercase
 
