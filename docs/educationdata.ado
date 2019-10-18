@@ -493,7 +493,11 @@ mata
 				tempstring = tempstring + tokenstemp[i]
 				if (i != length(tokenstemp)) tempstring = tempstring + " "
 			}
-			vardefs[2,r] = subinstr(tempstring, " - ", "-")
+			vardefs[2,r] = subinstr(tempstring, "&ndash;", "–")
+			vardefs[2,r] = subinstr(vardefs[2,r], "&mdash;", "—")
+			vardefs[2,r] = subinstr(vardefs[2,r], " - ", "-")
+			vardefs[2,r] = subinstr(vardefs[2,r], " – ", "–")
+			vardefs[2,r] = subinstr(vardefs[2,r], " — ", "—")
 		}
 		return(vardefs)
 	}
@@ -601,6 +605,8 @@ mata
 		}
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
+			varinfo[2,c] = subinstr(varinfo[2,c], "&mdash;", "—")
+			varinfo[2,c] = subinstr(varinfo[2,c], "&ndash;", "–")
 			stata("qui label var " + varinfo[1,c] + " " + `"""' + varinfo[2,c] + `"""')
 			if (strlen(varinfo[1,c]) > 30) labelshort = substr(varinfo[1,c], 1, 30) + "df"
 			else labelshort = varinfo[1,c] + "df"
