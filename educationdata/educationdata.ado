@@ -498,7 +498,6 @@ mata
 			vardefs[2,r] = subinstr(vardefs[2,r], " - ", "-")
 			vardefs[2,r] = subinstr(vardefs[2,r], " – ", "–")
 			vardefs[2,r] = subinstr(vardefs[2,r], " — ", "—")
-			printf("\n\n" + vardefs[2,r])
 		}
 		return(vardefs)
 	}
