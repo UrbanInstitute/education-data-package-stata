@@ -1,9 +1,14 @@
 # Changelog for educationdata Stata Package
 
-#### 0.3.3 (Development Version, not yet released)
+
+#### 0.3.4 (Development Version, not yet released)
 
 
-#### 0.3.2 (Current Stable Version)
+#### 0.3.3 (Current Stable Version)
+
+- Updated package help to include new endpoints from latest release
+
+#### 0.3.2
 
 - Fix the variable labels and value labels where display html codes
 
