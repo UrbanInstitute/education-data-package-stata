@@ -658,7 +658,7 @@ unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
 perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
-accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.Geographies for older years of data or low-accuracy 
+accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. Geographies for older years of data or low-accuracy 
 geocode matches should be used with caution. In addition, we link schools’ 
 geographic locations to the geographic boundaries of school districts.
 
@@ -669,7 +669,7 @@ unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
 perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
-accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.Geographies for older years of data or low-accuracy 
+accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. Geographies for older years of data or low-accuracy 
 geocode matches should be used with caution. In addition, we link schools’ 
 geographic locations to the geographic boundaries of school districts.
 
@@ -680,7 +680,7 @@ unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
 perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
-accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.Geographies for older years of data or low-accuracy 
+accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. Geographies for older years of data or low-accuracy 
 geocode matches should be used with caution. In addition, we link schools’ 
 geographic locations to the geographic boundaries of school districts.
 
