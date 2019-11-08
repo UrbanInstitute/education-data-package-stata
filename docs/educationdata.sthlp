@@ -343,8 +343,8 @@ unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
 perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
-accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. Geographies for older years of data or low-accuracy geocode matches should be
-used with caution.
+accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. Geographies for older years of data or low-accuracy 
+geocode matches should be used with caution.
 
 {bf:"college nhgis census-2000"}: This endpoint contains geographic
 variables corresponding to 2000 Census geographies for each IPEDS institution.
@@ -353,8 +353,8 @@ unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
 perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
-accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. Geographies for older years of data or low-accuracy geocode matches should be
-used with caution.
+accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. Geographies for older years of data or low-accuracy 
+geocode matches should be used with caution.
 
 {bf:"college nhgis census-1990"}: This endpoint contains geographic
 variables corresponding to 1990 Census geographies for each IPEDS institution.
@@ -363,8 +363,8 @@ unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
 perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
-accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. Geographies for older years of data or low-accuracy geocode matches should be
-used with caution.
+accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. Geographies for older years of data or low-accuracy 
+geocode matches should be used with caution.
 
 {bf:District} - {browse "https://educationdata.urban.org/documentation/school-districts.html":Read Complete Documentation}
 
@@ -658,9 +658,10 @@ unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
 perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
-accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. Geographies for older years of data or low-accuracy geocode matches should be
-used with caution. In addition, we link schools’ geographic locations to the
-geographic boundaries of school districts.
+accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.
+Geographies for older years of data or low-accuracy 
+geocode matches should be used with caution. In addition, we link schools’ 
+geographic locations to the geographic boundaries of school districts.
 
 {bf:"school nhgis census-2000"}: This endpoint contains geographic variables
 corresponding to 2000 Census geographies for each school in the CCD directory.
@@ -669,9 +670,10 @@ unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
 perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
-accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. Geographies for older years of data or low-accuracy geocode matches should be
-used with caution. In addition, we link schools’ geographic locations to the
-geographic boundaries of school districts.
+accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. 
+Geographies for older years of data or low-accuracy 
+geocode matches should be used with caution. In addition, we link schools’ 
+geographic locations to the geographic boundaries of school districts.
 
 {bf:"school nhgis census-1990"}: This endpoint contains geographic variables
 corresponding to 1990 Census geographies for each school in the CCD directory.
@@ -680,9 +682,10 @@ unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
 perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
-accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}. Geographies for older years of data or low-accuracy geocode matches should be
-used with caution. In addition, we link schools’ geographic locations to the
-geographic boundaries of school districts.
+accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.
+Geographies for older years of data or low-accuracy 
+geocode matches should be used with caution. In addition, we link schools’ 
+geographic locations to the geographic boundaries of school districts.
 
 {marker options}{...}
 {title:Command Options}
