@@ -1,10 +1,14 @@
 # Changelog for educationdata Stata Package
 
 
-#### 0.3.4 (Development Version, not yet released)
+#### 0.3.5 (Development Version, not yet released)
 
 
-#### 0.3.3 (Current Stable Version)
+#### 0.3.4 (Current Stable Version)
+
+- Fix uppercase/lowercase bug that leads to missing data
+
+#### 0.3.3
 
 - Updated package help to include new endpoints from latest release
 
