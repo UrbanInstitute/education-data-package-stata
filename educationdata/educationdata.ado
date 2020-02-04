@@ -518,11 +518,18 @@ mata
 		root = libjson::webcall(urlmode(url) ,"");
 		result = root->getNode("results")
 		numrows = result->arrayLength()
+		varinfotemp = J(6,length(varinfo[1,.]),"")
+		for (c=1; c<=length(varinfo[1,.]); c++){
+			varinfotemp[1,c] = strlower(varinfo[1,c])
+			varinfotemp[3,c] = varinfo[3,c]
+		}
 		if (numrows > 0){
 			st_addobs(numrows)
 			endpos = startpos + numrows - 1
 			svarnames = getvartypes("string", varinfo)
 			rvarnames = getvartypes("other", varinfo)
+			svarnamestemp = getvartypes("string", varinfotemp)
+			rvarnamestemp = getvartypes("other", varinfotemp)
 			sdata = J(numrows,length(svarnames),"")
 			rdata = J(numrows,length(rvarnames),.)
 			for (r=1; r<=numrows; r++) {
@@ -540,11 +547,11 @@ mata
 				}
 			}
 			if (length(svarnames) > 0){
-				st_sview(SV,(startpos..endpos)',svarnames)
+				st_sview(SV,(startpos..endpos)',svarnamestemp)
 				SV[.,.] = sdata[.,.]
 			}
 			if (length(rvarnames) > 0){
-				st_view(V,(startpos..endpos)',rvarnames)
+				st_view(V,(startpos..endpos)',rvarnamestemp)
 				V[.,.] = rdata[.,.]
 			}
 			nextpage = root->getString("next", "")
@@ -861,9 +868,6 @@ mata
 		real scalar timeper1
 		real scalar timeper2
 		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
-		for (c=1; c<=length(varinfo[1,.]); c++){
-			varinfo[1,c] = strlower(varinfo[1,c])
-		}
 		if (st_global("debug_ind") == "1") printf(urlmode(st_global("base_url") + url2) + "\n")
 		root = libjson::webcall(urlmode(st_global("base_url") + url2),"");
 		results1 = root->getNode("results")
