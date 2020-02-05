@@ -6,7 +6,7 @@
 
 #### 0.3.4 (Current Stable Version)
 
-- Fix uppercase/lowercase bug that leads to missing data
+- Fix error caused by lowercase fix introduced in 0.3.1 that causes columns to only show missing data if they had uppercase characters, instead of showing the actual data values
 
 #### 0.3.3
 
