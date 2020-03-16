@@ -1,10 +1,13 @@
 # Changelog for educationdata Stata Package
 
+#### 0.3.6 (Development Version, not yet released)
 
-#### 0.3.5 (Development Version, not yet released)
 
+#### 0.3.5 (Current Stable Version)
 
-#### 0.3.4 (Current Stable Version)
+- Update package help to include new endpoints from latest release
+
+#### 0.3.4
 
 - Fix error caused by lowercase fix introduced in 0.3.1 that causes columns to only show missing data if they had uppercase characters, instead of showing the actual data values
 
