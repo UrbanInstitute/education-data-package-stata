@@ -627,10 +627,15 @@ mata
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
-			else if (varinfo[3,c] == "long" || varinfo[3,c] == "double"){
+			else if (varinfo[3,c] == "long"){
 				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
+			}
+			else if (varinfo[3,c] == "double"){
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				stata(labeldef)
+				stata("qui label values " + varinfo[1,c] + " " + labelshort + " , nofix")
 			}
 		}
 		return(1)
@@ -703,12 +708,19 @@ mata
 				}
 				stata("qui label values " + varinfo2[1,c] + " " + labelshort)
 			}
-			else if (varinfo2[3,c] == "long" || varinfo2[3,c] == "double"){
+			else if (varinfo2[3,c] == "long"){
 				if (init1 == 1){
 					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
 					stata(labeldef)
 				}
 				stata("qui label values " + varinfo2[1,c] + " " + labelshort)
+			}
+			else if (varinfo2[3,c] == "double"){
+				if (init1 == 1){
+					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+					stata(labeldef)
+				}
+				stata("qui label values " + varinfo2[1,c] + " " + labelshort + " , nofix")
 			}
 		}
 		return(1)		
