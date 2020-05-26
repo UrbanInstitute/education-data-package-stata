@@ -635,7 +635,7 @@ mata
 			else if (varinfo[3,c] == "double"){
 				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
 				stata(labeldef)
-				stata("qui label values " + varinfo[1,c] + " " + labelshort + " , nofix")
+				stata("qui label values " + varinfo[1,c] + " " + labelshort + ", nofix")
 			}
 		}
 		return(1)
@@ -720,7 +720,7 @@ mata
 					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
 					stata(labeldef)
 				}
-				stata("qui label values " + varinfo2[1,c] + " " + labelshort + " , nofix")
+				stata("qui label values " + varinfo2[1,c] + " " + labelshort + ", nofix")
 			}
 		}
 		return(1)		
