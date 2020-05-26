@@ -627,7 +627,7 @@ mata
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
-			else if (varinfo[3,c] == "long"){
+			else if (varinfo[3,c] == "float"){
 				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
@@ -708,7 +708,7 @@ mata
 				}
 				stata("qui label values " + varinfo2[1,c] + " " + labelshort)
 			}
-			else if (varinfo2[3,c] == "long"){
+			else if (varinfo2[3,c] == "float"){
 				if (init1 == 1){
 					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
 					stata(labeldef)
@@ -979,7 +979,7 @@ mata
 		}
 		validfilters = ""
 		for (c=1; c<=length(varinfo[6,.]); c++){
-			if (varinfo[6,c] == "1" && varinfo[3,c] == "long"){
+			if (varinfo[6,c] == "1" && varinfo[3,c] == "float"){
 				if (validfilters == "") validfilters = varinfo[1,c]
 				else validfilters = validfilters + ", " + varinfo[1,c]
 			}
