@@ -766,12 +766,8 @@ and value labels, without reading in the data. For example,
 
 . educationdata using "college ipeds directory", meta
 
-The {bf:{opt cache}} option is for situations in which the data have been updated recently
-on the portal, but you are still seeing the older data when you make a call. Typically,
-the technical team will clear the cache on the server, so this will not be an issue. We
-provide this option in case you are still seeing old data but think you should be seeing
-new data. We do not recommend using this option in any other case, as it will lead to 
-slower data download times.
+The {bf:{opt cache}} option allows returning cached results from the server. By default, the 
+program will get new results when you make a call. 
 
 . educationdata using "college ipeds directory", cache
 
