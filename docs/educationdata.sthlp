@@ -767,7 +767,8 @@ and value labels, without reading in the data. For example,
 . educationdata using "college ipeds directory", meta
 
 The {bf:{opt cache}} option allows returning cached results from the server. By default, the 
-program will get new results when you make a call. 
+program will get new results when you make a call. Using the cache option may increase the 
+speed of the program if you or others have made similar requests recently. For example, 
 
 . educationdata using "college ipeds directory", cache
 
