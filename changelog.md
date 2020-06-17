@@ -2,10 +2,10 @@
 
 #### 0.3.7 (Development Version, not yet released)
 
-
 #### 0.3.6 (Current Stable Version)
 
-- Set clear cache as default option 
+- Updated package help to include new endpoints from latest release
+- Set clear cache as default option when making API calls 
 - Fix widened formats for float variables by adding 'nofix' option when labelling values 
 - Fix display issue for very long integers by converting data type from long to float  
 
