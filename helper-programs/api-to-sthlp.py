@@ -65,5 +65,18 @@ for i in range(len(keep_str)):
 		sover = 1
 	perm_str += keep_str[i][0]
 
+# replace url from HTML to STATA helper function language 
+urls = {"https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm": "here", 
+		"https://www.urban.org/research/publication/ipeds-finance-user-guide": "here", 
+		"http://www.doe.virginia.gov/statistics_reports/index.shtml": "website"} 
+
+for url in urls:
+	url_html = fr'<a\s+href="{url}">{urls[url]}</a>'
+	url_sthlp = f'{{browse "{url}":{urls[url]}}}'
+	perm_str = re.sub(url_html, url_sthlp, perm_str)
+
+if 'href' in perm_str:
+	raise ValueError('Please fix the HTML URLs in the text.')
+
 with open('sthlp_table.txt', 'w') as f:
 	f.write(perm_str)
