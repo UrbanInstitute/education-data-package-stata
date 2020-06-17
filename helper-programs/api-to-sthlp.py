@@ -75,7 +75,9 @@ for url in urls:
 	url_sthlp = f'{{browse "{url}":{urls[url]}}}'
 	perm_str = re.sub(url_html, url_sthlp, perm_str)
 
-if 'href' in perm_str:
+perm_str = re.sub("&ndash;", "–", perm_str)
+
+if ('href' in perm_str) or ("&ndash;" in perm_str):
 	raise ValueError('Please fix the HTML URLs in the text.')
 
 with open('sthlp_table.txt', 'w') as f:

@@ -65,7 +65,7 @@ graduate, and first professional level.
 {bf:"college ipeds fall-enrollment race sex"}: This endpoint contains the
 number of students enrolled in the fall by race, sex, full-time/part-time
 status, and level of study. For undergraduates, this is further broken down by
-degree-seeking/non&ndash;degree-seeking, and degree-seeking is broken down by
+degree-seeking/non–degree-seeking, and degree-seeking is broken down by
 class level. Institutions with traditional academic year calendar systems
 (semester, quarter, trimester, or 4-1-4) report their enrollment as of October
 15 or the official fall reporting date of the institution. Institutions with
@@ -135,11 +135,11 @@ undergraduate students.
 status as of August 31, at the end of the academic year, for the cohort of
 full-time, first-time degree- or certificate-seeking undergraduates, by race
 and sex. Data for four-year institutions include the number of bachelor's
-degree&ndash;seeking students who enrolled six academic years earlier, the
-number of bachelor's degree&ndash;seeking students who completed any degree or
+degree–seeking students who enrolled six academic years earlier, the
+number of bachelor's degree–seeking students who completed any degree or
 certificate within 150 percent of normal time, the number who completed a
 bachelor's degree within 100, 125 or 150 percent on normal time, and the number
-of bachelor's degree&ndash;seeking students who transferred out. Data for
+of bachelor's degree–seeking students who transferred out. Data for
 students seeking a degree or certificate other than a bachelor's degree are
 also included for four-year institutions. Data for two-year institutions
 include the number of full-time, first-time students who enrolled three
@@ -152,8 +152,8 @@ certificate within 100 percent of normal time is not available by race and sex.
 graduation rate status as of August 31, at the end of the academic year, for
 the cohort of full-time, first-time degree- or certificate-seeking
 undergraduates. Data for four-year institutions include the number of
-bachelor's degree&ndash;seeking students who enrolled eight academic years
-earlier, the number of bachelor's degree&ndash;seeking students who completed a
+bachelor's degree–seeking students who enrolled eight academic years
+earlier, the number of bachelor's degree–seeking students who completed a
 bachelor's degree within 100, 150 or 200 percent on normal time. Data for less
 than four-year institutions include the number of full-time, first-time
 students who enrolled four academic years earlier, the number of students who
@@ -167,8 +167,8 @@ undergraduates. The three subcohorts are students who received a Pell grant,
 students who received a subsidized Stafford loan and did not receive a Pell
 grant, and students who did not receive either a Pell grant or Stafford loan.
 In four-year institutions each of the subcohorts will include the number of
-bachelor's degree&ndash;seeking students who enrolled six academic years
-earlier, the number of bachelor's degree&ndash;seeking students who completed
+bachelor's degree–seeking students who enrolled six academic years
+earlier, the number of bachelor's degree–seeking students who completed
 any degree or certificate within 150 percent of normal time, the number who
 completed a bachelor's degree within 150 percent on normal time. Data for
 students seeking a degree or certificate other than a bachelor's degree are
@@ -241,8 +241,8 @@ including income level, dependency status, number of college students sent Free
 Application for Federal Student Aid (FAFSA) forms to, and other student
 demographics. These data are produced for rolling two-year pooled entry cohorts
 by the National Student Loan Data System (e.g., the 1997 data represent
-information from two cohorts, assessment year 1996&ndash;97 and assessment year
-1997&ndash;98).
+information from two cohorts, assessment year 1996–97 and assessment year
+1997–98).
 
 {bf:"college scorecard student-characteristics home-neighborhood"}: This
 endpoint contains detailed demographic information on cohorts of students,
@@ -251,7 +251,7 @@ residing in the students' home zip codes, including information about race,
 education level, nationality, poverty status, household income, and employment
 status. The US Treasury Department calculated these data elements using census
 data for two-year pooled cohorts at each institution (e.g., the 2005 file
-includes the 2004&ndash;05 and 2005&ndash;06 earnings cohorts). Home zip codes
+includes the 2004–05 and 2005–06 earnings cohorts). Home zip codes
 are determined using information from when the student first applied for
 financial aid.
 
@@ -259,10 +259,10 @@ financial aid.
 earnings for former students, by their pooled entry cohort and institution.
 This information may be available 6, 7, 8, 9, and 10 years after the pooled
 cohort entered college, but availability varies by cohort. For example, the
-assessment year (AY) 1996&ndash;97 and AY 1997&ndash;98 pooled cohort has
+assessment year (AY) 1996–97 and AY 1997–98 pooled cohort has
 earnings data available 6, 7, 8, 9, and 10 years after entry, but the AY
-2001-02 and AY 2002&ndash;03 pooled cohort only has earnings data 10 years
-after entry and the AY 2003&ndash;04 and AY 2004&ndash;05 pooled cohort only
+2001-02 and AY 2002–03 pooled cohort only has earnings data 10 years
+after entry and the AY 2003–04 and AY 2004–05 pooled cohort only
 has earnings data 8 years after entry.
 
 {bf:"college scorecard default"}: This endpoint contains information on the
@@ -387,7 +387,7 @@ students in the subgroup, with the magnitude of the range decreasing as the
 number of students reported increases. States can change their statewide
 assessments, academic standards, or thresholds for proficiency levels, leading
 to changes in the proficiency share from year to year. The proficiency shares
-for Virginia's 2016&ndash;17 grade 5&ndash;8 math assessments are too low.
+for Virginia's 2016–17 grade 5–8 math assessments are too low.
 Users should instead refer to the Virginia Department of Education's Statistics
 and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
@@ -402,8 +402,8 @@ magnitude of the range decreasing as the number of students reported increases.
 States can change their statewide assessments, academic standards, or
 thresholds for proficiency levels, leading to changes in the proficiency share
 from year to year. Users are cautioned that the proficiency shares for
-Virginia's 2016&ndash;17 grade 5&ndash;8 math assessments are too low. The
-proficiency shares for Virginia's 2016&ndash;17 grade 5&ndash;8 math
+Virginia's 2016–17 grade 5–8 math assessments are too low. The
+proficiency shares for Virginia's 2016–17 grade 5–8 math
 assessments are too low. Users should instead refer to the Virginia Department
 of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
@@ -417,7 +417,7 @@ are more than 300 students in the subgroup, with the magnitude of the range
 decreasing as the number of students reported increases. States can change
 their statewide assessments, academic standards, or thresholds for proficiency
 levels, leading to changes in the proficiency share from year to year. The
-proficiency shares for Virginia's 2016&ndash;17 grade 5&ndash;8 math
+proficiency shares for Virginia's 2016–17 grade 5–8 math
 assessments are too low. Users should instead refer to the Virginia Department
 of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
@@ -436,7 +436,7 @@ Beginning in 2017, special population subgroups also include students who are
 in foster care and students who are military connected. States can change their
 statewide assessments, academic standards, or thresholds for proficiency
 levels, leading to changes in the proficiency share from year to year. The
-proficiency shares for Virginia's 2016&ndash;17 grade 5&ndash;8 math
+proficiency shares for Virginia's 2016–17 grade 5–8 math
 assessments are too low. Users should instead refer to the Virginia Department
 of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
@@ -472,7 +472,7 @@ information, grades offered, and information on school type (including charter,
 magnet, and alternative schools).
 
 {bf:"school crdc enrollment race sex"}: This endpoint contains student enrollment for
-each school by students' race and sex. This includes only K&ndash;12 students.
+each school by students' race and sex. This includes only K–12 students.
 
 {bf:"school crdc enrollment disability sex"}: This endpoint contains student
 enrollment for each school by students' disability status and sex. This only
@@ -506,7 +506,7 @@ of students who reported being harassed or bullied and the number of students
 who were disciplined for harassment or bullying, by students' race and sex.
 These reports and disciplines could be on the basis of sex; on the basis of
 race, color, or national origin; or on the basis of disability. This includes
-only students in grades K&ndash;12 and comparable ungraded levels.
+only students in grades K–12 and comparable ungraded levels.
 
 {bf:"school crdc harassment-or-bullying disability sex"}: This endpoint contains the
 number of students who reported being harassed or bullied and the number of
@@ -556,23 +556,23 @@ absences are excused or unexcused.
 
 {bf:"school crdc restraint-and-seclusion instances"}: This endpoint contains the
 number of instances of restraint or seclusion, by student's disability status.
-This includes only students in grades K&ndash;12 and comparable ungraded
+This includes only students in grades K–12 and comparable ungraded
 levels.
 
 {bf:"school crdc restraint-and-seclusion disability sex"}: This endpoint contains the
 number of students who were subjected to restraint or seclusion, by disability
-status and sex. This includes only students in grades K&ndash;12 and comparable
+status and sex. This includes only students in grades K–12 and comparable
 ungraded levels.
 
 {bf:"school crdc restraint-and-seclusion disability race sex"}: This endpoint contains
 the number of students who were subjected to restraint or seclusion, by
 disability status, race, and sex. This includes only students in grades
-K&ndash;12 and comparable ungraded levels.
+K–12 and comparable ungraded levels.
 
 {bf:"school crdc restraint-and-seclusion disability lep sex"}: This endpoint contains
 the number of students who were subjected to restraint or seclusion, by
 disability status, limited English proficiency status, and sex. This includes
-only students in grades K&ndash;12 and comparable ungraded levels.
+only students in grades K–12 and comparable ungraded levels.
 
 {bf:"school crdc ap-ib-enrollment race sex"}: This endpoint contains the number of
 students enrolled in Advanced Placement (AP) courses, the International
@@ -619,7 +619,7 @@ students in the subgroup, with the magnitude of the range decreasing as the
 number of students reported increases. States can change their statewide
 assessments, academic standards, or thresholds for proficiency levels, leading
 to changes in the proficiency share from year to year. The proficiency shares
-for Virginia's 2016&ndash;17 grade 5&ndash;8 math assessments are too low.
+for Virginia's 2016–17 grade 5–8 math assessments are too low.
 Users should instead refer to the Virginia Department of Education's Statistics
 and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
@@ -633,8 +633,8 @@ range, unless there are more than 300 students in the subgroup, with the
 magnitude of the range decreasing as the number of students reported increases.
 States can change their statewide assessments, academic standards, or
 thresholds for proficiency levels, leading to changes in the proficiency share
-from year to year. The proficiency shares for Virginia's 2016&ndash;17 grade
-5&ndash;8 math assessments are too low. Users should instead refer to the
+from year to year. The proficiency shares for Virginia's 2016–17 grade
+5–8 math assessments are too low. Users should instead refer to the
 Virginia Department of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
 
@@ -647,7 +647,7 @@ students in the subgroup, with the magnitude of the range decreasing as the
 number of students reported increases. States can change their statewide
 assessments, academic standards, or thresholds for proficiency levels, leading
 to changes in the proficiency share from year to year. The proficiency shares
-for Virginia's 2016&ndash;17 grade 5&ndash;8 math assessments are too low.
+for Virginia's 2016–17 grade 5–8 math assessments are too low.
 Users should instead refer to the Virginia Department of Education's Statistics
 and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
@@ -666,7 +666,7 @@ Beginning in 2017, special population subgroups also include students who are
 in foster care and students who are military connected. States can change their
 statewide assessments, academic standards, or thresholds for proficiency
 levels, leading to changes in the proficiency share from year to year. The
-proficiency shares for Virginia's 2016&ndash;17 grade 5&ndash;8 math
+proficiency shares for Virginia's 2016–17 grade 5–8 math
 assessments are too low. Users should instead refer to the Virginia Department
 of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
