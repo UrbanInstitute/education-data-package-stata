@@ -1,9 +1,14 @@
 # Changelog for educationdata Stata Package
 
-#### 0.3.6 (Development Version, not yet released)
+#### 0.3.7 (Development Version, not yet released)
 
+#### 0.3.6 (Current Stable Version)
 
-#### 0.3.5 (Current Stable Version)
+- Updated package help to include new endpoints from latest release
+- Fix widened formats for float variables by adding 'nofix' option when labelling values 
+- Fix display issue for very long integers by converting data type from long to float  
+
+#### 0.3.5 
 
 - Update package help to include new endpoints from latest release
 

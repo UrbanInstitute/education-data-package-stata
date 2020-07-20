@@ -31,6 +31,25 @@ and ACT are no longer collected. The possible values for the admission
 consideration variables have changed from prior data. "Do not know" is no
 longer an option and "considered but not required" was added.
 
+{bf:"college ipeds academic-year-tuition"}: This endpoint contains data on
+tuition and fees for institutions that offer primarily academic programs.
+
+{bf:"college ipeds academic-year-tuition-prof-program"}: This endpoint
+contains data on tuition and fees for professional degree programs at
+institutions that offer primarily academic programs.
+
+{bf:"college ipeds academic-year-room-board-other"}: This endpoint contains
+data on room, board, and other expenses for institutions that offer primarily
+academic programs.
+
+{bf:"college ipeds program-year-tuition-cip"}: This endpoint contains data
+on tuition fees for the largest programs at institutions that offer primarily
+occupational programs.
+
+{bf:"college ipeds program-year-room-board-other"}: This endpoint contains
+data on room, board, and other expenses for institutions that offer primarily
+occupational programs.
+
 {bf:"college ipeds enrollment-full-time-equivalent"}: This endpoint contains
 data on instructional activity measured in total credit and/or contact hours
 delivered by institutions during a 12-month period. The credit hour and contact
@@ -46,7 +65,7 @@ graduate, and first professional level.
 {bf:"college ipeds fall-enrollment race sex"}: This endpoint contains the
 number of students enrolled in the fall by race, sex, full-time/part-time
 status, and level of study. For undergraduates, this is further broken down by
-degree-seeking/non&ndash;degree-seeking, and degree-seeking is broken down by
+degree-seeking/non–degree-seeking, and degree-seeking is broken down by
 class level. Institutions with traditional academic year calendar systems
 (semester, quarter, trimester, or 4-1-4) report their enrollment as of October
 15 or the official fall reporting date of the institution. Institutions with
@@ -92,9 +111,9 @@ their educational program a year later. This is provided for full-time and
 part-time students.
 
 {bf:"college ipeds finance"}: This endpoint contains institutional finance
-data, including institutional revenues by source, scholarships, expenditures by
+data, including institutional revenue by source, scholarships, expenditures by
 functional and natural classifications, endowments, assets and liabilities, and
-pensions.
+pensions. A user guide to these data can be found {browse "https://www.urban.org/research/publication/ipeds-finance-user-guide":here}.
 
 {bf:"college ipeds student-faculty-ratio"}: Student-to-faculty ratio is
 defined as total FTE students not in graduate or professional programs divided
@@ -102,15 +121,25 @@ by total FTE instructional staff not teaching in graduate or professional
 programs. All data on this file is applicable only to institutions with
 undergraduate students.
 
+{bf:"college ipeds sfa-grants-and-net-price"}: No description at this time.
+
+{bf:"college ipeds sfa-by-living-arrangement"}: No description at this time.
+
+{bf:"college ipeds sfa-by-tuition-type"}: No description at this time.
+
+{bf:"college ipeds sfa-all-undergraduates"}: No description at this time.
+
+{bf:"college ipeds sfa-ftft"}: No description at this time.
+
 {bf:"college ipeds grad-rates"}: This endpoint contains the graduation rate
 status as of August 31, at the end of the academic year, for the cohort of
 full-time, first-time degree- or certificate-seeking undergraduates, by race
 and sex. Data for four-year institutions include the number of bachelor's
-degree&ndash;seeking students who enrolled six academic years earlier, the
-number of bachelor's degree&ndash;seeking students who completed any degree or
+degree–seeking students who enrolled six academic years earlier, the
+number of bachelor's degree–seeking students who completed any degree or
 certificate within 150 percent of normal time, the number who completed a
 bachelor's degree within 100, 125 or 150 percent on normal time, and the number
-of bachelor's degree&ndash;seeking students who transferred out. Data for
+of bachelor's degree–seeking students who transferred out. Data for
 students seeking a degree or certificate other than a bachelor's degree are
 also included for four-year institutions. Data for two-year institutions
 include the number of full-time, first-time students who enrolled three
@@ -123,8 +152,8 @@ certificate within 100 percent of normal time is not available by race and sex.
 graduation rate status as of August 31, at the end of the academic year, for
 the cohort of full-time, first-time degree- or certificate-seeking
 undergraduates. Data for four-year institutions include the number of
-bachelor's degree&ndash;seeking students who enrolled eight academic years
-earlier, the number of bachelor's degree&ndash;seeking students who completed a
+bachelor's degree–seeking students who enrolled eight academic years
+earlier, the number of bachelor's degree–seeking students who completed a
 bachelor's degree within 100, 150 or 200 percent on normal time. Data for less
 than four-year institutions include the number of full-time, first-time
 students who enrolled four academic years earlier, the number of students who
@@ -138,8 +167,8 @@ undergraduates. The three subcohorts are students who received a Pell grant,
 students who received a subsidized Stafford loan and did not receive a Pell
 grant, and students who did not receive either a Pell grant or Stafford loan.
 In four-year institutions each of the subcohorts will include the number of
-bachelor's degree&ndash;seeking students who enrolled six academic years
-earlier, the number of bachelor's degree&ndash;seeking students who completed
+bachelor's degree–seeking students who enrolled six academic years
+earlier, the number of bachelor's degree–seeking students who completed
 any degree or certificate within 150 percent of normal time, the number who
 completed a bachelor's degree within 150 percent on normal time. Data for
 students seeking a degree or certificate other than a bachelor's degree are
@@ -212,8 +241,8 @@ including income level, dependency status, number of college students sent Free
 Application for Federal Student Aid (FAFSA) forms to, and other student
 demographics. These data are produced for rolling two-year pooled entry cohorts
 by the National Student Loan Data System (e.g., the 1997 data represent
-information from two cohorts, assessment year 1996&ndash;97 and assessment year
-1997&ndash;98).
+information from two cohorts, assessment year 1996–97 and assessment year
+1997–98).
 
 {bf:"college scorecard student-characteristics home-neighborhood"}: This
 endpoint contains detailed demographic information on cohorts of students,
@@ -222,7 +251,7 @@ residing in the students' home zip codes, including information about race,
 education level, nationality, poverty status, household income, and employment
 status. The US Treasury Department calculated these data elements using census
 data for two-year pooled cohorts at each institution (e.g., the 2005 file
-includes the 2004&ndash;05 and 2005&ndash;06 earnings cohorts). Home zip codes
+includes the 2004–05 and 2005–06 earnings cohorts). Home zip codes
 are determined using information from when the student first applied for
 financial aid.
 
@@ -230,10 +259,10 @@ financial aid.
 earnings for former students, by their pooled entry cohort and institution.
 This information may be available 6, 7, 8, 9, and 10 years after the pooled
 cohort entered college, but availability varies by cohort. For example, the
-assessment year (AY) 1996&ndash;97 and AY 1997&ndash;98 pooled cohort has
+assessment year (AY) 1996–97 and AY 1997–98 pooled cohort has
 earnings data available 6, 7, 8, 9, and 10 years after entry, but the AY
-2001-02 and AY 2002&ndash;03 pooled cohort only has earnings data 10 years
-after entry and the AY 2003&ndash;04 and AY 2004&ndash;05 pooled cohort only
+2001-02 and AY 2002–03 pooled cohort only has earnings data 10 years
+after entry and the AY 2003–04 and AY 2004–05 pooled cohort only
 has earnings data 8 years after entry.
 
 {bf:"college scorecard default"}: This endpoint contains information on the
@@ -290,10 +319,38 @@ used with caution.
 
 {bf:"college fsa financial-responsibility"}: This endpoint contains
 financial responsibility composites scores for for-profit and nonprofit
-institutions. These scores are intended to gauge the financial health of an
-institution and are one of several factors the Department of Education uses to
-assess an institution's financial responsibility compliance. They are based on
-three ratios: a primary reserve ratio, an equity ratio, and a net income ratio.
+institutions. These scores gauge an institution's financial health and help the
+Department of Education assess an institution's financial responsibility
+compliance. The scores are based on a primary reserve ratio, an equity ratio,
+and a net income ratio. They are collected at the OPEID level, but we report
+them at the UNITID level in order to facilitate merging with IPEDS data.
+
+{bf:"college fsa grants"}: This endpoint contains data on Title IV grant
+volume and number of recipients by institution and year. These data are
+collected by the Office of Federal Student Aid at the OPEID level, and we have
+provided them at the UNITID level. Where these differ, amounts have been
+allocated to each institution based on full-time equivalent students. To avoid
+double-counting, users should use the _unitid variables; _opeid variables are
+the original amounts and will lead to double-counting unless only one record
+per opeid-year is kept.
+
+{bf:"college fsa loans"}: This endpoint contains data on Title IV loan
+volume and number of recipients by institution and year. These data are
+collected by the Office of Federal Student Aid at the OPEID level, and we have
+provided them at the UNITID level. Where these differ, amounts have been
+allocated to each institution based on full-time equivalent students. To avoid
+double-counting, users should use the _unitid variables; _opeid variables are
+the original amounts and will lead to double-counting unless only one record
+per opeid-year is kept.
+
+{bf:"college fsa campus-based-volume"}: This endpoint contains data on Title
+IV campus-based programs volume and number of recipients by institution and
+year. These data are collected by the Office of Federal Student Aid at the
+OPEID level, and we have provided them at the UNITID level. Where these differ,
+amounts have been allocated to each institution based on full-time equivalent
+students. To avoid double-counting, users should use the _unitid variables;
+_opeid variables are the original amounts and will lead to double-counting
+unless only one record per opeid-year is kept.
 
 {bf:District} - {browse "https://educationdata.urban.org/documentation/school-districts.html":Read Complete Documentation}
 
@@ -329,7 +386,11 @@ The proficiency share is reported as a range, unless there are more than 300
 students in the subgroup, with the magnitude of the range decreasing as the
 number of students reported increases. States can change their statewide
 assessments, academic standards, or thresholds for proficiency levels, leading
-to changes in the proficiency share from year to year.
+to changes in the proficiency share from year to year. The proficiency shares
+for Virginia's 2016–17 grade 5–8 math assessments are too low.
+Users should instead refer to the Virginia Department of Education's Statistics
+and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
+for accurate data.
 
 {bf:"district edfacts assessments race"}: This endpoint contains district-level
 achievement results for state assessments in mathematics and reading or
@@ -340,7 +401,12 @@ range, unless there are more than 300 students in the subgroup, with the
 magnitude of the range decreasing as the number of students reported increases.
 States can change their statewide assessments, academic standards, or
 thresholds for proficiency levels, leading to changes in the proficiency share
-from year to year.
+from year to year. Users are cautioned that the proficiency shares for
+Virginia's 2016–17 grade 5–8 math assessments are too low. The
+proficiency shares for Virginia's 2016–17 grade 5–8 math
+assessments are too low. Users should instead refer to the Virginia Department
+of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
+for accurate data.
 
 {bf:"district edfacts assessments sex"}: This endpoint contains district-level
 achievement results for state assessments in mathematics and reading or
@@ -350,7 +416,11 @@ proficiency share. The proficiency share is reported as a range, unless there
 are more than 300 students in the subgroup, with the magnitude of the range
 decreasing as the number of students reported increases. States can change
 their statewide assessments, academic standards, or thresholds for proficiency
-levels, leading to changes in the proficiency share from year to year.
+levels, leading to changes in the proficiency share from year to year. The
+proficiency shares for Virginia's 2016–17 grade 5–8 math
+assessments are too low. Users should instead refer to the Virginia Department
+of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
+for accurate data.
 
 {bf:"district edfacts assessments special-populations"}: This endpoint contains
 district-level achievement results for state assessments in mathematics and
@@ -362,9 +432,14 @@ subgroup, with the magnitude of the range decreasing as the number of students
 reported increases. Special population subgroups include children with one or
 more disabilities, economically disadvantaged students, students who are
 homeless, migrant students, and students with limited English proficiency.
-States can change their statewide assessments, academic standards, or
-thresholds for proficiency levels, leading to changes in the proficiency share
-from year to year.
+Beginning in 2017, special population subgroups also include students who are
+in foster care and students who are military connected. States can change their
+statewide assessments, academic standards, or thresholds for proficiency
+levels, leading to changes in the proficiency share from year to year. The
+proficiency shares for Virginia's 2016–17 grade 5–8 math
+assessments are too low. Users should instead refer to the Virginia Department
+of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
+for accurate data.
 
 {bf:School} - {browse "https://educationdata.urban.org/documentation/schools.html":Read Complete Documentation}
 
@@ -397,7 +472,7 @@ information, grades offered, and information on school type (including charter,
 magnet, and alternative schools).
 
 {bf:"school crdc enrollment race sex"}: This endpoint contains student enrollment for
-each school by students' race and sex. This includes only K&ndash;12 students.
+each school by students' race and sex. This includes only K–12 students.
 
 {bf:"school crdc enrollment disability sex"}: This endpoint contains student
 enrollment for each school by students' disability status and sex. This only
@@ -431,7 +506,7 @@ of students who reported being harassed or bullied and the number of students
 who were disciplined for harassment or bullying, by students' race and sex.
 These reports and disciplines could be on the basis of sex; on the basis of
 race, color, or national origin; or on the basis of disability. This includes
-only students in grades K&ndash;12 and comparable ungraded levels.
+only students in grades K–12 and comparable ungraded levels.
 
 {bf:"school crdc harassment-or-bullying disability sex"}: This endpoint contains the
 number of students who reported being harassed or bullied and the number of
@@ -481,23 +556,23 @@ absences are excused or unexcused.
 
 {bf:"school crdc restraint-and-seclusion instances"}: This endpoint contains the
 number of instances of restraint or seclusion, by student's disability status.
-This includes only students in grades K&ndash;12 and comparable ungraded
+This includes only students in grades K–12 and comparable ungraded
 levels.
 
 {bf:"school crdc restraint-and-seclusion disability sex"}: This endpoint contains the
 number of students who were subjected to restraint or seclusion, by disability
-status and sex. This includes only students in grades K&ndash;12 and comparable
+status and sex. This includes only students in grades K–12 and comparable
 ungraded levels.
 
 {bf:"school crdc restraint-and-seclusion disability race sex"}: This endpoint contains
 the number of students who were subjected to restraint or seclusion, by
 disability status, race, and sex. This includes only students in grades
-K&ndash;12 and comparable ungraded levels.
+K–12 and comparable ungraded levels.
 
 {bf:"school crdc restraint-and-seclusion disability lep sex"}: This endpoint contains
 the number of students who were subjected to restraint or seclusion, by
 disability status, limited English proficiency status, and sex. This includes
-only students in grades K&ndash;12 and comparable ungraded levels.
+only students in grades K–12 and comparable ungraded levels.
 
 {bf:"school crdc ap-ib-enrollment race sex"}: This endpoint contains the number of
 students enrolled in Advanced Placement (AP) courses, the International
@@ -543,7 +618,11 @@ proficiency share is reported as a range, unless there are more than 300
 students in the subgroup, with the magnitude of the range decreasing as the
 number of students reported increases. States can change their statewide
 assessments, academic standards, or thresholds for proficiency levels, leading
-to changes in the proficiency share from year to year.
+to changes in the proficiency share from year to year. The proficiency shares
+for Virginia's 2016–17 grade 5–8 math assessments are too low.
+Users should instead refer to the Virginia Department of Education's Statistics
+and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
+for accurate data.
 
 {bf:"school edfacts assessments race"}: This endpoint contains school-level
 achievement results for state assessments in mathematics and reading or
@@ -554,7 +633,10 @@ range, unless there are more than 300 students in the subgroup, with the
 magnitude of the range decreasing as the number of students reported increases.
 States can change their statewide assessments, academic standards, or
 thresholds for proficiency levels, leading to changes in the proficiency share
-from year to year.
+from year to year. The proficiency shares for Virginia's 2016–17 grade
+5–8 math assessments are too low. Users should instead refer to the
+Virginia Department of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
+for accurate data.
 
 {bf:"school edfacts assessments sex"}: This endpoint contains school-level achievement
 results for state assessments in mathematics and reading or language arts, by
@@ -564,7 +646,11 @@ proficiency share is reported as a range, unless there are more than 300
 students in the subgroup, with the magnitude of the range decreasing as the
 number of students reported increases. States can change their statewide
 assessments, academic standards, or thresholds for proficiency levels, leading
-to changes in the proficiency share from year to year.
+to changes in the proficiency share from year to year. The proficiency shares
+for Virginia's 2016–17 grade 5–8 math assessments are too low.
+Users should instead refer to the Virginia Department of Education's Statistics
+and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
+for accurate data.
 
 {bf:"school edfacts assessments special-populations"}: This endpoint contains
 school-level achievement results for state assessments in mathematics and
@@ -576,9 +662,14 @@ subgroup, with the magnitude of the range decreasing as the number of students
 reported increases. Special population subgroups include children with one or
 more disabilities, economically disadvantaged students, students who are
 homeless, migrant students, and students with limited English proficiency.
-States can change their statewide assessments, academic standards, or
-thresholds for proficiency levels, leading to changes in the proficiency share
-from year to year.
+Beginning in 2017, special population subgroups also include students who are
+in foster care and students who are military connected. States can change their
+statewide assessments, academic standards, or thresholds for proficiency
+levels, leading to changes in the proficiency share from year to year. The
+proficiency shares for Virginia's 2016–17 grade 5–8 math
+assessments are too low. Users should instead refer to the Virginia Department
+of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
+for accurate data.
 
 {bf:"school nhgis census-2010"}: This endpoint contains geographic variables
 corresponding to 2010 Census geographies for each school in the CCD directory.
