@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.3.6}
+{title:Education Data Package}{right:Version 0.3.7}
 
 {title:Syntax}
 
@@ -76,6 +76,7 @@ Or as follows:
     . educationdata using "dataset name here", optionnamehere(optionvaluehere) 
       anotheroptionhere
 
+
 {marker datasetname}{...}
 {title:Dataset Name Options}
 
@@ -83,7 +84,6 @@ The following are dataset names that should be inserted into quotes after
 the {bf:using} command, as described in the description above. For more
 information, such as valid filter variables and values, please see the
 "Read Complete Documentation" links provided.
-
 
 {bf:College} - {browse "https://educationdata.urban.org/documentation/colleges.html":Read Complete Documentation}
 
@@ -208,15 +208,24 @@ by total FTE instructional staff not teaching in graduate or professional
 programs. All data on this file is applicable only to institutions with
 undergraduate students.
 
-{bf:"college ipeds sfa-grants-and-net-price"}: No description at this time.
+{bf:"college ipeds sfa-grants-and-net-price"}: This endpoint contains data
+on net price, grant amounts, and total students receiving grant aid for
+first-time, full-time degree-seeking students receiving Title IV aid or any
+grant aid.
 
-{bf:"college ipeds sfa-by-living-arrangement"}: No description at this time.
+{bf:"college ipeds sfa-by-living-arrangement"}: This endpoint contains data
+on total first-time, full-time degree-seeking students receiving Title IV aid
+or any grant aid, by living arrangement.
 
-{bf:"college ipeds sfa-by-tuition-type"}: No description at this time.
+{bf:"college ipeds sfa-by-tuition-type"}: This endpoint contains data on
+total first-time, full-time degree-seeking students paying in-district,
+in-state, or out-of-state tuition.
 
-{bf:"college ipeds sfa-all-undergraduates"}: No description at this time.
+{bf:"college ipeds sfa-all-undergraduates"}: This endpoint contains data on
+total undergraduate students receiving different types of aid.
 
-{bf:"college ipeds sfa-ftft"}: No description at this time.
+{bf:"college ipeds sfa-ftft"}: This endpoint contains data on total
+first-time, full-time degree-seeking students receiving different types of aid.
 
 {bf:"college ipeds grad-rates"}: This endpoint contains the graduation rate
 status as of August 31, at the end of the academic year, for the cohort of
@@ -296,16 +305,16 @@ categorized according to the 2-digit Classification of Instructional Programs
 (CIP), a detailed coding system for postsecondary instructional programs, which
 groups the 6-digit CIPs into their families. There are some exceptions, such as
 law and medical fields, which were reported as 6-digits by the Integrated
-Postsecondary Education Data System. These data are available from 1991 to
-2015. IPEDS reported data at the 2-digit CIP level until 2001; after that, the
-6-digit CIP data were collapsed to the 2-digit level until 2015.
+Postsecondary Education Data System. IPEDS reported data at the 2-digit CIP
+level until 2001; after that, the 6-digit CIP data were collapsed to the
+2-digit level.
 
 {bf:"college ipeds completions-cip-6"}: This endpoint contains the number of
 awards by type of program, level of award (certificate or degree), first or
 second major, and by race and ethnicity and gender. Type of program is
 categorized according to the 6-digit Classification of Instructional Programs
 (CIP), a detailed coding system for postsecondary instructional programs, which
-changes over time. These data are available from 1983 to 2015.
+changes over time.
 
 {bf:"college ipeds academic-libraries"}: This endpoint contains information
 on the academic institution's electronic and physical library, collections,
@@ -413,31 +422,31 @@ and a net income ratio. They are collected at the OPEID level, but we report
 them at the UNITID level in order to facilitate merging with IPEDS data.
 
 {bf:"college fsa grants"}: This endpoint contains data on Title IV grant
-volume and number of recipients by institution and year. These data are
-collected by the Office of Federal Student Aid at the OPEID level, and we have
-provided them at the UNITID level. Where these differ, amounts have been
-allocated to each institution based on full-time equivalent students. To avoid
+volume and total recipients by institution and year. These data are collected
+by the Office of Federal Student Aid at the OPEID level, and we have provided
+them at the unit ID level. Where these differ, amounts have been allocated to
+each institution based on full-time equivalent students. To avoid
 double-counting, users should use the _unitid variables; _opeid variables are
 the original amounts and will lead to double-counting unless only one record
-per opeid-year is kept.
+per OPEID year is kept.
 
 {bf:"college fsa loans"}: This endpoint contains data on Title IV loan
-volume and number of recipients by institution and year. These data are
-collected by the Office of Federal Student Aid at the OPEID level, and we have
-provided them at the UNITID level. Where these differ, amounts have been
-allocated to each institution based on full-time equivalent students. To avoid
+volume and total recipients by institution and year. These data are collected
+by the Office of Federal Student Aid at the OPEID level, and we have provided
+them at the unit ID level. Where these differ, amounts have been allocated to
+each institution based on full-time equivalent students. To avoid
 double-counting, users should use the _unitid variables; _opeid variables are
 the original amounts and will lead to double-counting unless only one record
-per opeid-year is kept.
+per OPEID year is kept.
 
 {bf:"college fsa campus-based-volume"}: This endpoint contains data on Title
-IV campus-based programs volume and number of recipients by institution and
-year. These data are collected by the Office of Federal Student Aid at the
-OPEID level, and we have provided them at the UNITID level. Where these differ,
+IV campus-based programs volume and total recipients by institution and year.
+These data are collected by the Office of Federal Student Aid at the OPEID
+level, and we have provided them at the unit ID level. Where these differ,
 amounts have been allocated to each institution based on full-time equivalent
 students. To avoid double-counting, users should use the _unitid variables;
 _opeid variables are the original amounts and will lead to double-counting
-unless only one record per opeid-year is kept.
+unless only one record per OPEID year is kept.
 
 {bf:District} - {browse "https://educationdata.urban.org/documentation/school-districts.html":Read Complete Documentation}
 
@@ -793,7 +802,6 @@ accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-re
 Geographies for older years of data or low-accuracy geocode matches should be
 used with caution. In addition, we link schools’ geographic locations to the
 geographic boundaries of school districts.
-
 
 
 {marker options}{...}

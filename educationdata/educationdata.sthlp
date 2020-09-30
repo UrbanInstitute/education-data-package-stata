@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.3.6}
+{title:Education Data Package}{right:Version 0.3.7}
 
 {title:Syntax}
 
@@ -305,16 +305,16 @@ categorized according to the 2-digit Classification of Instructional Programs
 (CIP), a detailed coding system for postsecondary instructional programs, which
 groups the 6-digit CIPs into their families. There are some exceptions, such as
 law and medical fields, which were reported as 6-digits by the Integrated
-Postsecondary Education Data System. These data are available from 1991 to
-2015. IPEDS reported data at the 2-digit CIP level until 2001; after that, the
-6-digit CIP data were collapsed to the 2-digit level until 2015.
+Postsecondary Education Data System. IPEDS reported data at the 2-digit CIP
+level until 2001; after that, the 6-digit CIP data were collapsed to the
+2-digit level.
 
 {bf:"college ipeds completions-cip-6"}: This endpoint contains the number of
 awards by type of program, level of award (certificate or degree), first or
 second major, and by race and ethnicity and gender. Type of program is
 categorized according to the 6-digit Classification of Instructional Programs
 (CIP), a detailed coding system for postsecondary instructional programs, which
-changes over time. These data are available from 1983 to 2015.
+changes over time.
 
 {bf:"college ipeds academic-libraries"}: This endpoint contains information
 on the academic institution's electronic and physical library, collections,
@@ -802,7 +802,6 @@ accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-re
 Geographies for older years of data or low-accuracy geocode matches should be
 used with caution. In addition, we link schools’ geographic locations to the
 geographic boundaries of school districts.
-
 
 
 {marker options}{...}
