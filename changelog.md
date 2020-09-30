@@ -7,7 +7,7 @@
 
 - Update package to incorporate IPEDS endpoint updates from latest release 
 
-#### 0.3.6 (Current Stable Version)
+#### 0.3.6 
 
 - Updated package help to include new endpoints from latest release
 - Fix widened formats for float variables by adding 'nofix' option when labelling values 
