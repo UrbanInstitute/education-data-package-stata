@@ -1,6 +1,11 @@
 # Changelog for educationdata Stata Package
 
-#### 0.3.7 (Development Version, not yet released)
+#### 0.3.8 (Development Version, not yet released)
+
+
+#### 0.3.7 (Current Stable Version)
+
+- Update package to incorporate IPEDS endpoint updates from latest release 
 
 #### 0.3.6 (Current Stable Version)
 
