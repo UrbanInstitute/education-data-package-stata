@@ -36,8 +36,8 @@ mata
 			varinfo[1,r] = trow->getString("variable", "")
 			varinfo[2,r] = trow->getString("label", "")
 			tempvar = trow->getString("data_type", "")
-			if (tempvar == "integer") varinfo[3,r] = "float"
-			else if (tempvar == "float") varinfo[3,r] = "double"
+			if ((tempvar == "integer") && (varinfo[1,r] != "ncessch_num")) varinfo[3,r] = "float"
+			else if ((tempvar == "float") || (varinfo[1,r] == "ncessch_num")) varinfo[3,r] = "double"
 			else if (tempvar == "string"){ 
 				varinfo[3,r] = "str" + trow->getString("string_length", "")
 			}
