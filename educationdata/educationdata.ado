@@ -982,8 +982,6 @@ mata
 				if (validfilters == "") validfilters = varinfo[1,c]
 				else validfilters = validfilters + ", " + varinfo[1,c]
 			}
-			printf("validfitler\n")
-			printf(validfilters)
 		}
 		t = tokeninit(", ")
 		s = tokenset(t, validfilters)
