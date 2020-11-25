@@ -36,9 +36,8 @@ mata
 			varinfo[1,r] = trow->getString("variable", "")
 			varinfo[2,r] = trow->getString("label", "")
 			tempvar = trow->getString("data_type", "")
-			if (tempvar == "integer") varinfo[3,r] = "float"
-			else if (tempvar == "float") varinfo[3,r] = "double"
-			else if (tempvar == "string"){ 
+			if (tempvar == "integer" || tempvar == "float") varinfo[3,r] = "double"
+			else if (tempvar == "string"){
 				varinfo[3,r] = "str" + trow->getString("string_length", "")
 			}
 			varinfo[5,r] = trow->getString("format", "")
@@ -978,8 +977,8 @@ mata
 			varinfo[1,c] = strlower(varinfo[1,c])
 		}
 		validfilters = ""
-		for (c=1; c<=length(varinfo[6,.]); c++){
-			if (varinfo[6,c] == "1" && varinfo[3,c] == "float"){
+		for (c=1; c<=length(varinfo[6,.]); c++){    /* varinfo[6,c] indicates is_filter */ 
+			if (varinfo[6,c] == "1" && varinfo[3,c] == "double"){       /* note that no float variables are filters per metadata */ 
 				if (validfilters == "") validfilters = varinfo[1,c]
 				else validfilters = validfilters + ", " + varinfo[1,c]
 			}
