@@ -1,9 +1,12 @@
 # Changelog for educationdata Stata Package
 
-#### 0.3.8 (Development Version, not yet released)
+#### 0.3.9 (Development Version, not yet released)
 
+#### 0.3.8 (Current Stable Version)
 
-#### 0.3.7 (Current Stable Version)
+- Fix precision issue for long integers by converting data type to double 
+
+#### 0.3.7 
 
 - Update package to incorporate IPEDS endpoint updates from latest release 
 
