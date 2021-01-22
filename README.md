@@ -2,6 +2,8 @@
 
 Welcome to the [Education Data Portal](https://educationdata.urban.org) Stata Package repository. You'll need an internet connection to install and use the package.
 
+**NOTE**: By downloading and using this programming package, you agree to abide by the [Data Policy and Terms of Use of the Education Data Portal](https://educationdata.urban.org/documentation/#terms). 
+
 ### Quickstart Example
 
 [This example](https://github.com/UrbanInstitute/education-data-package-stata/blob/master/awards-by-major-example.do) walks you through installing the package and using the Education Data Portal to pull data for a specific college and major by race and gender for all years.
