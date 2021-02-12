@@ -2,8 +2,8 @@ program educationdata
 version 11.0
 mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
 mata: if (libjson::checkVersion((1,0,2))) {} else printf("{err: The JSON library version is not compatible with this command and so will likely fail. Please update libjson by running the following: ado uninstall libjson, then run: ssc install libjson}\n");
-syntax using/ , [SUBset(string)] [COLumns(string)] [CLEAR] [METAdata] [STAGING] [CSV] [CACHE] [DEBUG]
-mata: 	dummy=getalldata("`using'", "`columns'", "`subset'",strlen("`clear'"),strlen("`metadata'"),strlen("`staging'"),strlen("`csv'"),strlen("`cache'"),strlen("`debug'"));
+syntax using/ , [SUBset(string)] [COLumns(string)] [SUMMARIES(string)] [CLEAR] [METAdata] [STAGING] [CSV] [CACHE] [DEBUG]
+mata: 	dummy=getalldata("`using'", "`columns'", "`subset'", "`summaries'", strlen("`clear'"),strlen("`metadata'"),strlen("`staging'"),strlen("`csv'"),strlen("`cache'"),strlen("`debug'"));
 end
 
 mata
@@ -660,6 +660,28 @@ mata
 		return(toreturn)
 	}
 
+	// Helper function to reformat summaries subcommand to endpoint URLs
+	string scalar getsummariesurl(string scalar dataoptions, string scalar summaries_cmd){
+		string scalar ep_url 
+		string scalar agg_method
+		string scalar var_to_agg
+		string scalar agg_by
+		string rowvector token_cmd
+
+		ep_url = "/api/v1/"    
+		for (c=1; c<=length(tokens(dataoptions)); c++){   
+			ep_url = ep_url + tokens(dataoptions)[c] + "/"
+		}
+		ep_url = ep_url + "summaries/"
+
+		token_cmd = tokens(summaries_cmd)
+		agg_method = token_cmd[1]   
+		var_to_agg = token_cmd[2]
+		agg_by = token_cmd[4]
+		ep_url = ep_url + "?stat=" + agg_method + "&by=" + agg_by + "&var=" + var_to_agg
+		return(ep_url)
+	}
+
 	// Helper function for time taken
 	string scalar timeit(real scalar timeper){
 		string scalar timetaken
@@ -913,9 +935,17 @@ mata
 		}
 		return(1)
 	}
-	
+
+	// helper function to get data from summary endpoints 
+	string scalar getsummarydata(string scalar dataoptions, string scalar summaries){
+		summary_ep_url = getsummariesurl(dataoptions, summaries)
+		printf(st_global("base_url") + summary_ep_url)
+		res = getresults(st_global("base_url") + summary_ep_url)
+	}
+
+
 	// Main function to get data based on Stata request - calls other helper functions
-	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, real scalar clearme, real scalar metadataonly, real scalar staging, real scalar csv, real scalar clearcache, real scalar debugind){
+	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, string scalar summaries, real scalar clearme, real scalar metadataonly, real scalar staging, real scalar csv, real scalar clearcache, real scalar debugind){
 		string matrix endpoints
 		string matrix spops
 		string matrix varinfo
@@ -932,6 +962,7 @@ mata
 		string scalar dataoptions1
 		string scalar validfilters
 		string scalar ds
+		string scalar summary_ep_url
 		real scalar epid
 		real scalar spos
 		real scalar spos1
@@ -940,9 +971,10 @@ mata
 		real scalar epcount
 		real scalar tempdata
 		real scalar temp3
+		real scalar test
 		st_global("base_url","https://educationdata.urban.org")
 		st_global("staging_url","https://educationdata-stg.urban.org")
-		if (staging > 0) st_global("base_url",st_global("staging_url"))
+		if (staging > 0) st_global("base_url", st_global("staging_url"))
 		st_global("cc","0")
 		if (clearcache > 0) st_global("cc","1")
 		st_global("debug_ind", "0")
@@ -950,7 +982,7 @@ mata
 		X = st_data(.,.)
 		if (clearme > 0) stata("clear")
 		else{
-			if (length(X[.,.]) > 0) {
+			if (length(X[.,.]) > 0) {   
 				printf("Error: You currently have data loaded in Stata. Please add " + `"""' + "clear" + `"""' + " to the end of this command if you wish to remove your current data.")
 				return("")
 			}
@@ -958,132 +990,138 @@ mata
 		}
 		endpoints = endpointstrings()
 		dataoptions1 = shorttolongname(strlower(dataoptions), endpoints)
-		if (dataoptions1 == "Error1"){
-			printf("Error: You must enter the complete name of a dataset in the 'using' statement. The first is the 'short' name for the data category, and the remaining words are the unique name of the dataset. E.g., using " + `"""' + "school directory" + `"""' + ". Type " + `"""' + "help educationdata" + `"""' + " to learn more.")
+
+		if (strlen(summaries) > 0) {  
+			getsummarydata(dataoptions1, summaries)
 			return("")
-		}
-		else if (dataoptions1 == "Error2"){
-			printf("Error: The option you selected was invalid. The three options are: " + `"""' + "school" + `"""' + ", " + `"""' + "district" + `"""' + ", and " + `"""' + "college" + `"""' + ". Type " + `"""' + "help educationdata" + `"""' + " to learn more.")
-			return("")			
-		}
-		epid = validendpoints(dataoptions1)
-		if (epid == 0 || dataoptions1 == "Error3"){
-			printf("Error: The name of the category ('school', 'district', or 'college') is correct, but the name of the dataset you chose is not. Please verify the list of allowed options by typing " + `"""' + "help educationdata" + `"""' + ".")
-			return("")			
-		}
-		eid = endpoints[1,epid]
-		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
-		for (c=1; c<=length(varinfo[1,.]); c++){
-			varinfo[1,c] = strlower(varinfo[1,c])
-		}
-		validfilters = ""
-		for (c=1; c<=length(varinfo[6,.]); c++){    /* varinfo[6,c] indicates is_filter */ 
-			if (varinfo[6,c] == "1" && varinfo[3,c] == "double"){       /* note that no float variables are filters per metadata */ 
-				if (validfilters == "") validfilters = varinfo[1,c]
-				else validfilters = validfilters + ", " + varinfo[1,c]
-			}
-		}
-		t = tokeninit(", ")
-		s = tokenset(t, validfilters)
-		respre = tokengetall(t)
-		allopts = tokens(opts)
-		validopts = parseurls(endpoints[2,epid], "optional")
-		spops = J(2,length(validopts),"")
-		spops[1,.] = validopts[1,.]
-		urladds = ""
-		if (length(varinfo[1,.]) > 0){
-			for (i=1; i<=length(allopts); i++){
-				t = tokeninit("=")
-				s = tokenset(t, allopts[i])
-				res2 = tokengetall(t)
-				spos = stringpos(res2[1], validopts)
-				if (spos > 0) spops[2,spos] = allopts[i]
-				else{
-					spos1 = stringpos(res2[1], varinfo[1,.])
-					if (spos1 > 0){
-						if (res2[2] != subinstr(subinstr(res2[2], ":", ""), ",", "")){
-							if (iteminlist(res2[1], respre) == 0){ 
-								printf("Error, option " + allopts[i] + " is not valid, because it may only be filtered on a single value, not multiple values.\n")
-								printf("Decimal variables may not be filtered at all. The variables that can be filtered on multiple values in this dataset are as follows:\n\n")
-								printf(validfilters)
-								return("\n\nDownload failed. Please try again.")
-							}
-						}
-						if (urladds == "") urladds = urladds + allopts[i]
-						else urladds = urladds + ";" + allopts[i]
-					}
-					else {
-						printf("Error, option " + allopts[i] + " is not valid. Valid variable selections are as follows:\n")
-						urladds = ""
-						for (c=1; c<=length(varinfo[1,.]); c++){
-							if (stringpos(strofreal(c),("1","6","11","16","21","26","31","36","41","46","51","56","61","66","71","76","81","86","91","96","101")) > 0) urladds = urladds + varinfo[1,c]
-							else urladds = urladds + ", " + varinfo[1,c]
-							if (stringpos(strofreal(c),("5","10","15","20","25","30","35","40","45","50","55","60","65","70","75","80","85","90","95","100")) > 0) urladds = urladds + "\n"
-						}
-						printf(urladds)
-						return("\n\nDownload failed. Please try again.")
-					}
-				}
-			}
-		}
-		querystring = getquerystrings(urladds)
-		for (i=1; i<=length(spops[1,.]); i++){
-			if (spops[2,i] == "") spops[2,i] = spops[1,i] + "=alldata"
-		}
-		temp1 = validoptions(spops[2,1], epid)
-		if (tokens(temp1[1])[1] == "Invalid"){ 
-			printf(temp1[1])
-			return("")
-		}
-		epcount = 0
-		if (metadataonly <= 0) printf("Please be patient - downloading data.\n")
-		if (csv > 0 && metadataonly <= 0){
-			printf("\nNote that this function writes data to the current working directory.\n")
-			printf("If you do not have read and write privileges to the current directory, please change your working directory.\n")
-			printf("For example, you can enter " + `"""' + "cd D:/Users/[Your username here]/Documents" + `"""' + ".\n\n")
-			ds = tokens(dataoptions)[2]
-			temp3 = downloadcsv(eid,spops,ds,epid,varinfo,querystring,vlist)
-			if (temp3 == 0){
-				printf("Error: Sorry, there is no CSV file available for download for this dataset at this time.")
-			}
-		}
+		} 
 		else{
-			tempdata = createdataset(eid)
-			if (metadataonly <= 0){
-				if (length(spops[1,.]) == 1){
-					totallen = length(temp1)
-					for (i=1; i<=length(temp1); i++){
-						epcount = epcount + 1
-						urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
-						hidereturn = getalltables(eid, urltemp, totallen, epcount)
+			if (dataoptions1 == "Error1"){
+				printf("Error: You must enter the complete name of a dataset in the 'using' statement. The first is the 'short' name for the data category, and the remaining words are the unique name of the dataset. E.g., using " + `"""' + "school directory" + `"""' + ". Type " + `"""' + "help educationdata" + `"""' + " to learn more.")
+				return("")
+			}
+			else if (dataoptions1 == "Error2"){
+				printf("Error: The option you selected was invalid. The three options are: " + `"""' + "school" + `"""' + ", " + `"""' + "district" + `"""' + ", and " + `"""' + "college" + `"""' + ". Type " + `"""' + "help educationdata" + `"""' + " to learn more.")
+				return("")			
+			}
+			epid = validendpoints(dataoptions1)
+			if (epid == 0 || dataoptions1 == "Error3"){
+				printf("Error: The name of the category ('school', 'district', or 'college') is correct, but the name of the dataset you chose is not. Please verify the list of allowed options by typing " + `"""' + "help educationdata" + `"""' + ".")
+				return("")			
+			}
+			eid = endpoints[1,epid]
+			varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
+			for (c=1; c<=length(varinfo[1,.]); c++){
+				varinfo[1,c] = strlower(varinfo[1,c])
+			}
+			validfilters = ""
+			for (c=1; c<=length(varinfo[6,.]); c++){    /* varinfo[6,c] indicates is_filter */ 
+				if (varinfo[6,c] == "1" && varinfo[3,c] == "double"){       /* note that no float variables are filters per metadata */ 
+					if (validfilters == "") validfilters = varinfo[1,c]
+					else validfilters = validfilters + ", " + varinfo[1,c]
+				}
+			}
+			t = tokeninit(", ")
+			s = tokenset(t, validfilters)
+			respre = tokengetall(t)
+			allopts = tokens(opts)
+			validopts = parseurls(endpoints[2,epid], "optional")
+			spops = J(2,length(validopts),"")
+			spops[1,.] = validopts[1,.]
+			urladds = ""
+			if (length(varinfo[1,.]) > 0){
+				for (i=1; i<=length(allopts); i++){
+					t = tokeninit("=")
+					s = tokenset(t, allopts[i])
+					res2 = tokengetall(t)
+					spos = stringpos(res2[1], validopts)
+					if (spos > 0) spops[2,spos] = allopts[i]
+					else{
+						spos1 = stringpos(res2[1], varinfo[1,.])
+						if (spos1 > 0){
+							if (res2[2] != subinstr(subinstr(res2[2], ":", ""), ",", "")){
+								if (iteminlist(res2[1], respre) == 0){ 
+									printf("Error, option " + allopts[i] + " is not valid, because it may only be filtered on a single value, not multiple values.\n")
+									printf("Decimal variables may not be filtered at all. The variables that can be filtered on multiple values in this dataset are as follows:\n\n")
+									printf(validfilters)
+									return("\n\nDownload failed. Please try again.")
+								}
+							}
+							if (urladds == "") urladds = urladds + allopts[i]
+							else urladds = urladds + ";" + allopts[i]
+						}
+						else {
+							printf("Error, option " + allopts[i] + " is not valid. Valid variable selections are as follows:\n")
+							urladds = ""
+							for (c=1; c<=length(varinfo[1,.]); c++){
+								if (stringpos(strofreal(c),("1","6","11","16","21","26","31","36","41","46","51","56","61","66","71","76","81","86","91","96","101")) > 0) urladds = urladds + varinfo[1,c]
+								else urladds = urladds + ", " + varinfo[1,c]
+								if (stringpos(strofreal(c),("5","10","15","20","25","30","35","40","45","50","55","60","65","70","75","80","85","90","95","100")) > 0) urladds = urladds + "\n"
+							}
+							return("\n\nDownload failed. Please try again.")
+						}
 					}
 				}
-				else{
-					temp2 = validoptions(spops[2,2], epid)
-					if (tokens(temp2[1])[1] == "Invalid"){ 
-						printf(temp2[1])
-						return("")
-					}
-					totallen = length(temp1) * length(temp2)
-					for (i=1; i<=length(temp1); i++){
-						for (j=1; j<=length(temp2); j++){
+			}
+			querystring = getquerystrings(urladds)
+			for (i=1; i<=length(spops[1,.]); i++){
+				if (spops[2,i] == "") spops[2,i] = spops[1,i] + "=alldata"
+			}
+			temp1 = validoptions(spops[2,1], epid)
+			if (tokens(temp1[1])[1] == "Invalid"){ 
+				printf(temp1[1])
+				return("")
+			}
+			epcount = 0
+			if (metadataonly <= 0) printf("Please be patient - downloading data.\n")
+			if (csv > 0 && metadataonly <= 0){
+				printf("\nNote that this function writes data to the current working directory.\n")
+				printf("If you do not have read and write privileges to the current directory, please change your working directory.\n")
+				printf("For example, you can enter " + `"""' + "cd D:/Users/[Your username here]/Documents" + `"""' + ".\n\n")
+				ds = tokens(dataoptions)[2]
+				temp3 = downloadcsv(eid,spops,ds,epid,varinfo,querystring,vlist)
+				if (temp3 == 0){
+					printf("Error: Sorry, there is no CSV file available for download for this dataset at this time.")
+				}
+			}
+			else{
+				tempdata = createdataset(eid)
+				if (metadataonly <= 0){
+					if (length(spops[1,.]) == 1){
+						totallen = length(temp1)
+						for (i=1; i<=length(temp1); i++){
 							epcount = epcount + 1
-							urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
+							urltemp = subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]) + querystring
 							hidereturn = getalltables(eid, urltemp, totallen, epcount)
 						}
-					}		
+					}
+					else{
+						temp2 = validoptions(spops[2,2], epid)
+						if (tokens(temp2[1])[1] == "Invalid"){ 
+							printf(temp2[1])
+							return("")
+						}
+						totallen = length(temp1) * length(temp2)
+						for (i=1; i<=length(temp1); i++){
+							for (j=1; j<=length(temp2); j++){
+								epcount = epcount + 1
+								urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
+								hidereturn = getalltables(eid, urltemp, totallen, epcount)
+							}
+						}		
+					}
+					stata("qui compress")
 				}
-				stata("qui compress")
+				if (metadataonly > 0) {
+					printf("Metadata successfully loaded into Stata and ready to view. Remove the " + `"""' + "metadata" + `"""' + " argument if you want to load the data itself.\n\n")
+					printf("Note: You may filter this dataset on any variable (as long as it does not have a decimal value) using a single value (e.g. grade=1), however only the following variables allow filtering on multiple values (e.g.grade=1:3 or grade=1,2):\n\n")
+					printf(validfilters)
+				}
 			}
-			if (metadataonly > 0) {
-				printf("Metadata successfully loaded into Stata and ready to view. Remove the " + `"""' + "metadata" + `"""' + " argument if you want to load the data itself.\n\n")
-				printf("Note: You may filter this dataset on any variable (as long as it does not have a decimal value) using a single value (e.g. grade=1), however only the following variables allow filtering on multiple values (e.g.grade=1:3 or grade=1,2):\n\n")
-				printf(validfilters)
-			}
+			if (vlist != "") stata("keep " + vlist)
+			else printf("\nData successfully loaded into Stata and ready to use.")
+			return("")
 		}
-		if (vlist != "") stata("keep " + vlist)
-		else printf("\nData successfully loaded into Stata and ready to use.")
-		return("")
 	}
 
 end
