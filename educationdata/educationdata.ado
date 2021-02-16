@@ -53,6 +53,7 @@ mata
 		return(varinfo)		
 	}
 
+
 	// Parse metadata to get api endpoint strings, years, and required selectors from enpoint URL
 	string matrix endpointstrings(){
 		pointer (class libjson scalar) scalar res1
@@ -608,6 +609,47 @@ mata
 		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		for (c=1; c<=length(varinfo[1,.]); c++){
 			varinfo[1,c] = strlower(varinfo[1,c])
+			printf("\nvarinfo[1,c]:" + varinfo[1,c])
+		}
+		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
+		for (c=1; c<=length(varinfo[1,.]); c++){
+			varinfo[2,c] = subinstr(varinfo[2,c], "&mdash;", "—")
+			varinfo[2,c] = subinstr(varinfo[2,c], "&ndash;", "–")
+			stata("qui label var " + varinfo[1,c] + " " + `"""' + varinfo[2,c] + `"""')
+			if (strlen(varinfo[1,c]) > 30) labelshort = substr(varinfo[1,c], 1, 30) + "df"
+			else labelshort = varinfo[1,c] + "df"
+			if (varinfo[4,c] == "1"){
+				vardef = getvardefs(varinfo[1,c], varinfo[5,c])
+				labeldef = "qui label define " + labelshort + " "
+				for (r=1; r<=length(vardef[1,.]); r++){
+					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
+					if (r != length(vardef[1,.])) labeldef = labeldef + " "
+				}
+				stata(labeldef)
+				stata("qui label values " + varinfo[1,c] + " " + labelshort)
+			}
+			else if (varinfo[3,c] == "float"){
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				stata(labeldef)
+				stata("qui label values " + varinfo[1,c] + " " + labelshort)
+			}
+			else if (varinfo[3,c] == "double"){
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				stata(labeldef)
+				stata("qui label values " + varinfo[1,c] + " " + labelshort + ", nofix")
+			}
+		}
+		return(1)
+	}
+
+
+	// Helper function to create dataset
+	real scalar createdataset_summaries_ep(string matrix varinfo){
+		string matrix vardef
+		string scalar labeldef
+		string scalar labelshort
+		for (c=1; c<=length(varinfo[1,.]); c++){
+			varinfo[1,c] = strlower(varinfo[1,c])
 		}
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
@@ -936,13 +978,102 @@ mata
 		return(1)
 	}
 
-	// helper function to get data from summary endpoints 
-	string scalar getsummarydata(string scalar dataoptions, string scalar summaries){
-		summary_ep_url = getsummariesurl(dataoptions, summaries)
-		printf(st_global("base_url") + summary_ep_url)
-		res = getresults(st_global("base_url") + summary_ep_url)
+	// Gets all tables, using API to get the varlist and vartypes, and looping through all "nexts", calling gettable
+	real scalar getalltables_summaries(string matrix varinfo, string scalar url2, real scalar totallen1, real scalar epcount1){
+		pointer (class libjson scalar) scalar root
+		pointer (class libjson scalar) scalar results1
+		string scalar nextpage
+		string scalar timea
+		string scalar timetaken1
+		string scalar timetaken2
+		real scalar pagesize
+		real scalar totalpages
+		real scalar countpage
+		real scalar timeper1
+		real scalar timeper2
+		if (st_global("debug_ind") == "1") printf(urlmode(st_global("base_url") + url2) + "\n")
+		printf("\n\ntesting\n")
+		root = libjson::webcall(urlmode(st_global("base_url") + url2),"");
+		printf("\n\ntesting2\n")
+		results1 = root->getNode("results")
+		pagesize = results1->arrayLength()
+		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
+		spos = 1
+		if (st_nobs() > 0) spos = st_nobs() + 1
+		countpage = 1
+		if (epcount1 == 1){
+			if (totalpages == .) totalpages = 1
+			timeper1 = 1500 * totalpages * totallen1
+			timeper2 = 10000 * totalpages * totallen1
+			timetaken1 = timeit(timeper1)
+			timetaken2 = timeit(timeper2)
+			timea = "\nI estimate that the download for the entire file you requested will take "
+			if (timetaken1 == "less than one minute" && timetaken2 == "less than one minute") printf(timea + "less than one minute.\n")
+			else if (timetaken1 == "less than one minute" && timetaken2 != "less than one minute") printf(timea + "less than " + timetaken2 + ".\n")
+			else printf(timea + "between %s and %s.\n", timetaken1, timetaken2)
+			printf("This is only an estimate, so actual time may vary due to internet speed and file size differences.\n\n")
+			printf("Progress for each endpoint and call to the API will print to your screen. Please wait...\n")
+			printf("If this time is too long for you to wait, try adding the " + `"""' + "csv" + `"""' + " option to the end of your command to download the full csv directly.\n")
+		}
+		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
+		nextpage = gettable(st_global("base_url") + url2, spos, varinfo)
+		if (nextpage!="null"){
+			do {
+				spos = spos + pagesize
+				countpage = countpage + 1
+				printf("Endpoint %s of %s: On page %s of %s\n", strofreal(epcount1), strofreal(totallen1), strofreal(countpage), strofreal(totalpages))
+				nextpage = gettable(nextpage, spos, varinfo)
+			} while (nextpage!="null")
+		}
+		return(1)
 	}
 
+	// helper function to get data from summary endpoints 
+	string scalar getsummarydata(string scalar dataoptions, string scalar summaries, string scalar opts){
+		string matrix varinfo
+		real scalar spos
+		string matrix summary_ep_url
+		string rowvector allopts
+		string rowvector token_cmd
+		string matrix varinfo1
+		string matrix varinfo2
+		string matrix varinfo3
+		real scalar tempdata
+		real scalar totallen
+		real scalar epcount
+		summary_ep_url = getsummariesurl(dataoptions, summaries)
+		allopts = tokens(opts)
+		for (i=1; i<=length(allopts); i++){
+			summary_ep_url = summary_ep_url + "&" + allopts[i]
+		}
+		printf(st_global("base_url") + summary_ep_url)
+		token_cmd = tokens(summaries)
+		var_to_agg = token_cmd[2]
+		agg_by = token_cmd[4]
+		varinfo1 = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=year")
+		varinfo2 = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + agg_by)
+		varinfo3 = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + var_to_agg)
+		numrows = 3 
+		var_attr = 6 
+		varinfo = J(var_attr, numrows, "")
+		for (r=1; r<=numrows; r++){
+			varinfo[r, 1] = varinfo1[r, 1]
+			varinfo[r, 2] = varinfo2[r, 1]
+			varinfo[r, 3] = varinfo3[r, 1]
+		}
+		spos = 1
+		epcount = 0
+		totallen = 1
+		tempdata = createdataset_summaries_ep(varinfo)
+		for (i=1; i<=totallen; i++){
+			epcount = epcount + 1
+			hidereturn = getalltables_summaries(varinfo, summary_ep_url, totallen, epcount)
+		}
+		stata("qui compress")
+		if (vlist != "") stata("keep " + vlist)
+		else printf("\nData successfully loaded into Stata and ready to use.")
+		return("")
+	}
 
 	// Main function to get data based on Stata request - calls other helper functions
 	string scalar getalldata(string scalar dataoptions, string scalar vlist, string scalar opts, string scalar summaries, real scalar clearme, real scalar metadataonly, real scalar staging, real scalar csv, real scalar clearcache, real scalar debugind){
@@ -991,9 +1122,8 @@ mata
 		endpoints = endpointstrings()
 		dataoptions1 = shorttolongname(strlower(dataoptions), endpoints)
 
-		if (strlen(summaries) > 0) {  
-			getsummarydata(dataoptions1, summaries)
-			return("")
+		if (strlen(summaries) > 0){  
+			getsummarydata(dataoptions1, summaries, opts)
 		} 
 		else{
 			if (dataoptions1 == "Error1"){
@@ -1047,8 +1177,12 @@ mata
 									return("\n\nDownload failed. Please try again.")
 								}
 							}
-							if (urladds == "") urladds = urladds + allopts[i]
-							else urladds = urladds + ";" + allopts[i]
+							if (urladds == "") {
+								urladds = urladds + allopts[i]
+							}
+							else {
+								urladds = urladds + ";" + allopts[i]
+							}
 						}
 						else {
 							printf("Error, option " + allopts[i] + " is not valid. Valid variable selections are as follows:\n")
@@ -1102,10 +1236,12 @@ mata
 							return("")
 						}
 						totallen = length(temp1) * length(temp2)
+						printf("\ntotallen:" + strofreal(totallen))
 						for (i=1; i<=length(temp1); i++){
 							for (j=1; j<=length(temp2); j++){
 								epcount = epcount + 1
 								urltemp = subinstr(subinstr(endpoints[2,epid], "{" + spops[1,1] + "}", temp1[i]), "{" + spops[1,2] + "}", temp2[j]) + querystring
+								printf("\nurltempww:" + urltemp)
 								hidereturn = getalltables(eid, urltemp, totallen, epcount)
 							}
 						}		
