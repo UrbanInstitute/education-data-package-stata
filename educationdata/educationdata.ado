@@ -560,6 +560,65 @@ mata
 		else return("null")
 	}
 
+
+	string scalar gettable_summaries(string scalar url, real scalar startpos, string matrix varinfo){
+		pointer (class libjson scalar) scalar root
+		pointer (class libjson scalar) scalar result
+		pointer (class libjson scalar) scalar trow
+		string matrix sdata
+		string rowvector varnames
+		string scalar nextpage
+		string scalar tval
+		real matrix rdata
+		real scalar numrows
+		real scalar endpos
+		if (st_global("debug_ind") == "1") printf(urlmode(url) + "\n")
+		root = libjson::webcall(url ,"");
+		result = root->getNode("results")
+		numrows = result->arrayLength()
+		varinfotemp = J(6,length(varinfo[1,.]),"")
+		for (c=1; c<=length(varinfo[1,.]); c++){
+			varinfotemp[1,c] = strlower(varinfo[1,c])
+			varinfotemp[3,c] = varinfo[3,c]
+		}
+		if (numrows > 0){
+			st_addobs(numrows)
+			endpos = startpos + numrows - 1
+			svarnames = getvartypes("string", varinfo)
+			rvarnames = getvartypes("other", varinfo)
+			svarnamestemp = getvartypes("string", varinfotemp)
+			rvarnamestemp = getvartypes("other", varinfotemp)
+			sdata = J(numrows,length(svarnames),"")
+			rdata = J(numrows,length(rvarnames),.)
+			for (r=1; r<=numrows; r++) {
+				trow = result->getArrayValue(r);
+				for(c=1; c<=length(svarnames); c++) {
+					tval = trow->getString(svarnames[c],"");
+					if (tval == "null") tval = ""
+					if (tval == `"""' + `"""') tval = ""
+					sdata[r,c] = tval
+				}
+				for(c=1; c<=length(rvarnames); c++) {
+					tval = trow->getString(rvarnames[c],"");
+					if (tval == "null") rdata[r,c] = .
+					else rdata[r,c] = strtoreal(tval)
+				}
+			}
+			if (length(svarnames) > 0){
+				st_sview(SV,(startpos..endpos)',svarnamestemp)
+				SV[.,.] = sdata[.,.]
+			}
+			if (length(rvarnames) > 0){
+				st_view(V,(startpos..endpos)',rvarnamestemp)
+				V[.,.] = rdata[.,.]
+			}
+			nextpage = root->getString("next", "")
+			return(nextpage)
+		}
+		else return("null")
+	}
+
+
 	// Helper function to create query strings ?var=x for all potential subset combinations
 	string scalar getquerystrings(string scalar additions){
 		string rowvector result1
@@ -609,7 +668,6 @@ mata
 		varinfo = getvarinfo(st_global("base_url") + "/api/v1/api-endpoint-varlist/?endpoint_id=" + eid)
 		for (c=1; c<=length(varinfo[1,.]); c++){
 			varinfo[1,c] = strlower(varinfo[1,c])
-			printf("\nvarinfo[1,c]:" + varinfo[1,c])
 		}
 		temp1 = st_addvar(varinfo[3,.],varinfo[1,.])
 		for (c=1; c<=length(varinfo[1,.]); c++){
@@ -991,45 +1049,21 @@ mata
 		real scalar countpage
 		real scalar timeper1
 		real scalar timeper2
-		if (st_global("debug_ind") == "1") printf(urlmode(st_global("base_url") + url2) + "\n")
-		printf("\n\ntesting\n")
-		root = libjson::webcall(urlmode(st_global("base_url") + url2),"");
-		printf("\n\ntesting2\n")
+		if (st_global("debug_ind") == "1") printf(st_global("base_url") + url2 + "\n")
+		root = libjson::webcall(st_global("base_url") + url2,"");
 		results1 = root->getNode("results")
 		pagesize = results1->arrayLength()
 		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
 		spos = 1
 		if (st_nobs() > 0) spos = st_nobs() + 1
 		countpage = 1
-		if (epcount1 == 1){
-			if (totalpages == .) totalpages = 1
-			timeper1 = 1500 * totalpages * totallen1
-			timeper2 = 10000 * totalpages * totallen1
-			timetaken1 = timeit(timeper1)
-			timetaken2 = timeit(timeper2)
-			timea = "\nI estimate that the download for the entire file you requested will take "
-			if (timetaken1 == "less than one minute" && timetaken2 == "less than one minute") printf(timea + "less than one minute.\n")
-			else if (timetaken1 == "less than one minute" && timetaken2 != "less than one minute") printf(timea + "less than " + timetaken2 + ".\n")
-			else printf(timea + "between %s and %s.\n", timetaken1, timetaken2)
-			printf("This is only an estimate, so actual time may vary due to internet speed and file size differences.\n\n")
-			printf("Progress for each endpoint and call to the API will print to your screen. Please wait...\n")
-			printf("If this time is too long for you to wait, try adding the " + `"""' + "csv" + `"""' + " option to the end of your command to download the full csv directly.\n")
-		}
-		printf("\nGetting data from %s, endpoint %s of %s (%s records).\n", url2, strofreal(epcount1), strofreal(totallen1), root->getString("count", ""))
-		nextpage = gettable(st_global("base_url") + url2, spos, varinfo)
-		if (nextpage!="null"){
-			do {
-				spos = spos + pagesize
-				countpage = countpage + 1
-				printf("Endpoint %s of %s: On page %s of %s\n", strofreal(epcount1), strofreal(totallen1), strofreal(countpage), strofreal(totalpages))
-				nextpage = gettable(nextpage, spos, varinfo)
-			} while (nextpage!="null")
-		}
+		printf("\nGetting data from %s (%s records).\n", st_global("base_url") + url2, root->getString("count", ""))
+		nextpage = gettable_summaries(st_global("base_url") + url2, spos, varinfo)
 		return(1)
 	}
 
 	// helper function to get data from summary endpoints 
-	string scalar getsummarydata(string scalar dataoptions, string scalar summaries, string scalar opts){
+	string scalar getsummarydata(string scalar dataoptions, string scalar summaries, string scalar opts, string scalar vlist){
 		string matrix varinfo
 		real scalar spos
 		string matrix summary_ep_url
@@ -1046,7 +1080,6 @@ mata
 		for (i=1; i<=length(allopts); i++){
 			summary_ep_url = summary_ep_url + "&" + allopts[i]
 		}
-		printf(st_global("base_url") + summary_ep_url)
 		token_cmd = tokens(summaries)
 		var_to_agg = token_cmd[2]
 		agg_by = token_cmd[4]
@@ -1067,7 +1100,7 @@ mata
 		tempdata = createdataset_summaries_ep(varinfo)
 		for (i=1; i<=totallen; i++){
 			epcount = epcount + 1
-			hidereturn = getalltables_summaries(varinfo, summary_ep_url, totallen, epcount)
+			getalltables_summaries(varinfo, summary_ep_url, totallen, epcount)
 		}
 		stata("qui compress")
 		if (vlist != "") stata("keep " + vlist)
@@ -1123,7 +1156,8 @@ mata
 		dataoptions1 = shorttolongname(strlower(dataoptions), endpoints)
 
 		if (strlen(summaries) > 0){  
-			getsummarydata(dataoptions1, summaries, opts)
+			getsummarydata(dataoptions1, summaries, opts, vlist)
+			return("")
 		} 
 		else{
 			if (dataoptions1 == "Error1"){
