@@ -1057,7 +1057,6 @@ mata
 		spos = 1
 		if (st_nobs() > 0) spos = st_nobs() + 1
 		countpage = 1
-		printf("\nGetting data from %s (%s records).\n", st_global("base_url") + url2, root->getString("count", ""))
 		nextpage = gettable_summaries(st_global("base_url") + url2, spos, varinfo)
 		return(1)
 	}
@@ -1076,6 +1075,7 @@ mata
 		real scalar totallen
 		real scalar epcount
 		summary_ep_url = getsummariesurl(dataoptions, summaries)
+		printf("\nGetting data from: " + st_global("base_url") + summary_ep_url)
 		allopts = tokens(opts)
 		for (i=1; i<=length(allopts); i++){
 			summary_ep_url = summary_ep_url + "&" + allopts[i]
@@ -1100,11 +1100,11 @@ mata
 		tempdata = createdataset_summaries_ep(varinfo)
 		for (i=1; i<=totallen; i++){
 			epcount = epcount + 1
-			getalltables_summaries(varinfo, summary_ep_url, totallen, epcount)
+			alldata = getalltables_summaries(varinfo, summary_ep_url, totallen, epcount)
 		}
 		stata("qui compress")
 		if (vlist != "") stata("keep " + vlist)
-		else printf("\nData successfully loaded into Stata and ready to use.")
+		else printf("\n\nData successfully loaded into Stata and ready to use.")
 		return("")
 	}
 

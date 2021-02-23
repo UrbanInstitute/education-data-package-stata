@@ -909,7 +909,7 @@ reading in the data from the Education Data Portal. For example,
 
 . educationdata using "college ipeds directory", clear
 
-{bf: And finally the {opt sum:mmaries}} option provides statistical summaries of a dataset using 
+{bf:And finally the {opt summaries}} option provides statistical summaries of a dataset using 
 user-defined summary statistics and variables. The arguments are structured as 
 "summaries ([statistic method] [variable of interest] by [grouping variable])", where 
 the first argument indicates the summary statistic to be retrieved. Valid statistics include: 
@@ -919,8 +919,8 @@ For example,
 
 . educationdata using "school ccd enrollment", summaries(sum enrollment by fips) sub(year=2000) 
 
-This command takes the "schools/ccd/enrollment" endpoint, retrieves the sum of school enrollment by fips code, 
-and filters to year 2000. 
+This command takes the "schools/ccd/enrollment" endpoint, retrieves the sum of school enrollment 
+by fips code, and filters to year 2000. 
 
 More detailed instructions can be found in {browse "https://educationdata.urban.org/documentation":Education Data Portal Documentation}. 
 
