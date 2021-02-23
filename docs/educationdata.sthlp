@@ -76,7 +76,6 @@ Or as follows:
     . educationdata using "dataset name here", optionnamehere(optionvaluehere) 
       anotheroptionhere
 
-
 {marker datasetname}{...}
 {title:Dataset Name Options}
 
@@ -163,8 +162,8 @@ Available levels of study are undergraduate, graduate, first-professional
 
 {bf:"college ipeds fall-enrollment age sex"}: This endpoint contains the
 number of students enrolled in the fall by age categories, sex,
-full-time/part-time status, and level of study. Institutions with traditional
-academic year calendar systems (semester, quarter, trimester, or 4-1-4) report
+full-time/part-time status, and level of study.Â Institutions with traditional
+academic year calendar systems (semester, quarter, trimester, orÂ 4-1-4) report
 their enrollment as of October 15 or the official fall reporting date of the
 institution. Institutions with calendar systems that differ by program or allow
 continuous enrollment report students who are enrolled at any time between
@@ -177,7 +176,7 @@ are available.
 number of first-time freshmen by state of residence, along with data on the
 number who graduated from high school the previous year. Institutions with
 traditional academic year calendar systems (i.e., semester, quarter, trimester,
-or 4-1-4) report their enrollment as of October 15 or the institution’s
+or 4-1-4) report their enrollment as of October 15 or the institutionâ€™s
 official fall reporting date. Institutions with calendar systems that differ by
 program or allow continuous enrollment report students that are enrolled at any
 time between August 1 and October 31. Submission of enrollment of first-time
@@ -322,6 +321,14 @@ expenditures, and services. These data are available only for degree-granting
 institutions, and expenditure data are available only for institutions with
 total expenditures above $100,000.
 
+{bf:"college ipeds salaries-instructional-staff"}: This endpoint contains
+the number of staff, total salary outlays and average salaries of full-time,
+nonmedical, instructional staff by academic rank, contract length, and sex.
+
+{bf:"college ipeds salaries-noninstructional-staff"}: This endpoint contains
+the number and salary outlays for full-time, nonmedical, noninstructional staff
+by occupational category.
+
 {bf:"college scorecard institutional-characteristics"}: This endpoint
 contains institutional characteristics for each college or university,
 primarily including flags for minority-serving institutions. To avoid
@@ -448,6 +455,17 @@ students. To avoid double-counting, users should use the _unitid variables;
 _opeid variables are the original amounts and will lead to double-counting
 unless only one record per OPEID year is kept.
 
+{bf:"college fsa 90-10-revenue-percentages"}: This endpoint contains the
+amount and percentage of each proprietary institution's revenues from Title IV
+sources and non–Title IV sources as provided by the institution in its
+audited financial statements.
+
+{bf:"college nacubo endowments"}: This endpoint contains data on annual
+endowments.
+
+{bf:"college nccs 990-forms"}: This endpoint contains data from 990 tax
+forms filed annually by nonprofit organizations.
+
 {bf:District} - {browse "https://educationdata.urban.org/documentation/school-districts.html":Read Complete Documentation}
 
 {bf:"district ccd directory"}: This endpoint contains school district (local
@@ -536,6 +554,11 @@ proficiency shares for Virginia's 2016–17 grade 5–8 math
 assessments are too low. Users should instead refer to the Virginia Department
 of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
+
+{bf:"district edfacts grad-rates"}: This endpoint contains district-level
+adjusted cohort graduation rates. The graduation rate is reported as a range,
+with the magnitude of the range decreasing as the number of students reported
+increases. Graduation rates are provided by race and special populations.
 
 {bf:School} - {browse "https://educationdata.urban.org/documentation/schools.html":Read Complete Documentation}
 
@@ -767,6 +790,11 @@ assessments are too low. Users should instead refer to the Virginia Department
 of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
 
+{bf:"school edfacts grad-rates"}: This endpoint contains school-level adjusted cohort
+graduation rates. The graduation rate is reported as a range, with the
+magnitude of the range decreasing as the number of students reported increases.
+Graduation rates are provided by race and special populations.
+
 {bf:"school nhgis census-2010"}: This endpoint contains geographic variables
 corresponding to 2010 Census geographies for each school in the CCD directory.
 Geographies are merged on by latitude and longitude when available; when
@@ -776,7 +804,7 @@ perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
 accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.
 Geographies for older years of data or low-accuracy geocode matches should be
-used with caution. In addition, we link schools’ geographic locations to the
+used with caution. In addition, we link schoolsâ€™ geographic locations to the
 geographic boundaries of school districts.
 
 {bf:"school nhgis census-2000"}: This endpoint contains geographic variables
@@ -788,7 +816,7 @@ perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
 accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.
 Geographies for older years of data or low-accuracy geocode matches should be
-used with caution. In addition, we link schools’ geographic locations to the
+used with caution. In addition, we link schoolsâ€™ geographic locations to the
 geographic boundaries of school districts.
 
 {bf:"school nhgis census-1990"}: This endpoint contains geographic variables
@@ -800,7 +828,7 @@ perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
 accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.
 Geographies for older years of data or low-accuracy geocode matches should be
-used with caution. In addition, we link schools’ geographic locations to the
+used with caution. In addition, we link schoolsâ€™ geographic locations to the
 geographic boundaries of school districts.
 
 
@@ -876,10 +904,26 @@ slower data download times.
 
 . educationdata using "college ipeds directory", cache
 
-{bf:And finally the {opt clear}} option clears existing datasets from memory before
+{bf:The {opt clear}} option clears existing datasets from memory before
 reading in the data from the Education Data Portal. For example,
 
 . educationdata using "college ipeds directory", clear
+
+{bf: And finally the {opt sum:mmaries}} option provides statistical summaries of a dataset using 
+user-defined summary statistics and variables. The arguments are structured as 
+"summaries ([statistic method] [variable of interest] by [grouping variable])", where 
+the first argument indicates the summary statistic to be retrieved. Valid statistics include: 
+"avg", "sum", "count", "median", "min", "max", "stddev", and "variance". The second argument is 
+the variable to run the summary statistic on, and the third indicates the grouping variable to use. 
+For example, 
+
+. educationdata using "school ccd enrollment", summaries(sum enrollment by fips) sub(year=2000) 
+
+This command takes the "schools/ccd/enrollment" endpoint, retrieves the sum of school enrollment by fips code, 
+and filters to year 2000. 
+
+More detailed instructions can be found in {browse "https://educationdata.urban.org/documentation":Education Data Portal Documentation}. 
+
 
 {title:Installing package dependencies}
 

@@ -1,8 +1,13 @@
 # Changelog for educationdata Stata Package
 
-#### 0.3.9 (Development Version, not yet released)
+#### 4.0.0 (Development Version, not yet released)
 
-#### 0.3.8 (Current Stable Version)
+#### 0.3.9 (Current Stable Version)
+
+- Update package to incorporate new endpoints from latest release 
+- Add summaries option to allow access to the new summary endpoint functionality 
+
+#### 0.3.8 
 
 - Fix precision issue for long integers by converting data type to double 
 
