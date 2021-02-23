@@ -1,7 +1,7 @@
 d 'EDUCATIONDATA': The package for accessing the Education Data Portal
 d https://educationdata.urban.org/
 d
-d Distribution-Date: 20201124
+d Distribution-Date: 20210223
 d
 F educationdata.ado
 F educationdata.sthlp
