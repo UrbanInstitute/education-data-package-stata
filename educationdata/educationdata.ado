@@ -778,7 +778,9 @@ mata
 		agg_method = token_cmd[1]   
 		var_to_agg = token_cmd[2]
 		agg_by = token_cmd[4]
+			
 		ep_url = ep_url + "?stat=" + agg_method + "&by=" + agg_by + "&var=" + var_to_agg
+
 		return(ep_url)
 	}
 
@@ -1050,16 +1052,23 @@ mata
 		real scalar timeper1
 		real scalar timeper2
 		if (st_global("debug_ind") == "1") printf(st_global("base_url") + url2 + "\n")
-		root = libjson::webcall(st_global("base_url") + url2,"");
-		results1 = root->getNode("results")
-		pagesize = results1->arrayLength()
-		totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
-		spos = 1
-		if (st_nobs() > 0) spos = st_nobs() + 1
-		countpage = 1
-		nextpage = gettable_summaries(st_global("base_url") + url2, spos, varinfo)
-		return(1)
+		printf("\n\nGetting data from:" + st_global("base_url") + url2 + "\n")
+		root = libjson::webcall(st_global("base_url") + url2, "");
+		if (root) {
+			results1 = root->getNode("results")
+			pagesize = results1->arrayLength()
+			totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
+			spos = 1
+			if (st_nobs() > 0) spos = st_nobs() + 1
+			countpage = 1
+			nextpage = gettable_summaries(st_global("base_url") + url2, spos, varinfo)
+			return(1)
+		} else{
+			printf("\nThis Stata command is invalid. Please follow the instructions on the Education Data Portal Website.") 
+			return(0)
+		}
 	}
+
 
 	// helper function to get data from summary endpoints 
 	string scalar getsummarydata(string scalar dataoptions, string scalar summaries, string scalar opts, string scalar vlist){
@@ -1070,12 +1079,11 @@ mata
 		string rowvector token_cmd
 		string matrix varinfo1
 		string matrix varinfo2
-		string matrix varinfo3
+		string matrix varinfo_gropuby_var
 		real scalar tempdata
 		real scalar totallen
 		real scalar epcount
 		summary_ep_url = getsummariesurl(dataoptions, summaries)
-		printf("\nGetting data from: " + st_global("base_url") + summary_ep_url)
 		allopts = tokens(opts)
 		for (i=1; i<=length(allopts); i++){
 			summary_ep_url = summary_ep_url + "&" + allopts[i]
@@ -1083,16 +1091,27 @@ mata
 		token_cmd = tokens(summaries)
 		var_to_agg = token_cmd[2]
 		agg_by = token_cmd[4]
+		if (strmatch(agg_by, "*,*") == 1) groupby_lst = tokens(agg_by, ",")
 		varinfo1 = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=year")
-		varinfo2 = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + agg_by)
-		varinfo3 = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + var_to_agg)
-		numrows = 3 
+		varinfo_var_to_agg = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + var_to_agg)
+		num_var = 2 + (length(groupby_lst) + 1)/2
 		var_attr = 6 
-		varinfo = J(var_attr, numrows, "")
-		for (r=1; r<=numrows; r++){
+		varinfo = J(var_attr, num_var, "")
+		for (r=1; r<=var_attr; r++){
 			varinfo[r, 1] = varinfo1[r, 1]
-			varinfo[r, 2] = varinfo2[r, 1]
-			varinfo[r, 3] = varinfo3[r, 1]
+		}
+		temp = 2 
+		for (j=1; j<=length(groupby_lst); j++){
+			if (groupby_lst[j] != ","){
+				varinfo_gropuby_var = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + groupby_lst[j])
+				for (r=1; r<=var_attr; r++){
+					varinfo[r, temp] = varinfo_gropuby_var[r, 1]
+				}
+				temp = temp + 1 
+			}
+		}
+		for (r=1; r<=var_attr; r++){
+			varinfo[r, temp] = varinfo_var_to_agg[r, 1]
 		}
 		spos = 1
 		epcount = 0
@@ -1102,9 +1121,11 @@ mata
 			epcount = epcount + 1
 			alldata = getalltables_summaries(varinfo, summary_ep_url, totallen, epcount)
 		}
-		stata("qui compress")
-		if (vlist != "") stata("keep " + vlist)
-		else printf("\n\nData successfully loaded into Stata and ready to use.")
+		if (alldata == 1){
+			stata("qui compress")
+			if (vlist != "") stata("keep " + vlist)
+			else printf("\n\nData successfully loaded into Stata and ready to use.")
+		}
 		return("")
 	}
 
