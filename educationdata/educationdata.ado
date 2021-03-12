@@ -30,6 +30,10 @@ mata
 		real scalar numrowscheck
 		res = getresults(url)
 		numrows = res->arrayLength()
+		if (numrows == 0){
+			temp = raise_error()
+			return("")
+		}
 		varinfo = J(6,numrows,"")
 		for (r=1; r<=numrows; r++) {
 			trow = res->getArrayValue(r)
@@ -777,8 +781,16 @@ mata
 		token_cmd = tokens(summaries_cmd)
 		agg_method = token_cmd[1]   
 		var_to_agg = token_cmd[2]
-		agg_by = token_cmd[4]
-			
+		agg_by = ""
+
+		for (c=4; c<=length(token_cmd); c++){
+			if (c != length(token_cmd)){
+				agg_by = agg_by + token_cmd[c] + ","
+			} else {
+				agg_by = agg_by + token_cmd[c]
+			}
+		}   
+
 		ep_url = ep_url + "?stat=" + agg_method + "&by=" + agg_by + "&var=" + var_to_agg
 
 		return(ep_url)
@@ -1038,6 +1050,11 @@ mata
 		return(1)
 	}
 
+	real scalar raise_error(){
+		printf("\nThis Stata command is invalid. Please open the URL above in a browser for detailed error messages. More instructions can be found on the Education Data Portal Documentation Website (https://educationdata.urban.org/documentation/).") 
+		return(0)
+	}
+
 	// Gets all tables, using API to get the varlist and vartypes, and looping through all "nexts", calling gettable
 	real scalar getalltables_summaries(string matrix varinfo, string scalar url2, real scalar totallen1, real scalar epcount1){
 		pointer (class libjson scalar) scalar root
@@ -1052,9 +1069,8 @@ mata
 		real scalar timeper1
 		real scalar timeper2
 		if (st_global("debug_ind") == "1") printf(st_global("base_url") + url2 + "\n")
-		printf("\n\nGetting data from:" + st_global("base_url") + url2 + "\n")
 		root = libjson::webcall(st_global("base_url") + url2, "");
-		if (root) {
+		if (root){
 			results1 = root->getNode("results")
 			pagesize = results1->arrayLength()
 			totalpages = floor((strtoreal(root->getString("count", ""))) / pagesize) + 1
@@ -1064,11 +1080,11 @@ mata
 			nextpage = gettable_summaries(st_global("base_url") + url2, spos, varinfo)
 			return(1)
 		} else{
-			printf("\nThis Stata command is invalid. Please follow the instructions on the Education Data Portal Website.") 
+			error=raise_error()
 			return(0)
+			}
 		}
 	}
-
 
 	// helper function to get data from summary endpoints 
 	string scalar getsummarydata(string scalar dataoptions, string scalar summaries, string scalar opts, string scalar vlist){
@@ -1079,7 +1095,7 @@ mata
 		string rowvector token_cmd
 		string matrix varinfo1
 		string matrix varinfo2
-		string matrix varinfo_gropuby_var
+		string matrix varinfo_groupby_var
 		real scalar tempdata
 		real scalar totallen
 		real scalar epcount
@@ -1088,9 +1104,17 @@ mata
 		for (i=1; i<=length(allopts); i++){
 			summary_ep_url = summary_ep_url + "&" + allopts[i]
 		}
+		printf("\n\nGetting data from: " + st_global("base_url") + summary_ep_url + "\n")
 		token_cmd = tokens(summaries)
 		var_to_agg = token_cmd[2]
-		agg_by = token_cmd[4]
+		agg_by = ""
+		for (c=4; c<=length(token_cmd); c++){
+			if (c != length(token_cmd)){
+				agg_by = agg_by + token_cmd[c] + ","
+			} else {
+				agg_by = agg_by + token_cmd[c]
+			}
+		}  
 		if (strmatch(agg_by, "*,*") == 1) groupby_lst = tokens(agg_by, ",")
 		varinfo1 = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=year")
 		varinfo_var_to_agg = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + var_to_agg)
@@ -1103,9 +1127,9 @@ mata
 		temp = 2 
 		for (j=1; j<=length(groupby_lst); j++){
 			if (groupby_lst[j] != ","){
-				varinfo_gropuby_var = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + groupby_lst[j])
+				varinfo_groupby_var = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + groupby_lst[j])
 				for (r=1; r<=var_attr; r++){
-					varinfo[r, temp] = varinfo_gropuby_var[r, 1]
+					varinfo[r, temp] = varinfo_groupby_var[r, 1]
 				}
 				temp = temp + 1 
 			}

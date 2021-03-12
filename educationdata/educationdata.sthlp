@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.3.9}
+{title:Education Data Package}{right:Version 0.4.0}
 
 {title:Syntax}
 
@@ -915,9 +915,10 @@ user-defined summary statistics and variables. The arguments are structured as
 the first argument indicates the summary statistic to be retrieved. Valid statistics include: 
 "avg", "sum", "count", "median", "min", "max", "stddev", and "variance". The second argument is 
 the variable to run the summary statistic on, and the third indicates the grouping variable to use. 
+If there are multiple grouping variables, please separate them by one whitespace. 
 For example, 
 
-. educationdata using "school ccd enrollment", summaries(sum enrollment by fips) sub(year=2000) 
+. educationdata using "school ccd enrollment", summaries(sum enrollment by fips race) sub(year=2000) 
 
 This command takes the "schools/ccd/enrollment" endpoint, retrieves the sum of school enrollment 
 by fips code, and filters to year 2000. 
