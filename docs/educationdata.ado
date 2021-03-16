@@ -1082,7 +1082,6 @@ mata
 		} else{
 			error=raise_error()
 			return(0)
-			}
 		}
 	}
 
@@ -1115,7 +1114,11 @@ mata
 				agg_by = agg_by + token_cmd[c]
 			}
 		}  
-		if (strmatch(agg_by, "*,*") == 1) groupby_lst = tokens(agg_by, ",")
+		if (strmatch(agg_by, "*,*") == 1) {
+			groupby_lst = tokens(agg_by, ",")
+		} else {
+			groupby_lst = tokens(agg_by)
+		}
 		varinfo1 = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=year")
 		varinfo_var_to_agg = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + var_to_agg)
 		num_var = 2 + (length(groupby_lst) + 1)/2
