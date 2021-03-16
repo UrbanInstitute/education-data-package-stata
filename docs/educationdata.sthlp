@@ -24,21 +24,35 @@
         
     Note that there can be no spaces around the equals sign (e.g., use sub(year=2011), not sub(year = 2011)).
 
-    Download the full directory of colleges and universities for 2011
+    Download the full directory of colleges and universities for 2011:
         . educationdata using "college ipeds directory", sub(year=2011)
         
-    Download the full directory of colleges and universities for 2011 to 2013 in Florida.
+    Download the full directory of colleges and universities for 2011 to 2013 in Florida:
         . educationdata using "college ipeds directory", sub(year=2011:2013 fips=12)
 
-    Download the full directory for 2011 to 2013 in Florida and keep only the unitid and year variables.
+    Download the full directory for 2011 to 2013 in Florida and keep only the unitid and year variables:
     	. educationdata using "college ipeds directory", sub(year=2011:2013 fips=12) col(unitid year)
 
-    Download graduate rates for totals only, not race and sex breakdowns, for all years
+    Download graduate rates for totals only, not race and sex breakdowns, for all years:
         . educationdata using "college ipeds grad-rates", sub(race=99 sex=99)
+
+{bf:Examples of getting statistical summaries of a dataset}:
+    
+    Download enrollment totals by race and state in 2018: 
+    . educationdata using "school ccd enrollment", summaries(sum enrollment using fips race) sub(year=2018) 
+
+    Download total education expenditures by core-based statistical area in 2015: 
+    . educationdata using "district ccd finance", summaries(sum exp_total by cbsa) sub(year=2015) 
+
+    Download the average number of college admissions by gender in each state in 2018: 
+    . educationdata using "college ipeds admissions-enrollment", summaries(avg number_admitted by sex fips) sub(year=2018)
+
+    Download the average number of students who took at least one AP exams by race and disability in each year: 
+    . educationdata using "school crdc ap-exams", summaries(avg students_AP_exam_oneormore by race disability)
 
 {bf:Getting only metadata}:
 
-    Get metadata for the full directory of colleges and universities
+    Get metadata for the full directory of colleges and universities:
         . educationdata using "college ipeds directory", meta
 
 {bf:Downloading from CSV instead of the API}:
@@ -51,6 +65,7 @@
 
     Download the full directory of colleges and universities for 2011 to 2013 in Florida.
         . educationdata using "college ipeds directory", sub(year=2011:2013 fips=12) csv   
+
 
 {title:Description}
 
