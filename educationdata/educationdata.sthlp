@@ -1,5 +1,5 @@
 {smcl}
-{title:Education Data Package}{right:Version 0.4.0}
+{title:Education Data Package}{right:Version 0.4.1}
 
 {title:Syntax}
 
@@ -616,6 +616,9 @@ includes students in grades K-12.
 each school by students' Limited English Proficiency status and sex. This only
 includes students in grades K-12.
 
+{bf:"school crdc discipline-instances"}: This endpoint contains the number of
+discipline in schools
+
 {bf:"school crdc discipline disability sex"}: This endpoint contains student
 discipline information for each school, including suspensions, expulsions,
 arrests, referrals, and corporal punishment by students' race and sex.
@@ -744,6 +747,73 @@ number of students taking the SAT or ACT, by disability status and sex.
 {bf:"school crdc sat-act-participation lep sex"}: This endpoint contains the number of
 students taking the SAT or ACT, by limited English proficiency status and sex.
 
+{bf:"school crdc teachers-staff"}: This endpoint contains data on the number of FTE
+teachers and staff at each school.
+
+{bf:"school crdc math-and-science race sex"}: This endpoint contains data on
+enrollment in Biology, Chemistry, Advanced Math, Calculus, Algebra II, Physics,
+and Geometry courses by race and sex.
+
+{bf:"school crdc math-and-science disability sex"}: This endpoint contains data on
+enrollment in Biology, Chemistry, Advanced Math, Calculus, Algebra II, Physics,
+and Geometry courses by disability and sex.
+
+{bf:"school crdc math-and-science lep sex"}: This endpoint contains data on enrollment
+in Biology, Chemistry, Advanced Math, Calculus, Algebra II, Physics, and
+Geometry courses by limited English proficiency status and sex.
+
+{bf:"school crdc algebra1 race sex"}: This endpoint contains data on the number of
+students enrolled in and passing Algebra I by race and sex.
+
+{bf:"school crdc algebra1 disability sex"}: This endpoint contains data on the number
+of students enrolled in and passing Algebra I by disability status and sex.
+
+{bf:"school crdc algebra1 lep sex"}: This endpoint contains data on the number of
+students enrolled in and passing Algebra I by Limited English Proficiency
+status and sex.
+
+{bf:"school crdc offenses"}: This endpoint contains data on the number of criminal
+incidents in schools.
+
+{bf:"school crdc dual-enrollment race sex"}: This endpoint contains data that
+indicates whether the school has any students enrolled in a dual
+enrollment/dual credit program by race and sex.
+
+{bf:"school crdc dual-enrollment disability sex"}: This endpoint contains data that
+indicates whether the school has any students enrolled in a dual
+enrollment/dual credit program by disability and sex.
+
+{bf:"school crdc dual-enrollment lep sex"}: This endpoint contains data that indicates
+whether the school has any students enrolled in a dual enrollment/dual credit
+program by limited English proficiency status and sex.
+
+{bf:"school crdc credit-recovery"}: This endpoint contains data on student enrollment
+in credit recovery.
+
+{bf:"school crdc suspensions-days race sex"}: This endpoint contains the number of
+days students missed due to suspensions by race and sex.
+
+{bf:"school crdc suspensions-days disability sex"}: This endpoint contains the number
+of days students missed due to suspensions by disability and sex.
+
+{bf:"school crdc suspensions-days lep sex"}: This endpoint contains the number of days
+students missed due to suspensions by limited English proficiency status and
+sex.
+
+{bf:"school crdc offerings"}: This endpoint contains details on the number and types
+of classes offered in schools.
+
+{bf:"school crdc school-finance"}: This endpoint contains school finance data.
+
+{bf:"school crdc retention race sex"}: This endpoint contains data on the number of
+students retained in a school.
+
+{bf:"school crdc retention disability sex"}: This endpoint contains data on the number
+of students retained in a school.
+
+{bf:"school crdc retention lep sex"}: This endpoint contains data on the number of
+students retained in a school.
+
 {bf:"school edfacts assessments"}: This endpoint contains school-level achievement
 results for state assessments in mathematics and reading or language arts, by
 grade. It includes the number of students who completed each assessment for
@@ -845,6 +915,7 @@ accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-re
 Geographies for older years of data or low-accuracy geocode matches should be
 used with caution. In addition, we link schoolsâ€™ geographic locations to the
 geographic boundaries of school districts.
+
 
 
 {marker options}{...}
