@@ -1,8 +1,12 @@
 # Changelog for educationdata Stata Package
 
-#### 0.4.1 (Development Version, not yet released)
+#### 0.4.2 (Development Version, not yet released)
 
-#### 0.4.0 (Current Stable Version)
+#### 0.4.1 (Current Stable Version)
+
+- Update package to incorporate new endpoints and add new years to existing endpoints from latest release 
+
+#### 0.4.0 
 
 - Allow multiple grouping variables in summary endpoints
 - Fix missing value labels in summary endpoints 
