@@ -687,16 +687,17 @@ mata
 					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
 					if (r != length(vardef[1,.])) labeldef = labeldef + " "
 				}
+				labeldef = labeldef + ", replace"
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
 			else if (varinfo[3,c] == "float"){
-				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
 			else if (varinfo[3,c] == "double"){
-				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort + ", nofix")
 			}
@@ -727,16 +728,17 @@ mata
 					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
 					if (r != length(vardef[1,.])) labeldef = labeldef + " "
 				}
+				labeldef = labeldef + ", replace"
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
 			else if (varinfo[3,c] == "float"){
-				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
 			else if (varinfo[3,c] == "double"){
-				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort + ", nofix")
 			}
@@ -828,7 +830,9 @@ mata
 		string scalar labeldef
 		string scalar labelshort
 		for (c=1; c<=length(varinfo2[1,.]); c++){
+			printf(varinfo2[1,c])
 			stata("qui label var " + varinfo2[1,c] + " " + `"""' + varinfo2[2,c] + `"""')
+			printf("\n labelled \n")
 			if (strlen(varinfo2[1,c]) > 30) labelshort = substr(varinfo2[1,c], 1, 30) + "df"
 			else labelshort = varinfo2[1,c] + "df"
 			if (varinfo2[4,c] == "1"){
@@ -839,23 +843,30 @@ mata
 						labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
 						if (r != length(vardef[1,.])) labeldef = labeldef + " "
 					}
+					labeldef = labeldef + ", replace"
 					stata(labeldef)
 				}
 				stata("qui label values " + varinfo2[1,c] + " " + labelshort)
+				printf("\n value labelled \n")
 			}
 			else if (varinfo2[3,c] == "float"){
 				if (init1 == 1){
-					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 					stata(labeldef)
 				}
 				stata("qui label values " + varinfo2[1,c] + " " + labelshort)
+				printf("\n value labelled \n")
 			}
 			else if (varinfo2[3,c] == "double"){
 				if (init1 == 1){
-					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 					stata(labeldef)
 				}
+				printf(varinfo2[1,c])
+				printf("\n labelshort \n")
+				printf(labelshort)
 				stata("qui label values " + varinfo2[1,c] + " " + labelshort + ", nofix")
+				printf("\n value labelled \n")
 			}
 		}
 		return(1)		

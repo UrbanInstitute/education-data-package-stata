@@ -5,6 +5,7 @@
 #### 0.4.1 (Current Stable Version)
 
 - Update package to incorporate new endpoints and add new years to existing endpoints from latest release 
+- Fix value labeling issue by adding replace option
 
 #### 0.4.0 
 
