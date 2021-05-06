@@ -687,16 +687,17 @@ mata
 					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
 					if (r != length(vardef[1,.])) labeldef = labeldef + " "
 				}
+				labeldef = labeldef + ", replace"
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
 			else if (varinfo[3,c] == "float"){
-				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
 			else if (varinfo[3,c] == "double"){
-				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort + ", nofix")
 			}
@@ -727,16 +728,17 @@ mata
 					labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
 					if (r != length(vardef[1,.])) labeldef = labeldef + " "
 				}
+				labeldef = labeldef + ", replace"
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
 			else if (varinfo[3,c] == "float"){
-				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort)
 			}
 			else if (varinfo[3,c] == "double"){
-				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+				labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 				stata(labeldef)
 				stata("qui label values " + varinfo[1,c] + " " + labelshort + ", nofix")
 			}
@@ -839,20 +841,21 @@ mata
 						labeldef = labeldef + vardef[1,r] + " " + `"""' + vardef[2,r] + `"""'
 						if (r != length(vardef[1,.])) labeldef = labeldef + " "
 					}
+					labeldef = labeldef + ", replace"
 					stata(labeldef)
 				}
 				stata("qui label values " + varinfo2[1,c] + " " + labelshort)
 			}
 			else if (varinfo2[3,c] == "float"){
 				if (init1 == 1){
-					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 					stata(labeldef)
 				}
 				stata("qui label values " + varinfo2[1,c] + " " + labelshort)
 			}
 			else if (varinfo2[3,c] == "double"){
 				if (init1 == 1){
-					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""'
+					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 					stata(labeldef)
 				}
 				stata("qui label values " + varinfo2[1,c] + " " + labelshort + ", nofix")
