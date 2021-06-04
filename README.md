@@ -19,13 +19,19 @@ ssc install libjson
 Then, the following command will install, or if the package is already installed, update the education data package.
 
 ```stata
-net install educationdata, replace from("https://urbaninstitute.github.io/education-data-package-stata/")
+ssc install educationdata
 ```
 
 If you are having trouble, first try running the following:
 
 ```stata
 adoupdate
+```
+
+Note that it can sometimes take a small amount of time for the package to be updated on SSC, as it involves a manual step to submit, per the maintainer's instructions. To get the latest version from Github, you can run:
+
+```stata
+net install educationdata, replace from("https://urbaninstitute.github.io/education-data-package-stata/")
 ```
 
 If you're still having trouble with this command, uninstall any existing installations using the instructions below, close and re-open Stata, then re-run the commands above.
