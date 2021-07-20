@@ -19,7 +19,7 @@ ssc install libjson
 Then, the following command will install, or if the package is already installed, update the education data package.
 
 ```stata
-ssc install educationdata
+ssc install educationdata, replace
 ```
 
 If you are having trouble, first try running the following:
