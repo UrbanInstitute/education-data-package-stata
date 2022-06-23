@@ -177,8 +177,8 @@ Available levels of study are undergraduate, graduate, first-professional
 
 {bf:"college ipeds fall-enrollment age sex"}: This endpoint contains the
 number of students enrolled in the fall by age categories, sex,
-full-time/part-time status, and level of study.Â Institutions with traditional
-academic year calendar systems (semester, quarter, trimester, orÂ 4-1-4) report
+full-time/part-time status, and level of study. Institutions with traditional
+academic year calendar systems (semester, quarter, trimester, or 4-1-4) report
 their enrollment as of October 15 or the official fall reporting date of the
 institution. Institutions with calendar systems that differ by program or allow
 continuous enrollment report students who are enrolled at any time between
@@ -191,7 +191,7 @@ are available.
 number of first-time freshmen by state of residence, along with data on the
 number who graduated from high school the previous year. Institutions with
 traditional academic year calendar systems (i.e., semester, quarter, trimester,
-or 4-1-4) report their enrollment as of October 15 or the institutionâ€™s
+or 4-1-4) report their enrollment as of October 15 or the institution's
 official fall reporting date. Institutions with calendar systems that differ by
 program or allow continuous enrollment report students that are enrolled at any
 time between August 1 and October 31. Submission of enrollment of first-time
@@ -606,18 +606,16 @@ information, grades offered, and information on school type (including charter,
 magnet, and alternative schools).
 
 {bf:"school crdc enrollment race sex"}: This endpoint contains student enrollment for
-each school by students' race and sex. This includes only K–12 students.
+each school by students' race and sex.
 
 {bf:"school crdc enrollment disability sex"}: This endpoint contains student
-enrollment for each school by students' disability status and sex. This only
-includes students in grades K-12.
+enrollment for each school by students' disability status and sex.
 
 {bf:"school crdc enrollment lep sex"}: This endpoint contains student enrollment for
-each school by students' Limited English Proficiency status and sex. This only
-includes students in grades K-12.
+each school by students' Limited English Proficiency status and sex.
 
 {bf:"school crdc discipline-instances"}: This endpoint contains the number of
-discipline in schools
+discipline instances in schools.
 
 {bf:"school crdc discipline disability sex"}: This endpoint contains student
 discipline information for each school, including suspensions, expulsions,
@@ -889,7 +887,7 @@ perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
 accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.
 Geographies for older years of data or low-accuracy geocode matches should be
-used with caution. In addition, we link schoolsâ€™ geographic locations to the
+used with caution. In addition, we link schools' geographic locations to the
 geographic boundaries of school districts.
 
 {bf:"school nhgis census-2000"}: This endpoint contains geographic variables
@@ -901,7 +899,7 @@ perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
 accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.
 Geographies for older years of data or low-accuracy geocode matches should be
-used with caution. In addition, we link schoolsâ€™ geographic locations to the
+used with caution. In addition, we link schools' geographic locations to the
 geographic boundaries of school districts.
 
 {bf:"school nhgis census-1990"}: This endpoint contains geographic variables
@@ -913,9 +911,11 @@ perform accurate offline geocoding. Geocode accuracy variables indicate the
 degree of precision of this geocoding. Additional information on the match
 accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.
 Geographies for older years of data or low-accuracy geocode matches should be
-used with caution. In addition, we link schoolsâ€™ geographic locations to the
+used with caution. In addition, we link schools' geographic locations to the
 geographic boundaries of school districts.
 
+{bf:"school meps"}: This endpoint contains school-level poverty information including
+original and modified MEPS, standard errors, and annual weighted percentiles.
 
 
 {marker options}{...}
