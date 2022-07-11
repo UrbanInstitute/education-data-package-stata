@@ -1,3 +1,4 @@
+*! version 0.4.1 (v2)
 program educationdata
 version 11.0
 mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
@@ -773,6 +774,7 @@ mata
 		string scalar var_to_agg
 		string scalar agg_by
 		string rowvector token_cmd
+		
 
 		ep_url = "/api/v1/"    
 		for (c=1; c<=length(tokens(dataoptions)); c++){   
@@ -784,15 +786,14 @@ mata
 		agg_method = token_cmd[1]   
 		var_to_agg = token_cmd[2]
 		agg_by = ""
-
+		
 		for (c=4; c<=length(token_cmd); c++){
 			if (c != length(token_cmd)){
 				agg_by = agg_by + token_cmd[c] + ","
 			} else {
 				agg_by = agg_by + token_cmd[c]
 			}
-		}   
-
+		}
 		ep_url = ep_url + "?stat=" + agg_method + "&by=" + agg_by + "&var=" + var_to_agg
 
 		return(ep_url)
@@ -1101,6 +1102,7 @@ mata
 		real scalar tempdata
 		real scalar totallen
 		real scalar epcount
+
 		summary_ep_url = getsummariesurl(dataoptions, summaries)
 		allopts = tokens(opts)
 		for (i=1; i<=length(allopts); i++){
@@ -1110,6 +1112,19 @@ mata
 		token_cmd = tokens(summaries)
 		var_to_agg = token_cmd[2]
 		agg_by = ""
+		
+		printf("\n ---before substitution---")
+		token_cmd
+		printf("\n ---")
+		
+		if (dataoptions == "schools ccd enrollment"){
+			printf("\n ---substitute 'year' in token_cmd if it exists---")
+			token_cmd = select(token_cmd, token_cmd[1,.]:!="year")
+			printf("\n ---after substitution---")
+			token_cmd
+			printf("\n ---")
+		}
+		
 		for (c=4; c<=length(token_cmd); c++){
 			if (c != length(token_cmd)){
 				agg_by = agg_by + token_cmd[c] + ","
@@ -1117,11 +1132,15 @@ mata
 				agg_by = agg_by + token_cmd[c]
 			}
 		}  
+		printf("\n --- agg_by: %s", agg_by)
 		if (strmatch(agg_by, "*,*") == 1) {
 			groupby_lst = tokens(agg_by, ",")
 		} else {
 			groupby_lst = tokens(agg_by)
 		}
+		printf("\n --- FINAL GROUP BY LIST--- \n")
+		groupby_lst
+		printf("\n ---")
 		varinfo1 = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=year")
 		varinfo_var_to_agg = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + var_to_agg)
 		num_var = 2 + (length(groupby_lst) + 1)/2
