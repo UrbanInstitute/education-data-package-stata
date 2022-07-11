@@ -1,4 +1,4 @@
-*! version 0.4.1 (v2)
+*! version 0.4.1
 program educationdata
 version 11.0
 mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
@@ -1117,6 +1117,8 @@ mata
 		token_cmd
 		printf("\n ---")
 		
+		/* if the data source is "school ccd enrollment" and year is a "by variable", 
+		   remove it since year is a default by-variable for this data source*/
 		if (dataoptions == "schools ccd enrollment"){
 			printf("\n ---substitute 'year' in token_cmd if it exists---")
 			token_cmd = select(token_cmd, token_cmd[1,.]:!="year")
