@@ -1119,13 +1119,18 @@ mata
 		
 		/* if the data source is "school ccd enrollment" and year is a "by variable", 
 		   remove it since year is a default by-variable for this data source*/
-		if (dataoptions == "schools ccd enrollment"){
+		/*if (dataoptions == "schools ccd enrollment"){
 			printf("\n ---substitute 'year' in token_cmd if it exists---")
 			token_cmd = select(token_cmd, token_cmd[1,.]:!="year")
 			printf("\n ---after substitution---")
 			token_cmd
 			printf("\n ---")
-		}
+		}*/
+		printf("\n ---substitute 'year' in token_cmd if it exists---")
+		token_cmd = select(token_cmd, token_cmd[1,.]:!="year")
+		printf("\n ---after substitution---")
+		token_cmd
+		printf("\n ---")
 		
 		for (c=4; c<=length(token_cmd); c++){
 			if (c != length(token_cmd)){
