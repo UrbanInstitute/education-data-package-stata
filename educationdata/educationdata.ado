@@ -245,9 +245,9 @@ mata
 	// Helper function to add mode logging to URLs for API tracking
 	string scalar urlmode(string scalar url3){
 		string scalar strnum
-		if (strpos(url3, "mode=stata") == 0){
-			if (subinstr(url3, "?", "") == url3) url3 = url3 + "?mode=stata"
-			else url3 = url3 + "&mode=stata"
+		if (strpos(url3, "mode=testing") == 0){
+			if (subinstr(url3, "?", "") == url3) url3 = url3 + "?mode=testing"
+			else url3 = url3 + "&mode=testing"
 		}
 		strnum = strofreal(round(runiform(1,1)*100000))
 		if (st_global("cc") == "1") url3 = url3 + "&a=" + strnum
@@ -1113,24 +1113,15 @@ mata
 		var_to_agg = token_cmd[2]
 		agg_by = ""
 		
-		printf("\n ---before substitution---")
-		token_cmd
-		printf("\n ---")
-		
-		/* if the data source is "school ccd enrollment" and year is a "by variable", 
-		   remove it since year is a default by-variable for this data source*/
-		/*if (dataoptions == "schools ccd enrollment"){
-			printf("\n ---substitute 'year' in token_cmd if it exists---")
-			token_cmd = select(token_cmd, token_cmd[1,.]:!="year")
-			printf("\n ---after substitution---")
-			token_cmd
-			printf("\n ---")
-		}*/
-		printf("\n ---substitute 'year' in token_cmd if it exists---")
+		// printf("\n ---before substitution---")
+		// token_cmd
+		// printf("\n ---")
+
+		// printf("\n ---substitute 'year' in token_cmd if it exists---")
 		token_cmd = select(token_cmd, token_cmd[1,.]:!="year")
-		printf("\n ---after substitution---")
-		token_cmd
-		printf("\n ---")
+		// printf("\n ---after substitution---")
+		// token_cmd
+		// printf("\n ---")
 		
 		for (c=4; c<=length(token_cmd); c++){
 			if (c != length(token_cmd)){
@@ -1139,15 +1130,15 @@ mata
 				agg_by = agg_by + token_cmd[c]
 			}
 		}  
-		printf("\n --- agg_by: %s", agg_by)
+// 		printf("\n --- agg_by: %s", agg_by)
 		if (strmatch(agg_by, "*,*") == 1) {
 			groupby_lst = tokens(agg_by, ",")
 		} else {
 			groupby_lst = tokens(agg_by)
 		}
-		printf("\n --- FINAL GROUP BY LIST--- \n")
-		groupby_lst
-		printf("\n ---")
+// 		printf("\n --- FINAL GROUP BY LIST--- \n")
+// 		groupby_lst
+// 		printf("\n ---")
 		varinfo1 = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=year")
 		varinfo_var_to_agg = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + var_to_agg)
 		num_var = 2 + (length(groupby_lst) + 1)/2
