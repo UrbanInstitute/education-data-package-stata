@@ -774,7 +774,6 @@ mata
 		string scalar var_to_agg
 		string scalar agg_by
 		string rowvector token_cmd
-		
 
 		ep_url = "/api/v1/"    
 		for (c=1; c<=length(tokens(dataoptions)); c++){   
@@ -1102,20 +1101,16 @@ mata
 		real scalar tempdata
 		real scalar totallen
 		real scalar epcount
-
 		summary_ep_url = getsummariesurl(dataoptions, summaries)
 		allopts = tokens(opts)
 		for (i=1; i<=length(allopts); i++){
 			summary_ep_url = summary_ep_url + "&" + allopts[i]
 		}
-	
 		printf("\n\nGetting data from: " + st_global("base_url") + summary_ep_url + "\n")
 		token_cmd = tokens(summaries)
 		var_to_agg = token_cmd[2]
 		agg_by = ""
-		
 		token_cmd = select(token_cmd, token_cmd[1,.]:!="year")
-		
 		for (c=4; c<=length(token_cmd); c++){
 			if (c != length(token_cmd)){
 				agg_by = agg_by + token_cmd[c] + ","
@@ -1123,13 +1118,11 @@ mata
 				agg_by = agg_by + token_cmd[c]
 			}
 		}  
-
 		if (strmatch(agg_by, "*,*") == 1) {
 			groupby_lst = tokens(agg_by, ",")
 		} else {
 			groupby_lst = tokens(agg_by)
 		}
-
 		varinfo1 = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=year")
 		varinfo_var_to_agg = getvarinfo(st_global("base_url") + "/api/v1/api-variables/?variable=" + var_to_agg)
 		num_var = 2 + (length(groupby_lst) + 1)/2
