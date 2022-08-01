@@ -1,4 +1,4 @@
-*! version 0.4.1
+*! version 0.4.1 - TESTING
 program educationdata
 version 11.0
 mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
@@ -1108,6 +1108,7 @@ mata
 		for (i=1; i<=length(allopts); i++){
 			summary_ep_url = summary_ep_url + "&" + allopts[i]
 		}
+	
 		printf("\n\nGetting data from: " + st_global("base_url") + summary_ep_url + "\n")
 		token_cmd = tokens(summaries)
 		var_to_agg = token_cmd[2]
