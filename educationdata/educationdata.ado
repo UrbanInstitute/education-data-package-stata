@@ -785,17 +785,14 @@ mata
 		agg_method = token_cmd[1]   
 		var_to_agg = token_cmd[2]
 		agg_by = ""
-
 		for (c=4; c<=length(token_cmd); c++){
 			if (c != length(token_cmd)){
 				agg_by = agg_by + token_cmd[c] + ","
 			} else {
 				agg_by = agg_by + token_cmd[c]
 			}
-		}
-		
+		}   
 		ep_url = ep_url + "?stat=" + agg_method + "&by=" + agg_by + "&var=" + var_to_agg
-		
 		return(ep_url)
 	}
 
