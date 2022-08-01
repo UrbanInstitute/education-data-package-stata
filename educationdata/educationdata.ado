@@ -795,7 +795,7 @@ mata
 		}
 		
 		ep_url = ep_url + "?stat=" + agg_method + "&by=" + agg_by + "&var=" + var_to_agg
-
+		
 		return(ep_url)
 	}
 
