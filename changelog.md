@@ -1,8 +1,13 @@
 # Changelog for educationdata Stata Package
 
-#### 0.4.2 (Development Version, not yet released)
+#### 0.4.2 (2022-08-02)
 
-#### 0.4.1 (Current Stable Version)
+- Report package version 
+- Add example using multiple filters in summary endpoints to documentation
+- Fix error from aggregating by only year in summary endpoints 
+
+
+#### 0.4.1 
 
 - Update package to incorporate new endpoints and add new years to existing endpoints from latest release 
 - Fix value labeling issue by adding replace option
@@ -13,7 +18,7 @@
 - Fix missing value labels in summary endpoints 
 - Add error handling in summary endpoints 
 
-#### 0.3.9 (Current Stable Version)
+#### 0.3.9 
 
 - Update package to incorporate new endpoints from latest release 
 - Add summaries option to allow access to the new summary endpoint functionality 
