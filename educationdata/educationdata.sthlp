@@ -49,6 +49,9 @@
 
     Download the average number of students who took at least one AP exams by race and disability in each year: 
     . educationdata using "school crdc ap-exams", summaries(avg students_AP_exam_oneormore by race disability)
+	
+	Download IB enrollment totals by Office of Civil Rights school ID in 2017 for the state of New York only:
+	. educationdata using "school crdc ap-ib-enrollment", summaries(sum enrl_IB by crdc_id) sub(year=2017&fips=36)
 
 {bf:Getting only metadata}:
 
@@ -1008,6 +1011,15 @@ For example,
 
 This command takes the "schools/ccd/enrollment" endpoint, retrieves the sum of school enrollment 
 by fips code, and filters to year 2000. 
+
+Filters can also be applied to summary statistics using the "sub" command.  The arguments are structured as 
+"sub(variable=value))", where multiple filters are separated by "&".
+For example,
+
+. educationdata using "school crdc ap-ib-enrollment", summaries(sum enrl_IB by crdc_id) sub(year=2017&fips=36)
+
+This command takes the "schools/crdc/ap-ib-enrollment" endpoint, retrieves the sum of IB enrollment by Office of 
+Civil Rights school ID in 2017 for the state of New York.
 
 More detailed instructions can be found in {browse "https://educationdata.urban.org/documentation":Education Data Portal Documentation}. 
 

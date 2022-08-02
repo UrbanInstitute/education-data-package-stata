@@ -1,3 +1,4 @@
+*! version 0.4.2
 program educationdata
 version 11.0
 mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
@@ -1110,6 +1111,7 @@ mata
 		token_cmd = tokens(summaries)
 		var_to_agg = token_cmd[2]
 		agg_by = ""
+		token_cmd = select(token_cmd, token_cmd[1,.]:!="year")
 		for (c=4; c<=length(token_cmd); c++){
 			if (c != length(token_cmd)){
 				agg_by = agg_by + token_cmd[c] + ","
