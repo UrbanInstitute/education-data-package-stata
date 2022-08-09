@@ -1,4 +1,4 @@
-*! version 0.4.1
+*! version 0.4.2
 program educationdata
 version 11.0
 mata: if (findfile("libjson.mlib") != "") {} else stata("ssc install libjson");
