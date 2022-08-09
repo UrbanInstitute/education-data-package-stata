@@ -245,9 +245,9 @@ mata
 	// Helper function to add mode logging to URLs for API tracking
 	string scalar urlmode(string scalar url3){
 		string scalar strnum
-		if (strpos(url3, "mode=stata") == 0){
-			if (subinstr(url3, "?", "") == url3) url3 = url3 + "?mode=stata"
-			else url3 = url3 + "&mode=stata"
+		if (strpos(url3, "mode=testing") == 0){
+			if (subinstr(url3, "?", "") == url3) url3 = url3 + "?mode=testing"
+			else url3 = url3 + "&mode=testing"
 		}
 		strnum = strofreal(round(runiform(1,1)*100000))
 		if (st_global("cc") == "1") url3 = url3 + "&a=" + strnum
@@ -859,8 +859,34 @@ mata
 					labeldef = "qui label define " + labelshort + " -1 " + `"""' + "Missing/Not reported" + `"""' + " -2 " + `"""' + "Not applicable" + `"""' + " -3 " + `"""' + "Suppressed data" + `"""' + ", replace"
 					stata(labeldef)
 				}
+				//nkv: added this if-conditional
+				if (substr(st_vartype(varinfo2[1,c]), 1, 3) == "str"){
+					printf("\n --- varinfo2[1,c]: %s --- \n", varinfo2[1,c])
+					printf("\n --- varinfo2[3,c]: %s --- \n", varinfo2[3,c])
+					printf("\n --- st_vartype(varinfo2[1,c]): %s --- \n", st_vartype(varinfo2[1,c]))
+					if (varinfo2[1,c] == "year"){
+					stata("tab " + varinfo2[1,c] + ", missing")
+					}
+					stata("destring " + varinfo2[1,c] + ", replace")
+				}
 				stata("qui label values " + varinfo2[1,c] + " " + labelshort + ", nofix")
 			}
+			// nkv: added this else statement
+		   else {
+				if ((substr(varinfo2[3,c], 1, 3) == "str") & (substr(st_vartype(varinfo2[1,c]), 1, 3) != "str")){
+					printf("\n --- varinfo2[1,c]: %s --- \n", varinfo2[1,c])
+					printf("\n --- substr(varinfo2[3,c], 1, 3): %s --- \n", substr(varinfo2[3,c], 1, 3))
+					printf("\n --- substr(st_vartype(varinfo2[1,c]), 1, 3): %s --- \n", substr(st_vartype(varinfo2[1,c]), 1, 3))
+					// str_var = strofreal(st_data(., varinfo2[1,c]))
+					//st_dropvar(varinfo2[1,c])
+					// st_store(., st_addvar("string", varinfo2[1,c] + "v2"), str_var)
+					//var_len = max(strlen(strofreal(st_data(., varinfo2[1,c]))))
+					//my_stmt = "tostring " + varinfo2[1,c] + `", format("%"' + strofreal(var_len) + `".0f") replace"'
+					//printf("\n --- length of string: %s --- \n", strofreal(var_len))
+					//printf("\n --- %s --- \n", my_stmt)
+					//stata("tostring " + varinfo2[1,c] + `", format("%"' + strofreal(var_len) + `".0f") replace"')
+				}
+		   }
 		}
 		return(1)		
 	}
@@ -881,6 +907,7 @@ mata
 		string rowvector queryparamlist
 		string scalar keepstate
 		string scalar keepbase
+		// printf("\n --- checkpoint 6.1.1 ---\n")
 		keepbase = "qui keep if inlist("
 		for (r=1; r<=length(spops2[1,.]); r++){
 			t = tokeninit("=")
@@ -893,21 +920,28 @@ mata
 					keepstate = keepstate + "," + correctgrade(voptions[c])
 				}
 				keepstate = keepstate + ")"
+				printf("\n --- keepstate command: %s ---\n", keepstate)
 				stata(keepstate)
 			}
 		}
+		// printf("\n --- checkpoint 6.1.2 ---\n")
 		querystring2 = subinstr(querystring2, "?", "")
+		// printf("\n --- checkpoint 6.1.3 ---\n")
 		t = tokeninit("&")
 		s = tokenset(t, querystring2)
 		queryparams = tokengetall(t)
+		// printf("\n --- checkpoint 6.1.4 ---\n")
 		for (r=1; r<=length(queryparams); r++){
 			t = tokeninit("=")
 			s = tokenset(t, queryparams[r])
 			queryparamvals = tokengetall(t)
 			keepstate = keepbase + queryparamvals[1] + "," + queryparamvals[2] + ")"
+			// printf("\n --- keepstate command: %s ---\n", keepstate)
 			stata(keepstate)
 		}
+		// printf("\n --- checkpoint 6.1.5 ---\n")
 		if (vlist2 != "") stata("keep " + vlist2)
+		// printf("\n --- checkpoint 6.1.6 ---\n")
 		return(1)
 	}
 
@@ -936,14 +970,17 @@ mata
 		real scalar temp3
 		real scalar countfiles
 		tbaseurl = st_global("base_url") + "/csv/" + ds1 + "/"
+		// printf("\n --- checkpoint 1 ---\n")
 		results1 = getresults(st_global("base_url") + "/api/v1/api-downloads/?endpoint_id=" + eid1)
 		yearslist = validoptions(spops1[2,1], epid1)
 		numresults = results1->arrayLength()
 		temp1 = 0
+		// printf("\n --- checkpoint 1 ---\n")
 		if (numresults == 1){
 			return(0)
 		}
 		if (numresults == 2){
+			// printf("\n --- checkpoint 3 ---\n")
 			printf("Downloading file, please wait...\n")
 			tval = results1->getArrayValue(2)->getString("file_name", "")
 			temp3 = copycsv(tval, tbaseurl)
@@ -957,6 +994,7 @@ mata
 			temp2 = subsetkeep(spops1, querystring1, epid1, vlist1)
 		}
 		else{
+			// printf("\n --- checkpoint 4 ---\n")
 			printf("Progress for each CSV file will print to your screen. Please wait...\n\n")
 			relfilesstr = ""
 			for (r=1; r<=numresults; r++){
@@ -973,6 +1011,7 @@ mata
 					else relfilesstr = relfilesstr + ";" + tval
 				}
 			}
+			// printf("\n --- checkpoint 5 ---\n")
 			t = tokeninit(";")
 			s = tokenset(t, relfilesstr)
 			relfiles = tokengetall(t)
@@ -991,13 +1030,22 @@ mata
 					stata("qui rm temp_eddata_file_gen_012345.csv")
 				}
 				else stata("qui import delimited " + tbaseurl + subinstr(relfiles[r], " ", "") + ", clear" + addstrings)
+				// printf("\n --- checkpoint 6.0 ---\n")
+				// printf("\n nkv BEFORE temp1: %s \n", strofreal(temp1))
 				if (temp1 == 0) temp1 = labelcsv(varinfo1, 1)
 				else temp1 = labelcsv(varinfo1, 0)
+				// printf("\n AFTER temp1: %s \n", strofreal(temp1))
+				// printf("\n --- checkpoint 6.1 ---\n")
 				temp2 = subsetkeep(spops1, querystring1, epid1, vlist1)
 				stata("qui save temp_eddata_file_gen_012345, replace")
+				// printf("\n --- checkpoint 6.2 ---\n")
 				stata("qui restore")
-				stata("qui append using temp_eddata_file_gen_012345")
+				// printf("\n --- checkpoint 6.3 ---\n")
+				stata("qui append using temp_eddata_file_gen_012345, force")
+				//stata("qui append using temp_eddata_file_gen_012345")
+				// printf("\n --- checkpoint 6.4 ---\n")
 			}
+			// printf("\n --- checkpoint 7 ---\n")
 			stata("qui rm temp_eddata_file_gen_012345.dta")
 		}
 		stata("qui compress")
