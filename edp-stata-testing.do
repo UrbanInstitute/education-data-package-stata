@@ -1,0 +1,1 @@
+educationdata using "school ccd enrollment", summaries(sum enrollment using fips race) sub(year=2018&fips=11)
