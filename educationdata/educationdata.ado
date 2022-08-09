@@ -860,33 +860,33 @@ mata
 					stata(labeldef)
 				}
 				//nkv: added this if-conditional
-				if (substr(st_vartype(varinfo2[1,c]), 1, 3) == "str"){
-					printf("\n --- varinfo2[1,c]: %s --- \n", varinfo2[1,c])
-					printf("\n --- varinfo2[3,c]: %s --- \n", varinfo2[3,c])
-					printf("\n --- st_vartype(varinfo2[1,c]): %s --- \n", st_vartype(varinfo2[1,c]))
-					if (varinfo2[1,c] == "year"){
-					stata("tab " + varinfo2[1,c] + ", missing")
-					}
-					stata("destring " + varinfo2[1,c] + ", replace")
-				}
+// 				if (substr(st_vartype(varinfo2[1,c]), 1, 3) == "str"){
+// 					printf("\n --- varinfo2[1,c]: %s --- \n", varinfo2[1,c])
+// 					printf("\n --- varinfo2[3,c]: %s --- \n", varinfo2[3,c])
+// 					printf("\n --- st_vartype(varinfo2[1,c]): %s --- \n", st_vartype(varinfo2[1,c]))
+// 					if (varinfo2[1,c] == "year"){
+// 					stata("tab " + varinfo2[1,c] + ", missing")
+// 					}
+// 					stata("destring " + varinfo2[1,c] + ", replace")
+// 				}
 				stata("qui label values " + varinfo2[1,c] + " " + labelshort + ", nofix")
 			}
 			// nkv: added this else statement
-		   else {
-				if ((substr(varinfo2[3,c], 1, 3) == "str") & (substr(st_vartype(varinfo2[1,c]), 1, 3) != "str")){
-					printf("\n --- varinfo2[1,c]: %s --- \n", varinfo2[1,c])
-					printf("\n --- substr(varinfo2[3,c], 1, 3): %s --- \n", substr(varinfo2[3,c], 1, 3))
-					printf("\n --- substr(st_vartype(varinfo2[1,c]), 1, 3): %s --- \n", substr(st_vartype(varinfo2[1,c]), 1, 3))
-					// str_var = strofreal(st_data(., varinfo2[1,c]))
-					//st_dropvar(varinfo2[1,c])
-					// st_store(., st_addvar("string", varinfo2[1,c] + "v2"), str_var)
-					//var_len = max(strlen(strofreal(st_data(., varinfo2[1,c]))))
-					//my_stmt = "tostring " + varinfo2[1,c] + `", format("%"' + strofreal(var_len) + `".0f") replace"'
-					//printf("\n --- length of string: %s --- \n", strofreal(var_len))
-					//printf("\n --- %s --- \n", my_stmt)
-					//stata("tostring " + varinfo2[1,c] + `", format("%"' + strofreal(var_len) + `".0f") replace"')
-				}
-		   }
+// 		   else {
+// 				if ((substr(varinfo2[3,c], 1, 3) == "str") & (substr(st_vartype(varinfo2[1,c]), 1, 3) != "str")){
+// 					printf("\n --- varinfo2[1,c]: %s --- \n", varinfo2[1,c])
+// 					printf("\n --- substr(varinfo2[3,c], 1, 3): %s --- \n", substr(varinfo2[3,c], 1, 3))
+// 					printf("\n --- substr(st_vartype(varinfo2[1,c]), 1, 3): %s --- \n", substr(st_vartype(varinfo2[1,c]), 1, 3))
+// 					// str_var = strofreal(st_data(., varinfo2[1,c]))
+// 					//st_dropvar(varinfo2[1,c])
+// 					// st_store(., st_addvar("string", varinfo2[1,c] + "v2"), str_var)
+// 					//var_len = max(strlen(strofreal(st_data(., varinfo2[1,c]))))
+// 					//my_stmt = "tostring " + varinfo2[1,c] + `", format("%"' + strofreal(var_len) + `".0f") replace"'
+// 					//printf("\n --- length of string: %s --- \n", strofreal(var_len))
+// 					//printf("\n --- %s --- \n", my_stmt)
+// 					//stata("tostring " + varinfo2[1,c] + `", format("%"' + strofreal(var_len) + `".0f") replace"')
+// 				}
+// 		   }
 		}
 		return(1)		
 	}
@@ -920,7 +920,7 @@ mata
 					keepstate = keepstate + "," + correctgrade(voptions[c])
 				}
 				keepstate = keepstate + ")"
-				printf("\n --- keepstate command: %s ---\n", keepstate)
+				// printf("\n --- keepstate command: %s ---\n", keepstate)
 				stata(keepstate)
 			}
 		}
@@ -1041,8 +1041,8 @@ mata
 				// printf("\n --- checkpoint 6.2 ---\n")
 				stata("qui restore")
 				// printf("\n --- checkpoint 6.3 ---\n")
-				stata("qui append using temp_eddata_file_gen_012345, force")
-				//stata("qui append using temp_eddata_file_gen_012345")
+				// stata("qui append using temp_eddata_file_gen_012345, force")
+				stata("qui append using temp_eddata_file_gen_012345")
 				// printf("\n --- checkpoint 6.4 ---\n")
 			}
 			// printf("\n --- checkpoint 7 ---\n")
