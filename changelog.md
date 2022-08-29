@@ -5,9 +5,9 @@
 - Report package version 
 - Add example using multiple filters in summary endpoints to documentation
 - Fix error from aggregating by only year in summary endpoints 
+- Update package to incorporate new endpoints and add new years to existing endpoints from latest release 
 
-
-#### 0.4.1 
+#### 0.4.1 (2021-04-20)
 
 - Update package to incorporate new endpoints and add new years to existing endpoints from latest release 
 - Fix value labeling issue by adding replace option
