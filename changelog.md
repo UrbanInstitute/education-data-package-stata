@@ -1,5 +1,9 @@
 # Changelog for educationdata Stata Package
 
+#### 0.4.3 (2022-09-26)
+
+- Update message when using `csv` option to say: "Note that this function **temporarily** writes data to the current working directory"   
+
 #### 0.4.2 (2022-08-02)
 
 - Report package version 
