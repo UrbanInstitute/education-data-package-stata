@@ -1243,7 +1243,7 @@ mata
 			epcount = 0
 			if (metadataonly <= 0) printf("Please be patient - downloading data.\n")
 			if (csv > 0 && metadataonly <= 0){
-				printf("\nNote that this function writes data to the current working directory.\n")
+				printf("\nNote that this function temporarily writes data to the current working directory.\n")
 				printf("If you do not have read and write privileges to the current directory, please change your working directory.\n")
 				printf("For example, you can enter " + `"""' + "cd D:/Users/[Your username here]/Documents" + `"""' + ".\n\n")
 				ds = tokens(dataoptions)[2]
