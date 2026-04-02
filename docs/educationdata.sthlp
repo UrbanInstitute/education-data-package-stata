@@ -405,8 +405,8 @@ one-year repayment rate for fiscal year (FY) 2008 and FY 2009 cohorts
 (cohort_year 2008) are measured in FY 2009 and FY 2010 (year 2009),
 respectively.
 
-{bf:"college nhgis census-2010"}: This endpoint contains geographic
-variables corresponding to 2010 Census geographies for each IPEDS institution.
+{bf:"college nhgis census-1990"}: This endpoint contains geographic
+variables corresponding to 1990 Census geographies for each IPEDS institution.
 Geographies are merged on by latitude and longitude when available; when
 unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
@@ -427,8 +427,19 @@ accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-re
 Geographies for older years of data or low-accuracy geocode matches should be
 used with caution.
 
-{bf:"college nhgis census-1990"}: This endpoint contains geographic
-variables corresponding to 1990 Census geographies for each IPEDS institution.
+{bf:"college nhgis census-2010"}: This endpoint contains geographic
+variables corresponding to 2010 Census geographies for each IPEDS institution.
+Geographies are merged on by latitude and longitude when available; when
+unavailable, latitudes and longitudes were obtained from address information
+using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
+perform accurate offline geocoding. Geocode accuracy variables indicate the
+degree of precision of this geocoding. Additional information on the match
+accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.
+Geographies for older years of data or low-accuracy geocode matches should be
+used with caution.
+
+{bf:"college nhgis census-2020"}: This endpoint contains geographic
+variables corresponding to 2020 Census geographies for each IPEDS institution.
 Geographies are merged on by latitude and longitude when available; when
 unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
@@ -483,6 +494,22 @@ endowments.
 
 {bf:"college nccs 990-forms"}: This endpoint contains data from 990 tax
 forms filed annually by nonprofit organizations.
+
+{bf:"college eada institutional-characteristics"}: This endpoint contains
+data, for each college or university, on athletic participation and
+expenditures as required by the Equity in Athletics Disclosure Act (EADA), by
+all co-educational postsecondary institutions that receive Title IV funding
+(i.e., those that participate in federal student aid programs) and that have an
+intercollegiate athletics program.
+
+{bf:"college campus-crime hate-crimes"}: This endpoint contains data on
+reported hate crimes and their locations.
+
+{bf:"college pseo earnings-and-flows"}: This endpoint contains information
+from the US Census Bureau on earnings outcomes and employment flows for recent
+college graduates. These data are only available for partner institutions to
+the PSEO program. For more information, go to
+https://lehd.ces.census.gov/data/pseo_experimental.html.
 
 {bf:District} - {browse "https://educationdata.urban.org/documentation/school-districts.html":Read Complete Documentation}
 
@@ -815,6 +842,12 @@ of students retained in a school.
 {bf:"school crdc retention lep sex"}: This endpoint contains data on the number of
 students retained in a school.
 
+{bf:"school crdc covid-indicators"}: This endpoint contains data on changes to
+schooling delivery as a result of the Covid-19 pandemic.
+
+{bf:"school crdc internet-access"}: This endpoint contains data on Internet access and
+device usage at schools.
+
 {bf:"school edfacts assessments"}: This endpoint contains school-level achievement
 results for state assessments in mathematics and reading or language arts, by
 grade. It includes the number of students who completed each assessment for
@@ -881,8 +914,11 @@ graduation rates. The graduation rate is reported as a range, with the
 magnitude of the range decreasing as the number of students reported increases.
 Graduation rates are provided by race and special populations.
 
-{bf:"school nhgis census-2010"}: This endpoint contains geographic variables
-corresponding to 2010 Census geographies for each school in the CCD directory.
+{bf:"school meps"}: This endpoint contains school-level poverty information including
+original and modified MEPS, standard errors, and annual weighted percentiles.
+
+{bf:"school nhgis census-1990"}: This endpoint contains geographic variables
+corresponding to 1990 Census geographies for each school in the CCD directory.
 Geographies are merged on by latitude and longitude when available; when
 unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
@@ -905,8 +941,8 @@ Geographies for older years of data or low-accuracy geocode matches should be
 used with caution. In addition, we link schools' geographic locations to the
 geographic boundaries of school districts.
 
-{bf:"school nhgis census-1990"}: This endpoint contains geographic variables
-corresponding to 1990 Census geographies for each school in the CCD directory.
+{bf:"school nhgis census-2010"}: This endpoint contains geographic variables
+corresponding to 2010 Census geographies for each school in the CCD directory.
 Geographies are merged on by latitude and longitude when available; when
 unavailable, latitudes and longitudes were obtained from address information
 using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
@@ -917,8 +953,17 @@ Geographies for older years of data or low-accuracy geocode matches should be
 used with caution. In addition, we link schools' geographic locations to the
 geographic boundaries of school districts.
 
-{bf:"school meps"}: This endpoint contains school-level poverty information including
-original and modified MEPS, standard errors, and annual weighted percentiles.
+{bf:"school nhgis census-2020"}: This endpoint contains geographic variables
+corresponding to 2020 Census geographies for each school in the CCD directory.
+Geographies are merged on by latitude and longitude when available; when
+unavailable, latitudes and longitudes were obtained from address information
+using Urban's geocoder. The geocoder uses StreetMap Premium from Esri to
+perform accurate offline geocoding. Geocode accuracy variables indicate the
+degree of precision of this geocoding. Additional information on the match
+accuracy can be found {browse "https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm":here}.
+Geographies for older years of data or low-accuracy geocode matches should be
+used with caution. In addition, we link schools' geographic locations to the
+geographic boundaries of school districts.
 
 
 {marker options}{...}
