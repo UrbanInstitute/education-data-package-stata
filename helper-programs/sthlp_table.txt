@@ -236,7 +236,7 @@ institutions, and expenditure data are available only for institutions with
 total expenditures above $100,000.
 
 {bf:"college ipeds salaries-instructional-staff"}: This endpoint contains
-the number of staff, Â total salary outlays and average salaries of full-time,
+the number of staff, total salary outlays and average salaries of full-time,
 nonmedical, instructional staff by academic rank, contract length, and sex.
 
 {bf:"college ipeds salaries-noninstructional-staff"}: This endpoint contains
