@@ -190,26 +190,28 @@ any degree or certificate 150 percent of normal time.
 enrollment data from degree-granting institutions on undergraduate cohorts that
 entered an institution eight academic years ago. The two years of data
 currently available have slightly different definitions for cohorts and
-information available. In 2015, there is information on four cohorts collected
-at two points in time: six academic years and eight academic years after entry.
-The four cohorts of degree- or certificate-seeking undergraduates are
-full-time, first-time entering; part-time, first-time entering; full-time,
-non-first-time entering; and part-time, non-first-time entering. In 2016, there
-is information on eight cohorts collected at three points in time: four
+information available. In year 2015, there is information on four cohorts
+collected at two points in time: six academic years and eight academic years
+after entry. The four cohorts of degree- or certificate-seeking undergraduates
+are full-time, first-time entering; part-time, first-time entering; full-time,
+non-first-time entering; and part-time, non-first-time entering. In year 2016,
+there is information on eight cohorts collected at three points in time: four
 academic years, six academic years, and eight academic years after entry. The
-eight cohorts are the four cohorts described for 2015, but for each, they
+eight cohorts are the four cohorts described for year 2015, but for each, they
 further disaggregate by Pell recipients and non-Pell recipients. Additionally,
-in 2016, they collect more detailed information about the types of awards
+in year 2016, they collect more detailed information about the types of awards
 completed, such as a certificate, Associate's degree, or Bachelor's degree.
-Finally, the cohort definitions between the two years change. In 2015, the
+Finally, the cohort definitions between the two years change. In year 2015, the
 completion rate at 6 and 8 years after entry uses the adjusted cohort from the
-corresponding year after entry as the denominator, whereas in 2016, one
+corresponding year after entry as the denominator, whereas in year 2016, one
 adjusted cohort is used as the denominator in all rates, regardless of years
-after entry.
+after entry. We omit the data from cohort year 2015 because it is prettily
+heavily flagged for data inconsistencies.
 
 {bf:"college ipeds completers"}: This endpoint contains the number of
 students who completed any degree or certificate by race and ethnicity and
-gender.
+gender. Level_of_study was added in 2022. For all years prior to 2022,
+level_of_study == 99 (undergraduate and graduate total).
 
 {bf:"college ipeds completions-cip-2"}: This endpoint contains the number of
 awards by type of program, level of award (certificate or degree), first or
@@ -232,8 +234,7 @@ changes over time.
 {bf:"college ipeds academic-libraries"}: This endpoint contains information
 on the academic institution's electronic and physical library, collections,
 expenditures, and services. These data are available only for degree-granting
-institutions, and expenditure data are available only for institutions with
-total expenditures above $100,000.
+institutions.
 
 {bf:"college ipeds salaries-instructional-staff"}: This endpoint contains
 the number of staff, total salary outlays and average salaries of full-time,
