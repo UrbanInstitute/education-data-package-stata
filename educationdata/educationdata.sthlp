@@ -107,12 +107,13 @@ information, such as valid filter variables and values, please see the
 {bf:"college ipeds directory"}: This file contains directory information for
 every institution in the IPEDS universe. This includes name, address, city,
 state, zip code, and various URL links to the institution's home page,
-admissions, financial aid offices, and the net price calculator. Identifies
-institutions as currently active and institutions that participate in Title IV
-federal financial aid programs for which IPEDS is mandatory. It also includes
-variables derived from the Institutional Characteristics survey, such as
-control and level of institution, highest level and highest degree offered and
-Carnegie classifications.
+admissions, financial aid offices, and the net price calculator. Institution
+data are reported at the unit ID (UNITID) level. Identifies institutions as
+currently active and institutions that participate in Title IV federal
+financial aid programs for which IPEDS is mandatory. It also includes variables
+derived from the Institutional Characteristics survey, such as control and
+level of institution, highest level and highest degree offered and Carnegie
+classifications.
 
 {bf:"college ipeds institutional-characteristics"}: This endpoint contains
 data on program and award level offerings, control and affiliation of
@@ -158,13 +159,15 @@ occupational programs.
 data on instructional activity measured in total credit and/or contact hours
 delivered by institutions during a 12-month period. The credit hour and contact
 hour activity data are used to derive 12-month full-time equivalent (FTE)
-enrollments for both undergraduate and graduate levels. The graduate level does
-not include credit hours for doctoral professional practice students.
-Institutions can choose to accept the derived FTE or report their own FTE. Both
-reported and estimated/derived FTE are available in this data table for 2003
-and later. In addition, the reported FTE of doctoral professional practice
-students are also included. These data are only available at the undergraduate,
-graduate, and first professional level.
+enrollments for both undergraduate and graduate levels. For example, for
+institutions on a semester system, an FTE is calculated as 30 credit hours for
+undergraduates and 24 credit hours for graduates over a 12-month period. The
+graduate level does not include credit hours for doctoral professional practice
+students. Institutions can choose to accept the derived FTE or report their own
+FTE. Both reported and estimated/derived FTE are available in this data table
+for 2003 and later. In addition, the reported FTE of doctoral professional
+practice students are also included. These data are only available at the
+undergraduate, graduate, and first professional level.
 
 {bf:"college ipeds fall-enrollment race sex"}: This endpoint contains the
 number of students enrolled in the fall by race, sex, full-time/part-time
@@ -191,13 +194,14 @@ and first-professional (through 2008 only); in 2000, only undergraduate data
 are available.
 
 {bf:"college ipeds fall-enrollment residence"}: This endpoint contains the
-number of first-time freshmen by state of residence, along with data on the
-number who graduated from high school the previous year. Institutions with
-traditional academic year calendar systems (i.e., semester, quarter, trimester,
-or 4-1-4) report their enrollment as of October 15 or the institution's
-official fall reporting date. Institutions with calendar systems that differ by
-program or allow continuous enrollment report students that are enrolled at any
-time between August 1 and October 31. Submission of enrollment of first-time
+number of first-time degree- or certificate-seeking freshmen undergraduates by
+state of residence when first admitted, along with data on the number who
+graduated from high school the previous year. Institutions with traditional
+academic year calendar systems (i.e., semester, quarter, trimester, or 4-1-4)
+report their enrollment as of October 15 or the institution's official fall
+reporting date. Institutions with calendar systems that differ by program or
+allow continuous enrollment report students that are enrolled at any time
+between August 1 and October 31. Submission of enrollment of first-time
 undergraduate students by residency is mandatory in even-numbered years and
 optional in odd-numbered years.
 
@@ -208,6 +212,17 @@ valuable for institutions that use non-traditional calendar systems and offer
 short-term programs. Because this enrollment measure encompasses an entire
 year, it provides a more complete picture of the number of students these
 schools serve. Counts are available by level of study, sex, and race/ethnicity.
+
+{bf:"college ipeds enrollment-headcount-detailed"}: This endpoint contains
+the unduplicated head count of students enrolled over a 12-month period for
+both undergraduate and graduate levels. These enrollment data are particularly
+valuable for institutions that use non-traditional calendar systems and offer
+short-term programs. Because this enrollment measure encompasses an entire
+year, it provides a more complete picture of the number of students these
+schools serve. Counts are available by level of study, sex, race/ethnicity,
+class level, full-time/part-time status, and degree or certificate seeking.
+Breakdowns by ftpt, class_level, and degree_seeking are available beginning in
+2019.
 
 {bf:"college ipeds fall-retention"}: The first-year retention rate data
 measures the percentage of first-year students who persisted in or completed
@@ -227,22 +242,32 @@ undergraduate students.
 
 {bf:"college ipeds sfa-grants-and-net-price"}: This endpoint contains data
 on net price, grant amounts, and total students receiving grant aid for
-first-time, full-time degree-seeking students receiving Title IV aid or any
-grant aid.
+first-time, full-time degree-seeking undergraduate students receiving Title IV
+aid or any grant aid. A full-time student is enrolled 12 or more semester
+credits, 12 or more quarter credits, or 24 or more clock hours a week each
+term. A first-time student is a student attending any institution for the first
+time at the undergraduate level and includes students who started the previous
+summer or who started with college credits earned in high school. Net price is
+available for in-state or in-district students enrolled in public institutions
+and for all students enrolled in private institutions.
 
 {bf:"college ipeds sfa-by-living-arrangement"}: This endpoint contains data
-on total first-time, full-time degree-seeking students receiving Title IV aid
-or any grant aid, by living arrangement.
+on total first-time, full-time degree-seeking undergraduate students receiving
+Title IV aid or any grant aid, by living arrangement (on campus, off campus
+with family, off campus not with family).
 
 {bf:"college ipeds sfa-by-tuition-type"}: This endpoint contains data on
-total first-time, full-time degree-seeking students paying in-district,
-in-state, or out-of-state tuition.
+total first-time, full-time degree-seeking undergraduate students paying
+in-district, in-state, or out-of-state tuition.
 
 {bf:"college ipeds sfa-all-undergraduates"}: This endpoint contains data on
-total undergraduate students receiving different types of aid.
+total undergraduate students receiving different types of aid, including
+federal Pell grants, federal student loans, and other grant aid.
 
 {bf:"college ipeds sfa-ftft"}: This endpoint contains data on total
-first-time, full-time degree-seeking students receiving different types of aid.
+first-time, full-time degree-seeking students receiving different types of aid,
+including federal Pell grants, federal student loans, state and local grants,
+institutional grants, and any student loans.
 
 {bf:"college ipeds grad-rates"}: This endpoint contains the graduation rate
 status as of August 31, at the end of the academic year, for the cohort of
@@ -343,10 +368,6 @@ total expenditures above $100,000.
 the number of staff, total salary outlays and average salaries of full-time,
 nonmedical, instructional staff by academic rank, contract length, and sex.
 
-{bf:"college ipeds salaries-noninstructional-staff"}: This endpoint contains
-the number and salary outlays for full-time, nonmedical, noninstructional staff
-by occupational category.
-
 {bf:"college scorecard institutional-characteristics"}: This endpoint
 contains institutional characteristics for each college or university,
 primarily including flags for minority-serving institutions. To avoid
@@ -355,6 +376,10 @@ these data, you can see the other Institutional Characteristics and Directory
 endpoints. Notably, most of the information contained in this endpoint can be
 found in 2016 and aside from identification and year, only predominant degree
 awarded is available in other years.
+
+{bf:"college ipeds salaries-noninstructional-staff"}: This endpoint contains
+the number and salary outlays for full-time, nonmedical, noninstructional staff
+by occupational category.
 
 {bf:"college scorecard student-characteristics aid-applicants"}: This
 endpoint contains detailed data on student aid applicants in each institution,
@@ -377,14 +402,16 @@ are determined using information from when the student first applied for
 financial aid.
 
 {bf:"college scorecard earnings"}: This endpoint contains information on
-earnings for former students, by their pooled entry cohort and institution.
-This information may be available 6, 7, 8, 9, and 10 years after the pooled
-cohort entered college, but availability varies by cohort. For example, the
-assessment year (AY) 1996–97 and AY 1997–98 pooled cohort has
-earnings data available 6, 7, 8, 9, and 10 years after entry, but the AY
-2001-02 and AY 2002–03 pooled cohort only has earnings data 10 years
-after entry and the AY 2003–04 and AY 2004–05 pooled cohort only
-has earnings data 8 years after entry.
+earnings for former students, by their pooled entry cohort and institution,
+listed at the six-digit Office of Postsecondary Education ID (OPEID) level,
+which may be inclusive of multiple UNITIDs. This information may be available
+6, 7, 8, 9, and 10 years after the pooled cohort entered college, but
+availability varies by cohort. For example, the assessment year (AY)
+1996–97 and AY 1997–98 pooled cohort has earnings data available 6,
+7, 8, 9, and 10 years after entry, but the AY 2001-02 and AY 2002–03
+pooled cohort only has earnings data 10 years after entry and the AY
+2003–04 and AY 2004–05 pooled cohort only has earnings data 8 years
+after entry.
 
 {bf:"college scorecard default"}: This endpoint contains information on the
 default rates by cohort for two or three years after students entered
@@ -507,48 +534,58 @@ reported hate crimes and their locations.
 
 {bf:"college pseo earnings-and-flows"}: This endpoint contains information
 from the US Census Bureau on earnings outcomes and employment flows for recent
-college graduates. These data are only available for partner institutions to
-the PSEO program. For more information, go to
+college graduates. Earnings data are calculated using unemployment insurance
+wage records and are tabulated for graduates who earn more than what would be
+expected for a full-time worker at the federal minimum wage and have earnings
+in at least three quarters of the year. These data are available only for
+partner institutions to the PSEO program. For more information, go to
 https://lehd.ces.census.gov/data/pseo_experimental.html.
 
 {bf:District} - {browse "https://educationdata.urban.org/documentation/school-districts.html":Read Complete Documentation}
 
 {bf:"district ccd directory"}: This endpoint contains school district (local
-education agency identification)-level geographic and mailing information,
-agency type, highest and lowest grades offered, special education students and
-English language learners, and full-time equivalent teachers and other staff.
+education agency)-level geographic and mailing information, agency type,
+highest and lowest grades offered, total enrollment, special education students
+and English language learners, and full-time equivalent teachers and other
+staff.
 
-{bf:"district ccd enrollment"}: This endpoint contains student membership data
+{bf:"district ccd enrollment"}: This endpoint contains student enrollment data
 for each school district by grade.
 
-{bf:"district ccd enrollment race"}: This endpoint contains student membership
+{bf:"district ccd enrollment race"}: This endpoint contains student enrollment
 data for each school district by grade and race.
 
-{bf:"district ccd enrollment sex"}: This endpoint contains student membership
+{bf:"district ccd enrollment sex"}: This endpoint contains student enrollment
 data for each school district by grade and sex.
 
 {bf:"district ccd enrollment race sex"}: This endpoint contains student
-membership data for each school district by grade, race, and sex.
+enrollment data for each school district by grade, race, and sex.
 
 {bf:"district ccd finance"}: This endpoint contains district level finance data
-including revenues from federal, state, and local governments and expenditures.
+from the School District Finance Survey via the Form F-33, including revenues
+from federal, state, and local governments and expenditures, as well as
+salaries, benefits, long-term debt and interest payments, and fall student
+membership counts for per pupil spending. These data include charter schools.
 
-{bf:"district saipe"}: This endpoint contains district level data on the size
-of the population, the size of the school age population, and the size of the
-school age population that is in poverty.
+{bf:"district saipe"}: This endpoint contains geographic district-level data on
+the size of the population, the size of the school age population, and the size
+of the school age population that is in poverty. Because it is the geographic
+district, it includes all people who live in the district's geographic
+boundaries, including those who go to charter or private schools.
 
 {bf:"district edfacts assessments"}: This endpoint contains district-level
-achievement results for state assessments in mathematics and reading or
-language arts, by grade. It includes the number of students who completed each
-assessment for whom a proficiency level was assigned and the proficiency share.
-The proficiency share is reported as a range, unless there are more than 300
-students in the subgroup, with the magnitude of the range decreasing as the
-number of students reported increases. States can change their statewide
-assessments, academic standards, or thresholds for proficiency levels, leading
-to changes in the proficiency share from year to year. The proficiency shares
-for Virginia's 2016–17 grade 5–8 math assessments are too low.
-Users should instead refer to the Virginia Department of Education's Statistics
-and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
+achievement results for state-specific assessments in mathematics and reading
+or language arts, by grade. It includes the number of students who completed
+each assessment for whom a proficiency level was assigned and the proficiency
+share. The proficiency share is reported as a range, unless there are more than
+300 students in the subgroup, with the magnitude of the range decreasing as the
+number of students reported increases. Each state has its own assessment,
+meaning proficiency rates are not comparable across states. States can change
+their statewide assessments, academic standards, or thresholds for proficiency
+levels, leading to changes in the proficiency share from year to year. The
+proficiency shares for Virginia's 2016–17 grade 5–8 math
+assessments are too low. Users should instead refer to the Virginia Department
+of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
 
 {bf:"district edfacts assessments race"}: This endpoint contains district-level
@@ -558,11 +595,12 @@ students who completed each assessment for whom a proficiency level was
 assigned and the proficiency share. The proficiency share is reported as a
 range, unless there are more than 300 students in the subgroup, with the
 magnitude of the range decreasing as the number of students reported increases.
-States can change their statewide assessments, academic standards, or
-thresholds for proficiency levels, leading to changes in the proficiency share
-from year to year. Users are cautioned that the proficiency shares for
-Virginia's 2016–17 grade 5–8 math assessments are too low. The
-proficiency shares for Virginia's 2016–17 grade 5–8 math
+Each state has its own assessment, meaning proficiency rates are not comparable
+across states. States can change their statewide assessments, academic
+standards, or thresholds for proficiency levels, leading to changes in the
+proficiency share from year to year. Users are cautioned that the proficiency
+shares for Virginia's 2016–17 grade 5–8 math assessments are too
+low. The proficiency shares for Virginia's 2016–17 grade 5–8 math
 assessments are too low. Users should instead refer to the Virginia Department
 of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
@@ -573,10 +611,11 @@ language arts, by grade and sex. It includes the number of students who
 completed each assessment for whom a proficiency level was assigned and the
 proficiency share. The proficiency share is reported as a range, unless there
 are more than 300 students in the subgroup, with the magnitude of the range
-decreasing as the number of students reported increases. States can change
-their statewide assessments, academic standards, or thresholds for proficiency
-levels, leading to changes in the proficiency share from year to year. The
-proficiency shares for Virginia's 2016–17 grade 5–8 math
+decreasing as the number of students reported increases. Each state has its own
+assessment, meaning proficiency rates are not comparable across states. States
+can change their statewide assessments, academic standards, or thresholds for
+proficiency levels, leading to changes in the proficiency share from year to
+year. The proficiency shares for Virginia's 2016–17 grade 5–8 math
 assessments are too low. Users should instead refer to the Virginia Department
 of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
@@ -592,10 +631,11 @@ reported increases. Special population subgroups include children with one or
 more disabilities, economically disadvantaged students, students who are
 homeless, migrant students, and students with limited English proficiency.
 Beginning in 2017, special population subgroups also include students who are
-in foster care and students who are military connected. States can change their
-statewide assessments, academic standards, or thresholds for proficiency
-levels, leading to changes in the proficiency share from year to year. The
-proficiency shares for Virginia's 2016–17 grade 5–8 math
+in foster care and students who are military connected. Each state has its own
+assessment, meaning proficiency rates are not comparable across states. States
+can change their statewide assessments, academic standards, or thresholds for
+proficiency levels, leading to changes in the proficiency share from year to
+year. The proficiency shares for Virginia's 2016–17 grade 5–8 math
 assessments are too low. Users should instead refer to the Virginia Department
 of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
@@ -608,258 +648,278 @@ increases. Graduation rates are provided by race and special populations.
 {bf:School} - {browse "https://educationdata.urban.org/documentation/schools.html":Read Complete Documentation}
 
 {bf:"school ccd directory"}: This endpoint contains school-level information on
-location, mailing addresses, school types, highest and lowest grades offered,
-and free and reduced-price lunch. This endpoint also contains the school-level
-data on the number of full-time eqivalent teachers.
+location, mailing addresses, congressional district, school types (e.g.,
+charter or magnet), participation in the National School Lunch Program, highest
+and lowest grades offered, enrollment, and counts of free and reduced-price
+lunch and/or direct certification students. This endpoint provides information
+for public schools, including charters, and contains the school-level data on
+the number of full-time equivalent teachers.
 
-{bf:"school ccd enrollment"}: This endpoint contains student membership data for each
-school by grade. Only operational schools serving one or more grades are
-required to report membership and only these are included in this endpoint.
+{bf:"school ccd enrollment"}: This endpoint contains student enrollment data for each
+public school by grade. Only operational schools serving one or more grades are
+required to report enrollment and only these are included in this endpoint.
 
-{bf:"school ccd enrollment race"}: This endpoint contains student membership data for
-each school by grade and race. Only operational schools serving one or more
-grades are required to report membership and only these are included in this
-endpoint.
-
-{bf:"school ccd enrollment sex"}: This endpoint contains student membership data for
-each school by grade and sex. Only operational schools serving one or more
-grades are required to report membership and only these are included in this
-endpoint.
-
-{bf:"school ccd enrollment race sex"}: This endpoint contains student membership data
-for each school by grade, race, and sex. Only operational schools serving one
-or more grades are required to report membership and only these are included in
+{bf:"school ccd enrollment race"}: This endpoint contains student enrollment data for
+each public school by grade and race. Only operational schools serving one or
+more grades are required to report enrollment and only these are included in
 this endpoint.
 
+{bf:"school ccd enrollment sex"}: This endpoint contains student enrollment data for
+each public school by grade and sex. Only operational schools serving one or
+more grades are required to report enrollment and only these are included in
+this endpoint.
+
+{bf:"school ccd enrollment race sex"}: This endpoint contains student enrollment data
+for each public school by grade, race, and sex. Only operational schools
+serving one or more grades are required to report enrollment and only these are
+included in this endpoint.
+
 {bf:"school crdc directory"}: This endpoint contains school-level geographic
-information, grades offered, and information on school type (including charter,
-magnet, and alternative schools).
+information, grades offered (including prekindergarten), and information on
+school type (including charter, magnet, and alternative schools) for public
+schools.
 
 {bf:"school crdc enrollment race sex"}: This endpoint contains student enrollment for
-each school by students' race and sex.
+each public school by students' race and sex.
 
 {bf:"school crdc enrollment disability sex"}: This endpoint contains student
-enrollment for each school by students' disability status and sex.
+enrollment for each public school by students' disability status and sex.
 
 {bf:"school crdc enrollment lep sex"}: This endpoint contains student enrollment for
-each school by students' Limited English Proficiency status and sex.
+each public school by students' Limited English Proficiency status and sex.
 
 {bf:"school crdc discipline-instances"}: This endpoint contains the number of
-discipline instances in schools.
+discipline instances in public schools.
 
 {bf:"school crdc discipline disability sex"}: This endpoint contains student
-discipline information for each school, including suspensions, expulsions,
-arrests, referrals, and corporal punishment by students' race and sex.
-
-{bf:"school crdc discipline disability race sex"}: This endpoint contains student
-discipline information for each school, including suspensions, expulsions,
-arrests, referrals, and corporal punishment by students' disability status and
+discipline information for each public school, including suspensions,
+expulsions, arrests, referrals, and corporal punishment by students' race and
 sex.
 
+{bf:"school crdc discipline disability race sex"}: This endpoint contains student
+discipline information for each public school, including suspensions,
+expulsions, arrests, referrals, and corporal punishment by students' disability
+status and sex.
+
 {bf:"school crdc discipline disability lep sex"}: This endpoint contains student
-discipline information for each school, including suspensions, expulsions,
-arrests, referrals, and corporal punishment by students' limited English
-proficiency status and sex.
+discipline information for each public school, including suspensions,
+expulsions, arrests, referrals, and corporal punishment by students' limited
+English proficiency status and sex.
 
 {bf:"school crdc harassment-or-bullying allegations"}: This endpoint contains the
 number of allegations of harassment or bullying on the basis of sex; on the
-basis of race, color, or national origin; or on the basis of disability. This
-only includes students in grades K-12 and comparable ungraded levels.
+basis of sexual orientation; on the basis of religion; on the basis of race,
+color, or national origin; or on the basis of disability. This includes only
+public school students in grades K-12 and comparable ungraded levels.
 
 {bf:"school crdc harassment-or-bullying race sex"}: This endpoint contains the number
 of students who reported being harassed or bullied and the number of students
 who were disciplined for harassment or bullying, by students' race and sex.
 These reports and disciplines could be on the basis of sex; on the basis of
-race, color, or national origin; or on the basis of disability. This includes
-only students in grades K–12 and comparable ungraded levels.
+sexual orientation; on the basis of religion; on the basis of race, color, or
+national origin; or on the basis of disability. This includes only public
+school students in grades K–12 and comparable ungraded levels.
 
 {bf:"school crdc harassment-or-bullying disability sex"}: This endpoint contains the
 number of students who reported being harassed or bullied and the number of
 students who were disciplined for harassment or bullying, by students'
 disability status and sex. These reports and disciplines could be on the basis
-of sex, on the basis of race, color, or national origin, or on the basis of
-disability. This only includes students in grades K-12 and comparable ungraded
+of sex; on the basis of sexual orientation; on the basis of religion; on the
+basis of race, color, or national origin; or on the basis of disability. This
+only includes public school students in grades K-12 and comparable ungraded
 levels.
 
 {bf:"school crdc harassment-or-bullying lep sex"}: This endpoint contains the number
 of students who reported being harassed or bullied and the number of students
 who were disciplined for harassment or bullying, by students' limited English
 proficiency status and sex. These reports and disciplines could be on the basis
-of sex, on the basis of race, color, or national origin, or on the basis of
-disability. This only includes students in grades K-12 and comparable ungraded
+of sex; on the basis of sexual orientation; on the basis of religion; on the
+basis of race, color, or national origin; or on the basis of disability. This
+only includes public school students in grades K-12 and comparable ungraded
 levels.
 
 {bf:"school crdc chronic-absenteeism race sex"}: This endpoint contains the number of
-students who were chronically absent, by race and sex. Chronic absenteeism is
-defined as being absent 15 or more school days during the school year. A
-student is absent if he or she is not physically on school grounds and is not
-participating in instruction or instruction-related activities at an approved
-off-grounds location for the school day. Chronically absent students include
-students who are absent for any reason (e.g., illness, suspension, the need to
-care for a family member), regardless of whether absences are excused or
-unexcused.
+students who were homeless or chronically absent, by race and sex. Chronic
+absenteeism is defined as being absent 15 or more school days during the school
+year. A student is absent if he or she is not physically on school grounds and
+is not participating in instruction or instruction-related activities at an
+approved off-grounds location for the school day. Chronically absent students
+include students who are absent for any reason (e.g., illness, suspension, the
+need to care for a family member), regardless of whether absences are excused
+or unexcused.
 
 {bf:"school crdc chronic-absenteeism disability sex"}: This endpoint contains the
-number of students who were chronically absent, by disability status and sex.
-Chronic absenteeism is defined as being absent 15 or more school days during
-the school year. A student is absent if he or she is not physically on school
-grounds and is not participating in instruction or instruction-related
-activities at an approved off-grounds location for the school day. Chronically
-absent students include students who are absent for any reason (e.g., illness,
-suspension, the need to care for a family member), regardless of whether
-absences are excused or unexcused.
+number of students who were homeless or chronically absent, by disability
+status and sex. Chronic absenteeism is defined as being absent 15 or more
+school days during the school year. A student is absent if he or she is not
+physically on school grounds and is not participating in instruction or
+instruction-related activities at an approved off-grounds location for the
+school day. Chronically absent students include students who are absent for any
+reason (e.g., illness, suspension, the need to care for a family member),
+regardless of whether absences are excused or unexcused.
 
 {bf:"school crdc chronic-absenteeism lep sex"}: This endpoint contains the number of
-students who were chronically absent, by limited English proficiency status and
-sex. Chronic absenteeism is defined as being absent 15 or more school days
-during the school year. A student is absent if he or she is not physically on
-school grounds and is not participating in instruction or instruction-related
-activities at an approved off-grounds location for the school day. Chronically
-absent students include students who are absent for any reason (e.g., illness,
-suspension, the need to care for a family member), regardless of whether
-absences are excused or unexcused.
+students who were homeless or chronically absent, by limited English
+proficiency status and sex. Chronic absenteeism is defined as being absent 15
+or more school days during the school year. A student is absent if he or she is
+not physically on school grounds and is not participating in instruction or
+instruction-related activities at an approved off-grounds location for the
+school day. Chronically absent students include students who are absent for any
+reason (e.g., illness, suspension, the need to care for a family member),
+regardless of whether absences are excused or unexcused.
 
 {bf:"school crdc restraint-and-seclusion instances"}: This endpoint contains the
 number of instances of restraint or seclusion, by student's disability status.
-This includes only students in grades K–12 and comparable ungraded
-levels.
+This includes only public school students in grades K–12 and comparable
+ungraded levels.
 
 {bf:"school crdc restraint-and-seclusion disability sex"}: This endpoint contains the
 number of students who were subjected to restraint or seclusion, by disability
-status and sex. This includes only students in grades K–12 and comparable
-ungraded levels.
+status and sex. This includes only public school students in grades K–12
+and comparable ungraded levels.
 
 {bf:"school crdc restraint-and-seclusion disability race sex"}: This endpoint contains
 the number of students who were subjected to restraint or seclusion, by
-disability status, race, and sex. This includes only students in grades
-K–12 and comparable ungraded levels.
+disability status, race, and sex. This includes only public school students in
+grades K–12 and comparable ungraded levels.
 
 {bf:"school crdc restraint-and-seclusion disability lep sex"}: This endpoint contains
 the number of students who were subjected to restraint or seclusion, by
 disability status, limited English proficiency status, and sex. This includes
-only students in grades K–12 and comparable ungraded levels.
+only public school students in grades K–12 and comparable ungraded
+levels.
 
 {bf:"school crdc ap-ib-enrollment race sex"}: This endpoint contains the number of
-students enrolled in Advanced Placement (AP) courses, the International
-Baccalaureate (IB) Diploma Programme, and gifted and talented (GT) programs, by
-race and sex.
+public school students enrolled in Advanced Placement (AP) courses, the
+International Baccalaureate (IB) Diploma Programme, and gifted and talented
+(GT) programs, by race and sex.
 
 {bf:"school crdc ap-ib-enrollment disability sex"}: This endpoint contains the number
-of students enrolled in Advanced Placement (AP) courses, the International
-Baccalaureate (IB) Diploma Programme, and gifted and talented (GT) programs, by
-disability and sex.
+of public school students enrolled in Advanced Placement (AP) courses, the
+International Baccalaureate (IB) Diploma Programme, and gifted and talented
+(GT) programs, by disability and sex.
 
 {bf:"school crdc ap-ib-enrollment lep sex"}: This endpoint contains the number of
-students enrolled in Advanced Placement (AP) courses, the International
-Baccalaureate (IB) Diploma Programme, and gifted and talented (GT) programs, by
-limited English proficiency status and sex.
+public school students enrolled in Advanced Placement (AP) courses, the
+International Baccalaureate (IB) Diploma Programme, and gifted and talented
+(GT) programs, by limited English proficiency status and sex.
 
-{bf:"school crdc ap-exams race sex"}: This endpoint contains the number of students
-taking AP exams, and the number of students passing AP exams, by students' race
-and sex.
+{bf:"school crdc ap-exams race sex"}: This endpoint contains the number of public
+school students taking AP exams, and the number of students passing AP exams,
+by students' race and sex.
 
 {bf:"school crdc ap-exams disability sex"}: This endpoint contains the number of
-students taking AP exams, and the number of students passing AP exams, by
-students' disability status and sex.
+public school students taking AP exams, and the number of students passing AP
+exams, by students' disability status and sex.
 
-{bf:"school crdc ap-exams lep sex"}: This endpoint contains the number of students
-taking AP exams, and the number of students passing AP exams, by students'
-Limited English Proficiency status and sex.
+{bf:"school crdc ap-exams lep sex"}: This endpoint contains the number of public
+school students taking AP exams, and the number of students passing AP exams,
+by students' Limited English Proficiency status and sex.
 
 {bf:"school crdc sat-act-participation race sex"}: This endpoint contains the number
-of students taking the SAT or ACT, by race and sex.
+of public school students taking the SAT or ACT, by race and sex.
 
 {bf:"school crdc sat-act-participation disability sex"}: This endpoint contains the
-number of students taking the SAT or ACT, by disability status and sex.
+number of public school students taking the SAT or ACT, by disability status
+and sex.
 
 {bf:"school crdc sat-act-participation lep sex"}: This endpoint contains the number of
-students taking the SAT or ACT, by limited English proficiency status and sex.
+public school students taking the SAT or ACT, by limited English proficiency
+status and sex.
 
 {bf:"school crdc teachers-staff"}: This endpoint contains data on the number of FTE
-teachers and staff at each school.
+teachers and staff at each public school.
 
 {bf:"school crdc math-and-science race sex"}: This endpoint contains data on
 enrollment in Biology, Chemistry, Advanced Math, Calculus, Algebra II, Physics,
 and Geometry courses by race and sex.
 
 {bf:"school crdc math-and-science disability sex"}: This endpoint contains data on
-enrollment in Biology, Chemistry, Advanced Math, Calculus, Algebra II, Physics,
-and Geometry courses by disability and sex.
+public school enrollment in Biology, Chemistry, Advanced Math, Calculus,
+Algebra II, Physics, and Geometry courses by disability and sex.
 
-{bf:"school crdc math-and-science lep sex"}: This endpoint contains data on enrollment
-in Biology, Chemistry, Advanced Math, Calculus, Algebra II, Physics, and
-Geometry courses by limited English proficiency status and sex.
+{bf:"school crdc math-and-science lep sex"}: This endpoint contains data on public
+school enrollment in Biology, Chemistry, Advanced Math, Calculus, Algebra II,
+Physics, and Geometry courses by limited English proficiency status and sex.
 
 {bf:"school crdc algebra1 race sex"}: This endpoint contains data on the number of
-students enrolled in and passing Algebra I by race and sex.
+public school students enrolled in and passing Algebra I by race and sex.
 
 {bf:"school crdc algebra1 disability sex"}: This endpoint contains data on the number
-of students enrolled in and passing Algebra I by disability status and sex.
-
-{bf:"school crdc algebra1 lep sex"}: This endpoint contains data on the number of
-students enrolled in and passing Algebra I by Limited English Proficiency
+of public school students enrolled in and passing Algebra I by disability
 status and sex.
 
+{bf:"school crdc algebra1 lep sex"}: This endpoint contains data on the number of
+public school students enrolled in and passing Algebra I by Limited English
+Proficiency status and sex.
+
 {bf:"school crdc offenses"}: This endpoint contains data on the number of criminal
-incidents in schools.
+incidents in public schools, including firearms, homicide, battery, robbery,
+and threats.
 
 {bf:"school crdc dual-enrollment race sex"}: This endpoint contains data that
-indicates whether the school has any students enrolled in a dual
+indicates whether the public school has any students enrolled in a dual
 enrollment/dual credit program by race and sex.
 
 {bf:"school crdc dual-enrollment disability sex"}: This endpoint contains data that
-indicates whether the school has any students enrolled in a dual
+indicates whether the public school has any students enrolled in a dual
 enrollment/dual credit program by disability and sex.
 
 {bf:"school crdc dual-enrollment lep sex"}: This endpoint contains data that indicates
-whether the school has any students enrolled in a dual enrollment/dual credit
-program by limited English proficiency status and sex.
+whether the public school has any students enrolled in a dual enrollment/dual
+credit program by limited English proficiency status and sex.
 
-{bf:"school crdc credit-recovery"}: This endpoint contains data on student enrollment
-in credit recovery.
+{bf:"school crdc credit-recovery"}: This endpoint contains data on public school
+provision of credit recovery and student enrollment in credit recovery.
 
 {bf:"school crdc suspensions-days race sex"}: This endpoint contains the number of
-days students missed due to suspensions by race and sex.
+days public school students missed due to suspensions by race and sex.
 
 {bf:"school crdc suspensions-days disability sex"}: This endpoint contains the number
-of days students missed due to suspensions by disability and sex.
+of days public school students missed due to suspensions by disability and sex.
 
 {bf:"school crdc suspensions-days lep sex"}: This endpoint contains the number of days
-students missed due to suspensions by limited English proficiency status and
-sex.
+public school students missed due to suspensions by limited English proficiency
+status and sex.
 
 {bf:"school crdc offerings"}: This endpoint contains details on the number and types
-of classes offered in schools.
+of classes offered in public schools, including the number of classes taught by
+a certified teacher. This endpoint also includes information on the
+availability of AP courses, gifted and talented programs, and interscholastic
+sports programs.
 
-{bf:"school crdc school-finance"}: This endpoint contains school finance data.
+{bf:"school crdc school-finance"}: This endpoint contains school-level school finance
+data for public schools, including salaries, expenditures, and staff.
 
 {bf:"school crdc retention race sex"}: This endpoint contains data on the number of
-students retained in a school.
+students retained in a public school.
 
 {bf:"school crdc retention disability sex"}: This endpoint contains data on the number
-of students retained in a school.
+of students retained in a public school.
 
 {bf:"school crdc retention lep sex"}: This endpoint contains data on the number of
-students retained in a school.
+students retained in a public school.
 
 {bf:"school crdc covid-indicators"}: This endpoint contains data on changes to
-schooling delivery as a result of the Covid-19 pandemic.
+schooling delivery as a result of the COVID-19 pandemic, including instruction
+type, and remote and virtual learning in public schools.
 
 {bf:"school crdc internet-access"}: This endpoint contains data on Internet access and
-device usage at schools.
+device usage at schools, including availability of Wi-Fi or fiber-optic.
 
 {bf:"school edfacts assessments"}: This endpoint contains school-level achievement
 results for state assessments in mathematics and reading or language arts, by
-grade. It includes the number of students who completed each assessment for
-whom a proficiency level was assigned and the proficiency share. The
-proficiency share is reported as a range, unless there are more than 300
+grade for public schools. It includes the number of students who completed each
+assessment for whom a proficiency level was assigned and the proficiency share.
+The proficiency share is reported as a range, unless there are more than 300
 students in the subgroup, with the magnitude of the range decreasing as the
-number of students reported increases. States can change their statewide
-assessments, academic standards, or thresholds for proficiency levels, leading
-to changes in the proficiency share from year to year. The proficiency shares
-for Virginia's 2016–17 grade 5–8 math assessments are too low.
-Users should instead refer to the Virginia Department of Education's Statistics
-and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
+number of students reported increases. Each state has its own assessment,
+meaning proficiency rates are not comparable across states. States can change
+their statewide assessments, academic standards, or thresholds for proficiency
+levels, leading to changes in the proficiency share from year to year. The
+proficiency shares for Virginia's 2016–17 grade 5–8 math
+assessments are too low. Users should instead refer to the Virginia Department
+of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
 
 {bf:"school edfacts assessments race"}: This endpoint contains school-level
@@ -869,11 +929,13 @@ students who completed each assessment for whom a proficiency level was
 assigned and the proficiency share. The proficiency share is reported as a
 range, unless there are more than 300 students in the subgroup, with the
 magnitude of the range decreasing as the number of students reported increases.
-States can change their statewide assessments, academic standards, or
-thresholds for proficiency levels, leading to changes in the proficiency share
-from year to year. The proficiency shares for Virginia's 2016–17 grade
-5–8 math assessments are too low. Users should instead refer to the
-Virginia Department of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
+Each state has its own assessment, meaning proficiency rates are not comparable
+across states. States can change their statewide assessments, academic
+standards, or thresholds for proficiency levels, leading to changes in the
+proficiency share from year to year. The proficiency shares for Virginia's
+2016–17 grade 5–8 math assessments are too low. Users should
+instead refer to the Virginia Department of Education's Statistics and Reports
+{browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
 
 {bf:"school edfacts assessments sex"}: This endpoint contains school-level achievement
@@ -882,12 +944,13 @@ grade and sex. It includes the number of students who completed each assessment
 for whom a proficiency level was assigned and the proficiency share. The
 proficiency share is reported as a range, unless there are more than 300
 students in the subgroup, with the magnitude of the range decreasing as the
-number of students reported increases. States can change their statewide
-assessments, academic standards, or thresholds for proficiency levels, leading
-to changes in the proficiency share from year to year. The proficiency shares
-for Virginia's 2016–17 grade 5–8 math assessments are too low.
-Users should instead refer to the Virginia Department of Education's Statistics
-and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
+number of students reported increases. Each state has its own assessment,
+meaning proficiency rates are not comparable across states. States can change
+their statewide assessments, academic standards, or thresholds for proficiency
+levels, leading to changes in the proficiency share from year to year. The
+proficiency shares for Virginia's 2016–17 grade 5–8 math
+assessments are too low. Users should instead refer to the Virginia Department
+of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
 
 {bf:"school edfacts assessments special-populations"}: This endpoint contains
@@ -901,10 +964,11 @@ reported increases. Special population subgroups include children with one or
 more disabilities, economically disadvantaged students, students who are
 homeless, migrant students, and students with limited English proficiency.
 Beginning in 2017, special population subgroups also include students who are
-in foster care and students who are military connected. States can change their
-statewide assessments, academic standards, or thresholds for proficiency
-levels, leading to changes in the proficiency share from year to year. The
-proficiency shares for Virginia's 2016–17 grade 5–8 math
+in foster care and students who are military connected. Each state has its own
+assessment, meaning proficiency rates are not comparable across states. States
+can change their statewide assessments, academic standards, or thresholds for
+proficiency levels, leading to changes in the proficiency share from year to
+year. The proficiency shares for Virginia's 2016–17 grade 5–8 math
 assessments are too low. Users should instead refer to the Virginia Department
 of Education's Statistics and Reports {browse "http://www.doe.virginia.gov/statistics_reports/index.shtml":website}
 for accurate data.
@@ -914,8 +978,12 @@ graduation rates. The graduation rate is reported as a range, with the
 magnitude of the range decreasing as the number of students reported increases.
 Graduation rates are provided by race and special populations.
 
-{bf:"school meps"}: This endpoint contains school-level poverty information including
-original and modified MEPS, standard errors, and annual weighted percentiles.
+{bf:"school meps"}: This endpoint contains school-level poverty information, including
+original and modified MEPS, standard errors, and annual weighted percentiles
+for most public schools, and was created as an alternative to the traditional
+free and reduced-price meal or direct certification measures, which have become
+inconsistent since the introduction of the universal free school meal program
+Community Eligibility Provision.
 
 {bf:"school nhgis census-1990"}: This endpoint contains geographic variables
 corresponding to 1990 Census geographies for each school in the CCD directory.
